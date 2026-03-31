@@ -1,1 +1,290 @@
 @import "tailwindcss";
+
+/* primitives, usually only change primary based on website theme */
+:root {
+	--neutral-0: #ffffff;
+	--neutral-50:  #fafafa;
+	--neutral-100: #f5f5f5;
+	--neutral-200: #e5e5e5;
+	--neutral-300: #d4d4d4;
+	--neutral-400: #a3a3a3;
+	--neutral-500: #737373;
+	--neutral-600: #525252;
+	--neutral-700: #404040;
+	--neutral-800: #262626;
+	--neutral-900: #171717;
+	--neutral-950: #0a0a0a;
+
+	--primary-50:  #F2F9ED;
+	--primary-100: #E5F0CA;
+	--primary-200: #C9DF9E;
+	--primary-300: #AFCE79;
+	--primary-400: #94BA5B;
+	--primary-500: #7A9C4C;
+	--primary-600: #607C3C;
+	--primary-700: #4F6732;
+	--primary-800: #3E5128;
+	--primary-900: #2D3A1E;
+	--primary-950: #1B2414;
+
+	--danger-200: #fecaca;
+    --danger-500: #ef4444;
+    --danger-600: #dc2626;
+    --danger-800: #991b1b;
+
+    --alert-200: #fde68a;
+    --alert-500: #f59e0b;
+    --alert-600: #d97706;
+    --alert-800: #92400e;
+
+    --success-200: #a1f1bd;
+    --success-500: #22c55e;
+    --success-600: #16a34a;
+    --success-800: #166534;
+
+	/* radius */
+	--radius-xs: 4px;
+	--radius-sm: 6px;
+	--radius-md: 8px;
+	--radius-lg: 10px;
+	--radius-xl: 12px;
+
+	/* border */
+	--border-width-xs: 1px;
+	--border-width-sm: 2px;
+	--border-width-md: 3px;
+	--border-width-lg: 4px;
+
+	/* outline ring */
+	--focus-ring-none: none;
+	--focus-ring-sm: 0 0 0 3px;
+	--focus-ring-md: 0 0 0 4px;
+	--focus-ring-lg: 0 0 0 6px;
+	
+	--focus-ring-primary-500: rgba(255, 77, 82, 0.35);
+    --focus-ring-primary-600: rgba(238, 42, 44, 0.6); 
+	
+	--focus-ring-danger-500: rgba(239, 68, 68, 0.5); 
+	--focus-ring-danger-600: rgba(239, 68, 68, 0.6);
+
+	--focus-ring-gray: rgba(107, 114, 128, 0.35);
+}
+
+/* light mode mapping, edit here to add custom color for components */
+:root {
+	/* css for default bg */
+	--background-default: var(--neutral-50); 
+	--background-primary: var(--primary-50);  /* lighter primary colors for badges, navlink, etc background */
+	
+	--background-neutral: var(--neutral-0);  /* full white / dark */
+	--background-footer: var(--neutral-900);
+	
+	/* css mainly for text */
+	--foreground-default: var(--neutral-900);      
+	--foreground-primary:   var(--primary-500); /* accent primary colors for badges, navlink, etc foreground */
+
+	--foreground-muted:   var(--neutral-500);  
+	--foreground-brand:   var(--primary-600); 
+
+	--foreground-danger:  var(--danger-600); 
+	--foreground-alert: var(--alert-600); 
+	--foreground-success: var(--success-600); 
+
+	/* ------------------------------------------------ */
+
+	/* css for shadow rings */
+	--focus-ring-primary: var(--focus-ring-primary-500);
+	--focus-ring-danger: var(--focus-ring-danger-500);
+
+	/* -------------------------------------------- */
+
+	/* css for borders */
+	--border-default: var(--neutral-200); 
+	--border-default-accent: var(--neutral-500); 
+
+	--border-primary: var(--primary-200); 
+	--border-primary-accent: var(--primary-500); 
+
+	--border-danger: var(--danger-200);
+    --border-danger-accent: var(--danger-500);
+
+    --border-alert: var(--alert-200);
+    --border-alert-accent: var(--alert-500);
+
+    --border-success: var(--success-200);
+    --border-success-accent: var(--success-500);
+
+	/* custom css for components bg and fg */
+    --bg-btn-default: var(--neutral-900);
+    --fg-btn-default: var(--neutral-50);
+
+	--bg-btn-primary: var(--primary-500);
+    --fg-btn-primary: var(--neutral-0);
+
+    --bg-btn-danger:  var(--danger-500);
+    --fg-btn-danger:  var(--neutral-0);
+
+    --bg-btn-outline: transparent;
+    --fg-btn-outline: var(--primary-500);
+
+
+    --bg-btn-ghost: transparent;
+    --fg-btn-ghost: var(--neutral-900);
+	
+	--bg-btn-accent: var(--primary-50);
+    --fg-btn-accent: var(--primary-500);
+	
+	--bg-btn-accent-default: var(--neutral-100);
+    --fg-btn-accent-default: var(--neutral-900);  
+
+	--bg-card:       var(--neutral-0);      
+}
+
+/* dark mode override */
+@media (prefers-color-scheme: mustchange ) {
+	:root {
+		/* css for default bg */
+		--background-default: var(--neutral-900); 
+		--background-primary: var(--primary-500); 
+
+		--background-neutral: var(--neutral-900);
+		--background-footer: var(--neutral-950); /* #2B1315; */
+	
+		/* css mainly for text */
+		--foreground-default: var(--neutral-50);  
+		--foreground-primary: var(--neutral-0); 
+
+		--foreground-muted:   var(--neutral-400);  
+		--foreground-brand:   var(--primary-500);
+
+		--foreground-danger:   var(--danger-500);
+		--foreground-alert: var(--alert-500);  
+		--foreground-success: var(--success-500); 
+		
+		/* css for borders, rings, outline, etc */
+		--border-default: var(--neutral-700);
+		--border-default-accent: var(--neutral-500); 
+
+		--border-primary: var(--primary-600);
+		--border-primary-accent: var(--primary-500); 
+
+		--border-danger: var(--danger-600);
+        --border-danger-accent: var(--danger-500);
+
+        --border-alert: var(--alert-600);
+        --border-alert-accent: var(--alert-500);
+
+        --border-success: var(--success-600);
+        --border-success-accent: var(--success-500);
+
+		/* -------------------------------------------- */
+
+		/* css for shadow rings */
+		--focus-ring-primary: var(--focus-ring-primary-500);
+		--focus-ring-danger: var(--focus-ring-danger-500);
+
+		/* -------------------------------------------- */
+
+		/* custom css for components bg and fg */
+		--bg-btn-default: var(--neutral-600);
+		--fg-btn-default: var(--neutral-0);
+
+		--bg-btn-primary: var(--primary-600);
+		--fg-btn-primary: var(--neutral-0);
+
+		--bg-btn-danger:  var(--danger-600);
+		--fg-btn-danger:  var(--neutral-0);
+
+		--bg-btn-accent: var(--primary-600); 
+        --fg-btn-accent: var(--neutral-0);
+
+		--bg-btn-accent-default: var(--neutral-600);
+    	--fg-btn-accent-default: var(--neutral-0);  
+
+        --bg-btn-outline: transparent;
+        --fg-btn-outline: var(--primary-500);
+        
+        --bg-btn-ghost: transparent;
+        --fg-btn-ghost: var(--neutral-50);
+
+		--bg-card:      var(--neutral-800); 
+	}
+}
+
+/* configuration for tailwindcss classes */
+@theme {
+	/* css for default bg */
+	--color-default:    var(--background-default); /* use className="bg-default" */
+	--color-primary:    var(--background-primary); 
+
+	--color-neutral:    var(--background-neutral);
+	--color-footer:     var(--background-footer);
+
+	/* css mainly for text */
+	--color-default-fg: var(--foreground-default); /* use className="text-default-fg" */
+	--color-primary-fg: var(--foreground-primary);
+
+	--color-muted-fg:   var(--foreground-muted);
+	--color-brand-fg:   var(--foreground-brand);
+	
+	--color-danger-fg:  var(--foreground-danger);
+	--color-alert-fg:   var(--foreground-alert);
+	--color-success-fg: var(--foreground-success);
+
+	/* css for border colors */
+	--color-default-border: var(--border-default); /* use className="border-default-border" */
+	--color-default-accent-border: var(--border-default-accent);
+	--color-primary-border: var(--border-primary);
+	--color-primary-accent-border: var(--border-primary-accent);
+	--color-danger-border: var(--border-danger);
+    --color-danger-accent-border: var(--border-danger-accent);
+    --color-alert-border: var(--border-alert);
+    --color-alert-accent-border: var(--border-alert-accent);
+    --color-success-border: var(--border-success);
+    --color-success-accent-border: var(--border-success-accent);
+
+	/* -------------------------------------------- */
+
+	/* classes for radius and border size */
+	--radius-xs: var(--radius-xs); /* usage className="rounded-xs rounded-t-xs" */
+    --radius-sm: var(--radius-sm);
+    --radius-md: var(--radius-md);
+    --radius-lg: var(--radius-lg);
+    --radius-xl: var(--radius-xl);
+
+	--border-width-xs: var(--border-width-xs); /* usage className="border-xs border-b-xs" */
+    --border-width-sm: var(--border-width-sm);
+    --border-width-md: var(--border-width-md);
+    --border-width-lg: var(--border-width-lg);
+
+	/* classes for shadow rings */
+	--shadow-ring-primary: var(--focus-ring-sm) var(--focus-ring-primary); /* usage className="shadow-ring-sm shadow-ring-primary" */
+	--shadow-ring-danger:  var(--focus-ring-sm) var(--focus-ring-danger);
+	--shadow-ring-gray:    var(--focus-ring-sm) var(--focus-ring-gray);
+
+	/* custom css for elements */
+	--color-card:  var(--bg-card); /* use className="bg-card" */
+
+	--color-btn-primary:    var(--bg-btn-primary); /* use className="bg-btn-primary" */
+    --color-btn-primary-fg: var(--fg-btn-primary);
+    
+    --color-btn-danger:     var(--bg-btn-danger); 
+    --color-btn-danger-fg:  var(--fg-btn-danger);
+
+    --color-btn-default:    var(--bg-btn-default); 
+    --color-btn-default-fg: var(--fg-btn-default);
+
+    --color-btn-outline:    var(--bg-btn-outline); 
+    --color-btn-outline-fg: var(--fg-btn-outline);
+
+	--color-btn-accent:     var(--bg-btn-accent); 
+    --color-btn-accent-fg:  var(--fg-btn-accent);
+
+	--color-btn-accent-default:     var(--bg-btn-accent-default); 
+	--color-btn-accent-default-fg:  var(--fg-btn-accent-default); 
+
+    --color-btn-ghost:      var(--bg-btn-ghost); 
+    --color-btn-ghost-fg:   var(--fg-btn-ghost);
+
+	/* -------------------------------------------- */
+}
