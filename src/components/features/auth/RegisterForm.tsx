@@ -26,12 +26,12 @@ const registerSchema = z.object({
     confirmPassword: z.string(),
     name: z.string()
         .min(1, "Nome não deve ficar vazio.")
-        .max(60, "Nome deve ter no máximo 60 caracteres.")
+        .max(20, "Nome deve ter no máximo 20 caracteres.")
         .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "Nome só pode conter letras."),
     email: z.email("Formato de e-mail inválido."),
     lastName: z.string()
         .min(1, "Sobrenome não deve ficar vazio.")
-        .max(60, "Sobrenome deve ter no máximo 60 caracteres.")
+        .max(40, "Sobrenome deve ter no máximo 40 caracteres.")
         .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "Sobrenome só pode conter letras."),
     phone: z.string()
         .regex(/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/, "Formato de telefone inválido."),
