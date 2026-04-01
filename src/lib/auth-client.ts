@@ -9,8 +9,32 @@ export const authClient = createAuthClient({
                 role: {
                     type: "string",
                     required: false,
-                    defaultValue: "USER",
+                    defaultValue: "USER", 
                     input: false,
+                },
+                lastName: {
+                    type: "string",
+                    required: true, 
+                    input: true,    
+                    returned: false
+                },
+                phone: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                    returned: false
+                },
+                cpf: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                    returned: false
+                },
+                cep: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                    returned: false
                 }
             },
         }),
@@ -18,4 +42,4 @@ export const authClient = createAuthClient({
 })
 
 
-export const { signIn, signUp, useSession, signOut, updateUser } = authClient;
+export const { signIn, signUp, useSession, signOut, updateUser, sendVerificationEmail } = authClient;
