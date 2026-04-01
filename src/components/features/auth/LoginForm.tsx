@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, sendVerificationEmail } from "@/src/lib/auth-client";
+import { signIn, signOut, sendVerificationEmail } from "@/src/lib/auth-client";
 
 import { toast } from "@/src/lib/toast-store";
 import { Input, Button, Label, TextLink, TextButton } from "@/src/components/ui";
@@ -19,11 +19,14 @@ export function LoginForm() {
 	const [isUnverified, setIsUnverified] = useState(false);
     const [resendLoading, setResendLoading] = useState(false);
 
-    const handleEmailLogin = async (e: React.FormEvent) => {
+    const handleEmailLogin = async (e: React.SubmitEvent<HTMLFormElement>) => { /* older React.FormEvent */
             e.preventDefault();
             setLoading(true);
             setIsUnverified(false);
-    
+
+            /* sign out to prevent errors if user trying to login with an already active session */
+            await signOut()
+            
             await signIn.email(
                 {
                     email,
