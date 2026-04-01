@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
-import { Noto_Sans } from "next/font/google";
 import "./globals.css";
+import type { Metadata } from "next";
+
+import { Noto_Sans } from "next/font/google";
+import { Toaster } from "@/src/components/ui/Toaster"
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -15,10 +17,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     return (
         <html
-        lang="en"
-        className={`${notoSans.className} antialiased min-h-screen w-full`}
+            lang="en"
+            className="scroll-smooth"
         >
-        <body className="min-h-full flex flex-col">{children}</body>
+            <body
+                className={`${notoSans.className} antialiased min-h-screen w-full`}
+            >
+                {children}
+                <Toaster position="top-center"/>
+            </body>
         </html>
     );
 }
