@@ -1,63 +1,255 @@
 "use client";
 
-import { useSession, signOut, updateUser } from "@/src/lib/auth-client";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useSession } from "@/src/lib/auth-client";
+
+import Image from "next/image";
+import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
+
+import { Button } from "@/src/components/ui/Button";
+import { TextButton } from "@/src/components/ui/TextButton";
+import { ButtonLink } from "@/src/components/ui/ButtonLink";
+import { Badge } from "@/src/components/ui/Badge";
+import { Dialog } from "@/src/components/ui/Dialog";
+import { Card } from "@/src/components/ui/Card";
+
+import { CreatePetForm } from "@/src/components/features/dashboard/CreatePetForm";
+
+import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
+import { toast } from "@/src/lib/toast-store";
+import { XIcon } from "@/src/components/icons/outline";
+
+interface Pet {
+    id: string;
+    name: string;
+    species: string;
+    gender: string;
+    breed?: string;
+    birthDate: string;
+    weight: number;
+    coatColor: string;
+    chip?: string;
+    adoptionStatus: string;
+    isTemporaryHome: boolean;
+}
 
 export default function DashboardPage() {
-    const router = useRouter();
 
-    /* fields to show update example */
-    const [newName, setNewName] = useState<string>("");
+    const { data: session, error } = useSession();
+    
+    const [pets, setPets] = useState<Pet[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [fetchError, setFetchError] = useState(false);
+    
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const { data: session, isPending, refetch } = useSession();
+    useEffect(() => {
+        fetchPets();
+    }, []);
 
-    if (isPending) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-slate-50">
-                <p className="text-sm font-medium text-slate-500 animate-pulse">Carregando dados...</p>
-            </div>
-        );
-    }
-
-    if (!session) return null;
-
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
-    const handleLogout = async () => {
-        await signOut({ fetchOptions: { onSuccess: () => router.push("/login") } });
-    };
-
-    const handleUpdateUser = async () => {
-        if (newName !== "") {
-            await updateUser({ name: newName }, { onError: (ctx) => alert(ctx.error.message) });
-            await refetch();
-            setNewName("");
+    const fetchPets = async () => {
+        setIsLoading(true);
+        setFetchError(false);
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/me`, {
+                credentials: "include",
+            });
+            if (!response.ok) { /* manually throws backend error */
+                const data = await response.json();
+                throw new Error(data.message || "Erro desconhecido ao carregar pets.");
+            }
+            const data = await response.json();
+            setPets(data);
+        } catch (err: unknown) { 
+            /* this is the standart way to handle errors on the catch block, we should prevent crash if a non-error is thrown */
+            if (err instanceof Error) { 
+                setFetchError(true);
+                toast.warning(err.message);
+                return;
+            }
+            setFetchError(true);
+            toast.warning("Erro desconhecido ao carregar pets.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    const handlePetCreated = () => {
+        setIsDialogOpen(false);
+        fetchPets();
+    };
 
     return (
-        <div className="flex min-h-screen items-start justify-center bg-slate-50 p-4 gap-4 flex-wrap">
-            
-            {/* CARD: DADOS DO USUÁRIO */}
-            <div className="w-full space-y-4 max-w-md bg-white p-8 border text-slate-700">
-                <div className="w-full font-bold text-lg border-b pb-2">Dados do usuário</div>
-                <div className="space-y-1 text-sm">
-                    <p><strong>id:</strong> {session.session.userId}</p>
-                    <p className="truncate"><strong>token:</strong> {session.session.token}</p>
-                    <p><strong>name:</strong> {session.user.name}</p>
-                    <p><strong>role:</strong> {session.user.role}</p>
-                    <p><strong>email:</strong> {session.user.email}</p>
-                    <p>{session.user.emailVerified ? "Verificado ✅" : "Pendente ⚠️"}</p>
-                </div>
-                <button onClick={handleLogout} className="w-full border bg-red-50 text-red-600 py-2 hover:bg-red-100 transition">Sair</button>
-                <div className="pt-4 space-y-2 border-t">
-                    <input type="text" placeholder="novo nome" value={newName} onChange={(e) => setNewName(e.target.value)} className="w-full border bg-slate-50 p-2" />
-                    <button onClick={handleUpdateUser} className="w-full border bg-slate-100 py-2 hover:bg-slate-200 transition">Mudar Nome</button>
-                </div>
+        <div className="w-full flex flex-col p-4 md:p-6 ">
+            <div className="w-full flex justify-between items-center flex-wrap gap-y-2">
+                <h1 className="text-default-fg font-bold text-xl sm:text-2xl lg:text-4xl text-center lg:text-start">
+                    Bem-vindo (a), {session?.user.name}!
+                </h1>
+                <Button 
+                    variant="primary" 
+                    size="sm"
+                    pill="true"
+                    onClick={() => setIsDialogOpen(true)}
+                >
+                    + Cadastrar novo pet
+                </Button>
             </div>
+            
+            <p className="text-muted-fg text-xs sm:text-sm py-4 max-w-164">
+                Esta é sua área do cliente. Aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar
+                consultas para eles. No momento você 
+                {pets.length > 0 ? ` tem ${pets.length} pet${pets.length === 1 ? "" : "s"}.` : " ainda não tem pets cadastrados."}
+            </p>
 
+            {pets.length === 0 &&
+                <div className="flex flex-col items-center justify-center p-4 min-h-88 border-2 border-dashed border-primary-border 
+                    bg-card rounded-xl gap-y-4">
+                    {isLoading ? 
+                        <div className="flex justify-center">
+                            <SpinnerIcon /> 
+                        </div>
+                        : 
+                        fetchError ? 
+                            <>
+                                <div className="text-5xl text-muted-fg">
+                                    <XIcon size={40}/>
+                                </div>
+                                <h2 className="text-default-fg font-medium">
+                                    Erro ao carregar pets
+                                </h2>
+                                <Button
+                                    variant="outline" 
+                                    pill="true"
+                                    onClick={fetchPets}
+                                >
+                                    Tentar novamente
+                                </Button>
+                            </>
+                            :
+                            <>
+                                <div className="text-5xl">
+                                    🐶
+                                </div>
+                                <h2 className="text-default-fg font-medium">
+                                    Nenhum pet cadastrado
+                                </h2>
+                                <Button
+                                    variant="outline" 
+                                    pill="true"
+                                    onClick={() => setIsDialogOpen(true)}
+                                >
+                                    Cadastrar meu primeiro pet
+                                </Button>
+                            </>
+                    }
+                </div>            
+            }
+            
+            {/* must update the pet display here */}
+            {pets.length !== 0 && 
+                <div className="border-2 border-dashed border-default-border rounded-xl h-full">
+                    <div className="flex flex-col w-full max-w-184 justify-self-center justify-center p-4 gap-4">
+                        {pets.map((pet) => (
+                            <Card 
+                                key={pet.id}
+                                className=""
+                                size="lg"
+                            >
+                                <div className="flex w-full">
+                                    <Image 
+                                        className="max-w-24 self-start justify-self-center rounded-full"
+                                        src={pet_avatar_placeholder}
+                                        alt="Foto de perfil do pet"
+                                    />
+                                    <div className="flex flex-col w-full pl-2"> 
+                                        <div className="flex w-full flex-wrap items-center justify-between gap-2 pb-2">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="font-medium text-base sm:text-lg text-default-fg truncate">
+                                                    {pet.name}
+                                                </h3>
+                                                <Badge
+                                                    variant="primary"
+                                                    size="sm"
+                                                    pill="true"
+                                                >
+                                                    {pet.species}
+                                                </Badge>
+                                            </div>
+                                            <p className="text-xs sm:text-sm text-muted-fg flex truncate">
+                                                {pet.isTemporaryHome ? "Lar temporário " : "" }
+                                                { pet.adoptionStatus }
+                                                {/* must update later to properly set status*/}
+                                            </p>
+                                        </div>      
+                                        <div className="flex w-full flex-wrap justify-between max-w-104 gap-2 pb-2">
+                                            <div className="flex flex-col max-w-48">   
+                                                <p className="text-xs sm:text-sm text-muted-fg flex truncate">
+                                                    Raça: {pet.breed}
+                                                </p>
+                                                <p className="text-xs sm:text-sm text-muted-fg flex">
+                                                    Genero: {pet.gender}
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-col">   
+                                                <p className="text-xs sm:text-sm text-muted-fg flex truncate">
+                                                    Peso: {pet.weight} kg
+                                                </p>
+                                                <p className="text-xs sm:text-sm text-muted-fg flex">
+                                                    Cor da pelagem: {pet.coatColor}
+                                                </p>
+                                            </div>
+                                        </div>                           
+                                    </div>
+                                </div>
+                                <div className="flex w-full justify-between flex-wrap gap-y-2">
+                                    <div className="flex flex-col w-full max-w-52">   
+                                        <p className="text-xs sm:text-sm text-muted-fg flex truncate">
+                                            Nascimento: {new Date(pet.birthDate).toLocaleDateString()}
+                                        </p>
+                                        <p className="text-xs sm:text-sm text-muted-fg text-end flex">
+                                            Identificação: {pet.chip === "NO_CHIP" ? pet.chip : "Sem chip"}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex gap-2 items-center">
+                                            <ButtonLink
+                                                variant="outline"
+                                                size="sm"
+                                                href={`/dashboard/neuterings?petId=${pet.id}`}
+                                            >
+                                                Agendar castração
+                                            </ButtonLink>
+                                            <ButtonLink
+                                                variant="primary"
+                                                size="sm"
+                                                href={`/dashboard/schedule?petId=${pet.id}`}
+                                            >
+                                                Agendar consulta
+                                            </ButtonLink>
+                                    </div>
+                                </div>
+                            </Card>
+                        ))}
+                    </div> 
+                </div>
+            }
+
+            <p className="text-muted-fg text-xs sm:text-sm py-4 max-w-164">
+                Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, entre em contato com a clínica para realizar a edição / remoção do pet.
+            </p>
+
+            <Dialog
+                className="text-sm! sm:text-base! max-w-128!"
+                isOpen={isDialogOpen}
+                size="md"
+                onClose={() => setIsDialogOpen(false)}
+                title="Cadastrar novo pet"
+            > 
+                <CreatePetForm 
+                    onSuccess={handlePetCreated} 
+                    onCancel={() => setIsDialogOpen(false)} 
+                />
+            </Dialog>
         </div>
     );
 }
