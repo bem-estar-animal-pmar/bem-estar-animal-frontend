@@ -80,7 +80,7 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="w-full flex flex-col p-4 md:p-6 ">
+        <div className="w-full flex flex-col p-4 md:p-6">
             <div className="w-full flex justify-between items-center flex-wrap gap-y-2">
                 <h1 className="text-default-fg font-bold text-xl sm:text-2xl lg:text-4xl text-center lg:text-start">
                     Bem-vindo (a), {session?.user.name}!
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                                             <ButtonLink
                                                 variant="outline"
                                                 size="sm"
-                                                href={`/dashboard/neuterings?petId=${pet.id}`}
+                                                href={`/dashboard/neuterings/rules?petId=${pet.id}`}
                                             >
                                                 Agendar castração
                                             </ButtonLink>
@@ -239,7 +239,7 @@ export default function DashboardPage() {
             </p>
 
             <Dialog
-                className="text-sm! sm:text-base! max-w-128!"
+                className="text-sm! sm:text-base! max-w-132!"
                 isOpen={isDialogOpen}
                 size="md"
                 onClose={() => setIsDialogOpen(false)}
