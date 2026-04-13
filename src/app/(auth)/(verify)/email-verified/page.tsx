@@ -4,6 +4,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "@/src/lib/auth-client";
 import { useEffect, useState, Suspense } from "react";
 
+import Image from "next/image";
+import animal_logo from "@/public/animal-logo.svg"
+
 import { Loading } from "@/src/components/layout/Loading";
 import { Card, TextButton } from "@/src/components/ui";
 
@@ -82,17 +85,11 @@ const EmailVerifiedContent = () => {
             <main className="flex min-h-screen items-center justify-center bg-default p-2 sm:p-8 md:p-12">
                 <Card className="max-w-200" size="xl">
                     <div className="flex w-full justify-center">
-                        {/* image logo goes here
                         <Image
-                            src={logo}
-                            alt="Logo"
-                            className="dark:hidden w-full max-w-50 h-auto mb-2"
+                            src={animal_logo}
+                            alt="Logo do Bem-estar Animal"
+                            className="w-full max-w-50 h-auto mb-2"
                         />
-                        <Image
-                            src={logo_dark}
-                            alt="Logo"
-                            className="hidden dark:block w-full max-w-50 h-auto mb-2"
-                        /> */}
                     </div>
                     <h1 className="p-4 text-center text-2xl font-semibold text-default-fg">
                         Link Inválido
@@ -124,17 +121,11 @@ const EmailVerifiedContent = () => {
             <main className="flex min-h-screen items-center justify-center bg-default p-2 sm:p-8 md:p-12">
                 <Card className="max-w-200" size="xl">
                     <div className="flex w-full justify-center">
-                        {/* image logo goes here
                         <Image
-                            src={logo}
-                            alt="Logo"
-                            className="dark:hidden w-full max-w-50 h-auto mb-2"
+                            src={animal_logo}
+                            alt="Logo do Bem-estar Animal"
+                            className="w-full max-w-50 h-auto mb-2"
                         />
-                        <Image
-                            src={logo_dark}
-                            alt="Logo"
-                            className="hidden dark:block w-full max-w-50 h-auto mb-2"
-                        /> */}
                     </div>
                     <h1 className="p-4 text-center text-2xl font-semibold text-success-fg">
                         Email Verificado!
@@ -165,17 +156,11 @@ const EmailVerifiedContent = () => {
         <main className="flex min-h-screen items-center justify-center bg-default p-2 sm:p-8 md:p-12">
             <Card className="max-w-200" size="xl">
                 <div className="flex w-full justify-center">
-                    {/* image logo goes here
                     <Image
-                        src={logo}
-                        alt="Logo"
-                        className="dark:hidden w-full max-w-50 h-auto mb-2"
+                        src={animal_logo}
+                        alt="Logo do Bem-estar Animal"
+                        className="w-full max-w-50 h-auto mb-2"
                     />
-                    <Image
-                        src={logo_dark}
-                        alt="Logo"
-                        className="hidden dark:block w-full max-w-50 h-auto mb-2"
-                    /> */}
                 </div>
                 <h1 className="p-4 text-center text-2xl font-semibold text-success-fg">
                     Email Verificado!

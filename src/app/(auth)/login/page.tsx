@@ -1,5 +1,8 @@
 "use client";
 
+import Image from "next/image";
+import animal_logo from "@/public/animal-logo.svg"
+
 import { Card, TextLink } from "@/src/components/ui";
 import { LoginForm } from "@/src/components/features/auth/LoginForm";
 
@@ -8,21 +11,15 @@ export default function LoginPage() {
         <main className="flex min-h-screen items-center justify-center bg-default p-2 sm:p-8 md:p-12">
                 <Card className="max-w-120" size="xl">
                     <div className="flex w-full justify-center">
-                        {/* logo image goes here
                         <Image
-                            src={logo}
-                            alt="Logo"
-                            className="dark:hidden w-full max-w-50 h-auto mb-8"
+                            src={animal_logo}
+                            alt="Logo do Bem-estar Animal"
+                            className="w-full max-w-50 h-auto mb-8"
                         />
-                        <Image
-                            src={logo_dark}
-                            alt="Logo"
-                            className="hidden dark:block w-full max-w-50 h-auto mb-8"
-                        /> */}
                     </div>
 
                     <h1 className="text-center text-lg text-default-fg font-semibold">
-                        Entrar em Veterinária São Bento
+                        Entrar em Bem Estar Animal
                     </h1>
 
                     <p className="text-center text-xs text-muted-fg font-medium"> 

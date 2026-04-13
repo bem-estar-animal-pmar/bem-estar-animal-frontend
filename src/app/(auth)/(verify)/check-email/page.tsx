@@ -3,6 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
+import Image from "next/image";
+import animal_logo from "@/public/animal-logo.svg"
+
 import { Card, TextButton } from "@/src/components/ui";
 
 export default function CheckEmailPage() {
@@ -32,17 +35,11 @@ export default function CheckEmailPage() {
         <main className="flex min-h-screen items-center justify-center bg-default p-2 sm:p-8 md:p-12">
             <Card className="max-w-200" size="xl">
                 <div className="flex w-full justify-center">
-                    {/* logo image goes here
-                    <Image
-                        src={sao_bento_logo}
-                        alt="Logo"
-                        className="dark:hidden w-full max-w-50 h-auto mb-2"
-                    />
-                    <Image
-                        src={sao_bento_logo_dark}
-                        alt="Logo"
-                        className="hidden dark:block w-full max-w-50 h-auto mb-2"
-                    /> */}
+					<Image
+						src={animal_logo}
+						alt="Logo do Bem-estar Animal"
+						className="w-full max-w-50 h-auto mb-2"
+					/>
                 </div>
                 <h1 className="p-4 text-center text-2xl font-semibold text-default-fg">
                     Verifique seu e-mail

@@ -91,7 +91,7 @@ export default function DashboardPage() {
         <div className="w-full flex flex-col p-4 md:p-6">
             <div className="w-full flex justify-between items-center flex-wrap gap-y-2 pb-4">
                 <h1 className="text-default-fg font-semibold text-xl sm:text-2xl lg:text-3xl text-center lg:text-start">
-                    Bem-vindo (a), <span className="text-primary-fg">Luan{session?.user.name}</span>!
+                    Bem-vindo (a), <span className="text-primary-fg">{session?.user.name}</span>!
                 </h1>
                 <Button 
                     variant="primary" 
