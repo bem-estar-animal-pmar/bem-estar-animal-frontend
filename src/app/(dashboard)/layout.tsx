@@ -5,9 +5,11 @@ import { AuthGuard } from "@/src/components/features/auth/AuthGuard"
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
         <AuthGuard>
-            <main className="min-h-screen w-full flex flex-col max-w-384">
+            <div className="flex justify-center w-full">
+                <main className="min-h-screen w-full flex flex-col max-w-384">
                     {children}
-            </main>
+                </main>
+            </div>
         </AuthGuard>
     );
 }
