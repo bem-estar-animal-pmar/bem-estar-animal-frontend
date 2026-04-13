@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Image from "next/image"
+import { ApiError } from "@/src/lib/api-error"
 
 import { DatePicker } from "@/src/components/ui/DatePicker"
 import { Label } from "@/src/components/ui/Label"
@@ -68,6 +69,9 @@ const NeuteringContent = () => {
     const [selectedPetId, setSelectedPetId] = useState(petIdParam);
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
     const [selectedPeriod, setSelectedPeriod] = useState<"MORNING" | "AFTERNOON" | "">("");
+    const [animalFastAccepted, setAnimalFastAccepted] = useState(false);
+    const [animalChipAccepted, setAnimalChipAccepted] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
 
     /* loading states */
     const [isLoading, setIsLoading] = useState(true);
@@ -97,8 +101,8 @@ const NeuteringContent = () => {
                     petsResponse.json(),
                     appointmentsResponse.json()
                 ]);
-                const message = !petsResponse.ok ? petsData.message : appointmentsData.message;
-                throw new Error(message || "Falha ao carregar os dados iniciais.");
+                const data = !petsResponse.ok ? petsData : appointmentsData;
+                throw new ApiError(data.message, data.code, data.details);
             }
             
             const [petsData, appointmentsData] = await Promise.all([
@@ -110,11 +114,18 @@ const NeuteringContent = () => {
             setAppointments(appointmentsData);
 
         } catch (err: unknown) { 
-            if (err instanceof Error) {
+            if (err instanceof ApiError) {
+                if (err.details) {
+                    const firstError = err.details[0]?.message
+                    toast.warning(err.message, {
+                        message: firstError
+                    })
+                    return;
+                }
                 toast.warning(err.message);
-                return;
+                return
             }
-            toast.warning("Erro desconhecido ao carregar dados da página.");
+            toast.warning("Erro desconhecido ao carregar dados.");
         } finally {
             setIsLoading(false);
         }
@@ -135,10 +146,14 @@ const NeuteringContent = () => {
                 selectedDate.getDate()
             ));
 
+            // Adicione os booleanos no payload
             const payload = {
                 petId: selectedPetId,
                 scheduleDate: utcDate.toISOString(),
                 period: selectedPeriod,
+                animalFastAccepted,
+                animalChipAccepted,
+                termsAccepted
             };
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/neuterings`, {
@@ -151,20 +166,30 @@ const NeuteringContent = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || "Erro ao solicitar castração.");
+                throw new ApiError(data.message, data.code, data.details);
             }
 
             toast.success("Solicitação de castração enviada com sucesso!");
             setIsDialogOpen(false);
             setSelectedDate(undefined);
             setSelectedPeriod("");
+            setAnimalFastAccepted(false);
+            setAnimalChipAccepted(false);
+            setTermsAccepted(false);
             
             loadInitialData();
 
         } catch (err: unknown) {
-            if (err instanceof Error) {
+            if (err instanceof ApiError) {
+                if (err.details) {
+                    const firstError = err.details[0]?.message
+                    toast.warning(err.message, {
+                        message: firstError
+                    })
+                    return;
+                }
                 toast.warning(err.message);
-                return;
+                return
             }
             toast.warning("Erro desconhecido ao solicitar castração.");
         } finally {
@@ -184,21 +209,36 @@ const NeuteringContent = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || "Erro ao cancelar agendamento.");
+                throw new ApiError(data.message, data.code, data.details);
             }
 
             toast.success("Agendamento cancelado com sucesso.");
             loadInitialData();
 
         } catch (err: unknown) {
-            if (err instanceof Error) {
+            if (err instanceof ApiError) {
+                if (err.details) {
+                    const firstError = err.details[0]?.message
+                    toast.warning(err.message, {
+                        message: firstError
+                    })
+                    return;
+                }
                 toast.warning(err.message);
-                return;
+                return
             }
             toast.warning("Erro desconhecido ao cancelar.");
         } finally {
             setIsCanceling(null);
         }
+    };
+
+    const handleCloseDialog = () => {
+        setIsDialogOpen(false);
+        setAnimalFastAccepted(false);
+        setAnimalChipAccepted(false);
+        setTermsAccepted(false);
+        setSelectedPeriod(""); 
     };
 
     if (isLoading) {
@@ -412,10 +452,16 @@ const NeuteringContent = () => {
                 <Dialog 
                     size="md"
                     isOpen={isDialogOpen}
-                    onClose={() => setIsDialogOpen(false)}
+                    onClose={handleCloseDialog}
                     title="Concluir agendamento"
                 >
-                    <div className="flex flex-col gap-4">
+                    <form 
+                        className="flex flex-col gap-4"
+                        onSubmit={(e) => {
+                            e.preventDefault(); // Impede o reload da página
+                            handleCreateAppointment();
+                        }}
+                    >
                         <p className="text-sm text-muted-fg">
                             Escolha o período desejado para a castração do seu pet no dia <strong>{selectedDate?.toLocaleDateString()}</strong>.
                         </p>
@@ -434,23 +480,59 @@ const NeuteringContent = () => {
                             />
                         </div>
 
+                        <div className="gap-2 flex flex-col">
+                            <label className="flex items-start gap-2 text-sm text-default-fg cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    required 
+                                    checked={animalFastAccepted}
+                                    onChange={(e) => setAnimalFastAccepted(e.target.checked)}
+                                    className="" 
+                                />
+                                <span className="text-xs text-default-fg">Estou ciente e de acordo com as instruções de jejum (alimentar e hídrico) necessárias para a cirurgia.</span>
+                            </label>
+
+                            <label className="flex items-start gap-2 text-sm text-default-fg cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    required 
+                                    checked={animalChipAccepted}
+                                    onChange={(e) => setAnimalChipAccepted(e.target.checked)}
+                                    className="" 
+                                />
+                                <span className="text-xs text-default-fg">Autorizo a microchipagem obrigatória do meu animal durante o procedimento.</span>
+                            </label>
+
+                            <label className="flex items-start gap-2 text-sm text-default-fg cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    required 
+                                    checked={termsAccepted}
+                                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                                    className="" 
+                                />
+                                <span className="text-xs text-default-fg">Li e aceito os termos de responsabilidade do agendamento.</span>
+                            </label>
+                        </div>
+
                         <div className="flex justify-end gap-2 mt-4">
                             <Button 
+                                type="button" // Essencial para não submeter o formulário por acidente
                                 variant="outline" 
-                                onClick={() => setIsDialogOpen(false)}
+                                onClick={handleCloseDialog}
                                 disabled={isSubmitting}
                             >
                                 Voltar
                             </Button>
                             <Button 
+                                type="submit" // Transforma o botão no gatilho de validação HTML
                                 variant="primary" 
-                                onClick={handleCreateAppointment}
                                 disabled={isSubmitting || !selectedPeriod}
                             >
                                 {isSubmitting ? <SpinnerIcon /> : "Confirmar Agendamento"}
                             </Button>
                         </div>
-                    </div>
+                    </form>
                 </Dialog>
             </div>   
         </>
