@@ -12,7 +12,7 @@ import { Button } from "@/src/components/ui/Button"
 import { Card } from "@/src/components/ui/Card"
 import { Dialog } from "@/src/components/ui/Dialog"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
-import { Badge } from "@/src/components/ui"
+import { Badge, TextLink } from "@/src/components/ui"
 
 import { getTodayInBrasilia } from "@/src/lib/scheduling"
 import { toast } from "@/src/lib/toast-store"
@@ -117,15 +117,15 @@ const NeuteringContent = () => {
             if (err instanceof ApiError) {
                 if (err.details) {
                     const firstError = err.details[0]?.message
-                    toast.warning(err.message, {
+                    toast.danger(err.message, {
                         message: firstError
                     })
                     return;
                 }
-                toast.warning(err.message);
+                toast.danger(err.message);
                 return
             }
-            toast.warning("Erro desconhecido ao carregar dados.");
+            toast.danger("Erro desconhecido ao carregar dados.");
         } finally {
             setIsLoading(false);
         }
@@ -191,7 +191,7 @@ const NeuteringContent = () => {
                 toast.warning(err.message);
                 return
             }
-            toast.warning("Erro desconhecido ao solicitar castração.");
+            toast.danger("Erro desconhecido ao solicitar castração.");
         } finally {
             setIsSubmitting(false);
         }
@@ -227,7 +227,7 @@ const NeuteringContent = () => {
                 toast.warning(err.message);
                 return
             }
-            toast.warning("Erro desconhecido ao cancelar.");
+            toast.danger("Erro desconhecido ao cancelar.");
         } finally {
             setIsCanceling(null);
         }
@@ -256,16 +256,24 @@ const NeuteringContent = () => {
             <div className="w-full flex flex-col p-4 md:p-6">
                 <div className="w-full flex justify-between items-center flex-wrap gap-y-2">
                     <h1 className="text-default-fg font-semibold text-xl sm:text-2xl lg:text-3xl text-center lg:text-start">
-                        Agendamento de castração
+                        Agendamento de <span className="text-primary-fg">castração</span>
                     </h1>
                 </div>
 
-                <p className="text-muted-fg text-sm sm:text-base pt-4 pb-6 max-w-164">
-                    Nesta página você pode fazer pedidos de castração para o seu pet. O agendamento está sujeito a aprovação 
-                    e limites de vagas disponíveis por dia e espécie.
-                </p>
+                <span className="text-muted-fg text-sm sm:text-base pt-4 pb-6 ">
+                    Nesta página você pode realizar pedidos de castração para o seu pet. O agendamento está sujeito a aprovação 
+                    e limites de vagas disponíveis por dia e espécie. Certifique-se de ter lido as {" "}
+                    <TextLink 
+                        href={`/rules/neutering-rules${ petIdParam ? `?petId=${petIdParam}` : ""}`} 
+                        variant="primary"
+                        className="underline! text-sm! sm:text-base!"
+                    >
+                         regras de agendamento de castração
+                    </TextLink>  {" "}
+                    antes de prosseguir.
+                </span>
 
-                <div className="flex flex-col w-full gap-8 items-start pb-8">
+                <div className="flex flex-col w-full gap-8 mb-8 items-start pb-8 border-2 border-dashed border-primary-border rounded-xl p-4">
                     
                     <div className="flex flex-col sm:flex-row w-full gap-4 max-w-2xl">
                         <div className="flex flex-col w-full sm:w-1/2 gap-2">
@@ -376,7 +384,7 @@ const NeuteringContent = () => {
                     </div>
                 </div>
 
-                <div className="w-full pt-8 border-t border-default-border">
+                <div className="w-full p-4 md:p-6 border border-primary-border rounded-md ">
                     <h2 className="text-default-fg font-bold text-lg sm:text-xl pb-6">
                         Histórico de agendamentos
                     </h2>

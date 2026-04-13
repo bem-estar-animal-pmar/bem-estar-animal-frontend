@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "@/src/lib/auth-client";
+import { ApiError } from "@/src/lib/api-error";
 
 import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
 import { Button } from "@/src/components/ui/Button";
-import { TextButton } from "@/src/components/ui/TextButton";
 import { ButtonLink } from "@/src/components/ui/ButtonLink";
 import { Badge } from "@/src/components/ui/Badge";
 import { Dialog } from "@/src/components/ui/Dialog";
@@ -54,21 +54,29 @@ export default function DashboardPage() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/me`, {
                 credentials: "include",
             });
-            if (!response.ok) { /* manually throws backend error */
-                const data = await response.json();
-                throw new Error(data.message || "Erro desconhecido ao carregar pets.");
-            }
+
             const data = await response.json();
+
+            if (!response.ok) {
+                throw new ApiError(data.message, data.code, data.details);
+            }
+
             setPets(data);
         } catch (err: unknown) { 
-            /* this is the standart way to handle errors on the catch block, we should prevent crash if a non-error is thrown */
-            if (err instanceof Error) { 
+            if (err instanceof ApiError) {
                 setFetchError(true);
-                toast.warning(err.message);
-                return;
+                if (err.details) {
+                    const firstError = err.details[0]?.message
+                    toast.danger(err.message, {
+                        message: firstError
+                    })
+                    return;
+                }
+                toast.danger(err.message);
+                return
             }
             setFetchError(true);
-            toast.warning("Erro desconhecido ao carregar pets.");
+            toast.danger("Erro desconhecido ao carregar pets.");
         } finally {
             setIsLoading(false);
         }
@@ -81,9 +89,9 @@ export default function DashboardPage() {
 
     return (
         <div className="w-full flex flex-col p-4 md:p-6">
-            <div className="w-full flex justify-between items-center flex-wrap gap-y-2">
-                <h1 className="text-default-fg font-bold text-xl sm:text-2xl lg:text-4xl text-center lg:text-start">
-                    Bem-vindo (a), {session?.user.name}!
+            <div className="w-full flex justify-between items-center flex-wrap gap-y-2 pb-4">
+                <h1 className="text-default-fg font-semibold text-xl sm:text-2xl lg:text-3xl text-center lg:text-start">
+                    Bem-vindo (a), <span className="text-primary-fg">Luan{session?.user.name}</span>!
                 </h1>
                 <Button 
                     variant="primary" 
@@ -95,10 +103,15 @@ export default function DashboardPage() {
                 </Button>
             </div>
             
-            <p className="text-muted-fg text-xs sm:text-sm py-4 max-w-164">
-                Esta é sua área do cliente. Aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar
-                consultas para eles. No momento você 
+            <p className="text-muted-fg text-xs sm:text-sm max-w-320">
+                Esta é sua área do usuário, aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar 
+                consultas para eles. Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, 
+                entre em contato com a clínica para realizar a edição / remoção do pet.
+            </p>
+            <p className="text-muted-fg text-xs sm:text-sm py-4">
+                No momento você 
                 {pets.length > 0 ? ` tem ${pets.length} pet${pets.length === 1 ? "" : "s"}.` : " ainda não tem pets cadastrados."}
+
             </p>
 
             {pets.length === 0 &&
@@ -215,7 +228,7 @@ export default function DashboardPage() {
                                             <ButtonLink
                                                 variant="outline"
                                                 size="sm"
-                                                href={`/dashboard/neuterings/rules?petId=${pet.id}`}
+                                                href={`/rules/neutering-rules?petId=${pet.id}`}
                                             >
                                                 Agendar castração
                                             </ButtonLink>
@@ -233,10 +246,6 @@ export default function DashboardPage() {
                     </div> 
                 </div>
             }
-
-            <p className="text-muted-fg text-xs sm:text-sm py-4 max-w-164">
-                Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, entre em contato com a clínica para realizar a edição / remoção do pet.
-            </p>
 
             <Dialog
                 className="text-sm! sm:text-base! max-w-132!"

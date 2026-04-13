@@ -14,21 +14,21 @@ export const Navbar = () => {
                 Pets
             </NavLink>
             <NavLink
-                href="/dashboard/neuterings/rules"
+                href="/rules/neutering-rules"
                 variant="primary"
                 pill="true"
             >
                 Castrar
             </NavLink>
             <NavLink
-                href="/dashboard/emergencies/rules"
+                href="/rules/emergency-rules"
                 variant="primary"
                 pill="true"
             >
                 Consulta
             </NavLink>
             <NavLink
-                href="/dashboard/adoptions/rules"
+                href="/rules/adption-rules"
                 variant="primary"
                 pill="true"
             >
