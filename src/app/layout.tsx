@@ -18,7 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <html
             lang="en"
-            className="scroll-smooth"
+            data-scroll-behavior="smooth"
         >
             <body
                 className={`${notoSans.className} antialiased min-h-screen w-full`}
