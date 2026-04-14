@@ -10,6 +10,7 @@ export const Navbar = () => {
                 href="/dashboard"
                 variant="primary"
                 pill="true"
+                className="px-2! sm:px-3!"
             >
                 Pets
             </NavLink>
@@ -17,13 +18,15 @@ export const Navbar = () => {
                 href="/rules/neutering-rules"
                 variant="primary"
                 pill="true"
+                className="px-2! sm:px-3!"
             >
-                Castrar
+                Castração
             </NavLink>
             <NavLink
                 href="/rules/emergency-rules"
                 variant="primary"
                 pill="true"
+                className="px-2! sm:px-3!"
             >
                 Consulta
             </NavLink>
@@ -31,6 +34,7 @@ export const Navbar = () => {
                 href="/rules/adption-rules"
                 variant="primary"
                 pill="true"
+                className="px-2! sm:px-3!"
             >
                 Adoção
             </NavLink>

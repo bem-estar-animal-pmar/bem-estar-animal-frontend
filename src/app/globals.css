@@ -61,8 +61,8 @@
 	--focus-ring-md: 0 0 0 4px;
 	--focus-ring-lg: 0 0 0 6px;
 	
-	--focus-ring-primary-500: rgba(255, 77, 82, 0.35);
-    --focus-ring-primary-600: rgba(238, 42, 44, 0.6); 
+	--focus-ring-primary-500: rgba(122, 156, 76, 0.35);  /* #7A9C4C */
+	--focus-ring-primary-600: rgba(96, 124, 60, 0.6);    /* #607C3C */
 	
 	--focus-ring-danger-500: rgba(239, 68, 68, 0.5); 
 	--focus-ring-danger-600: rgba(239, 68, 68, 0.6);

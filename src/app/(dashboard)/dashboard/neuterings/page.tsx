@@ -46,7 +46,6 @@ interface NeuteringAppointment {
     }
 }
 
-// Mapa de status injetando classes diretas do Tailwind para criar Badges manuais
 const statusMap: Record<string, { label: string; classes: string }> = {
     PENDING: { label: "Pendente", classes: "bg-yellow-100 text-yellow-800 border-yellow-200" },
     AWAITING_EXAMS: { label: "Aguardando Exames", classes: "bg-blue-100 text-blue-800 border-blue-200" },
@@ -253,7 +252,7 @@ const NeuteringContent = () => {
 
     return (
         <>
-            <div className="w-full flex flex-col p-4 md:p-6">
+            <div className="w-full flex flex-col">
                 <div className="w-full flex justify-between items-center flex-wrap gap-y-2">
                     <h1 className="text-default-fg font-semibold text-xl sm:text-2xl lg:text-3xl text-center lg:text-start">
                         Agendamento de <span className="text-primary-fg">castração</span>
@@ -273,7 +272,7 @@ const NeuteringContent = () => {
                     antes de prosseguir.
                 </span>
 
-                <div className="flex flex-col w-full gap-8 mb-8 items-start pb-8 border-2 border-dashed border-primary-border rounded-xl p-4">
+                <div className="flex flex-col w-full gap-8 mb-8 items-center pb-8 border-2 border-dashed border-primary-border rounded-xl p-4">
                     
                     <div className="flex flex-col sm:flex-row w-full gap-4 max-w-2xl">
                         <div className="flex flex-col w-full sm:w-1/2 gap-2">
@@ -316,7 +315,7 @@ const NeuteringContent = () => {
                     <div className="w-full max-w-2xl">
                         <Label className="pb-2 block">Detalhes do pet selecionado</Label>
                         <Card 
-                            className="w-full" 
+                            className="w-full shadow-sm!" 
                             size="md"
                         >
                             <div className="flex w-full">
@@ -401,7 +400,7 @@ const NeuteringContent = () => {
                                     <Card 
                                         key={appt.id} 
                                         size="sm"
-                                        className="flex flex-row flex-wrap p-4 gap-4 items-start sm:items-center justify-between w-full"
+                                        className="flex flex-row flex-wrap p-4 gap-4 items-start sm:items-center justify-between shadow-sm!"
                                     >
                                         <div className="flex items-center flex-wrap gap-y-1 gap-x-4 w-full justify-between">
                                             <div className="flex">

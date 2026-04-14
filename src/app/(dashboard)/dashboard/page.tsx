@@ -88,7 +88,7 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="w-full flex flex-col p-4 md:p-6">
+        <div className="w-full flex flex-col">
             <div className="w-full flex justify-between items-center flex-wrap gap-y-2 pb-4">
                 <h1 className="text-default-fg font-semibold text-xl sm:text-2xl lg:text-3xl text-center lg:text-start">
                     Bem-vindo (a), <span className="text-primary-fg">{session?.user.name}</span>!
@@ -103,7 +103,7 @@ export default function DashboardPage() {
                 </Button>
             </div>
             
-            <p className="text-muted-fg text-xs sm:text-sm max-w-320">
+            <p className="text-muted-fg text-xs sm:text-sm max-w-316">
                 Esta é sua área do usuário, aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar 
                 consultas para eles. Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, 
                 entre em contato com a clínica para realizar a edição / remoção do pet.
