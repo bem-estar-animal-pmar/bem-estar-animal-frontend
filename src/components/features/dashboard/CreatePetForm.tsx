@@ -4,15 +4,17 @@ import React from "react";
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { format } from "date-fns"
+
+import { CreatePetFormProps } from "@/src/constants/interfaces";
+import { CreatePetFormData, createPetSchema } from "@/src/constants/schemas";
+import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions } from "@/src/constants/constants";
 
 import { Select } from "../../ui/Select";
 import { DatePicker } from "../../ui/DatePicker";
 import { Input } from "@/src/components/ui/Input";
 import { Button } from "@/src/components/ui/Button";
 import { Label } from "@/src/components/ui/Label";
-
 import { toast } from "@/src/lib/toast-store";
 
 /* birthDate is now a Date object because of our custom DatePicker, that means it will convert the date to our timezone,
@@ -24,131 +26,6 @@ want to include pet's birthday on its data showing)
 when sending to backend -> gets date with utc -3 for example, strips utc -3, backends saves as date utc-0
 when getting from backend -> gets date with utc 0, strips utc 0, frontend MUST show as date utc -3 without actually 
 converting */
-
-const checkDogBreed = (breed: string) => {
-    return ![ "ABYSSINIAN", "ANGORA", "BENGAL", "BIRMAN", "CHARTREUX", "RUSSIAN_BLUE", "HIMALAYAN", "MAINE_COON", "MUNCHKIN", "SPHYNX", "SIAMESE", "RAGDOLL", "SCOTTISH_FOLD", "AMERICAN_BURMESE", "PERSIAN", "EXOTIC_SHORTHAIR"
-    ].includes(breed);
-}
-
-const checkCatBreed = (breed: string) => {
-    return [ "MIXED_BREED", "ABYSSINIAN", "ANGORA", "BENGAL", "BIRMAN", "CHARTREUX", "RUSSIAN_BLUE", "HIMALAYAN", "MAINE_COON", "MUNCHKIN", "SPHYNX", "SIAMESE", "RAGDOLL", "SCOTTISH_FOLD", "AMERICAN_BURMESE", "PERSIAN", "EXOTIC_SHORTHAIR"
-    ].includes(breed);
-}
-
-const createPetSchema = z.object({
-    name: z.string()
-        .min(1, "O nome do pet é obrigatório.")
-        .max(60, "O nome deve ter no máximo 60 caracteres."),
-    species: z.enum(["DOG", "CAT"]),
-    gender: z.enum(["MALE", "FEMALE"]),
-    breed: z.enum(["AKITA","AMERICAN_STAFFORDSHIRE_TERRIER","AMERICAN_BULLY","BASSET_HOUND","BEAGLE","AUSTRALIAN_CATTLE_DOG","BERNESE_MOUNTAIN_DOG","BORDER_COLLIE","BORDER_TERRIER","BOSTON_TERRIER","BOXER","FRENCH_BULLDOG","ENGLISH_BULLDOG","BULL_TERRIER","CANE_CORSO","CAVALIER_KING_CHARLES_SPANIEL","CHIHUAHUA","CHOW_CHOW","AMERICAN_COCKER_SPANIEL","ENGLISH_COCKER_SPANIEL","COLLIE","DACHSHUND","DALMATIAN","DOBERMAN","DOGO_ARGENTINO","GREAT_DANE","FILA_BRASILEIRO","FOX_TERRIER","GOLDEN_RETRIEVER","SIBERIAN_HUSKY","JACK_RUSSELL_TERRIER","LABRADOODLE","LABRADOR_RETRIEVER","LHASA_APSO","POMERANIAN","MALTESE","GERMAN_SHEPHERD","AUSTRALIAN_SHEPHERD","MINIATURE_PINSCHER","PIT_BULL","POODLE","PUG","ROTTWEILER","SHIH_TZU","STAFFORDSHIRE_BULL_TERRIER","NEWFOUNDLAND","SCOTTISH_TERRIER","WEIMARANER","WELSH_CORGI","YORKSHIRE_TERRIER","ABYSSINIAN","ANGORA","BENGAL","BIRMAN","CHARTREUX","RUSSIAN_BLUE","HIMALAYAN","MAINE_COON","MUNCHKIN","SPHYNX","SIAMESE","RAGDOLL","SCOTTISH_FOLD","AMERICAN_BURMESE","PERSIAN","EXOTIC_SHORTHAIR","MIXED_BREED"]),
-    weight: z.number("O peso é obrigatório.").positive("O peso deve ser maior que zero."),
-    coatColor: z.string()
-        .min(1, "A cor da pelagem é obrigatória.")
-        .max(28, "A cor da pelagem de ter no máximo 28 caracteres."),
-    birthDate: z.date("A data de nascimento é obrigatória."), 
-}).refine((data) => {
-    if (data.species === "DOG") {
-        return checkDogBreed(data.breed);
-    }
-    if (data.species === "CAT") {
-        return checkCatBreed(data.breed);
-    }
-    return true;
-}, {
-  message: "A raça selecionada não combina com a espécie.",
-  path: ["breed"],
-});
-
-type CreatePetFormData = z.infer<typeof createPetSchema>;
-
-interface CreatePetFormProps {
-    onSuccess: () => void;
-    onCancel: () => void;
-}
-
-const speciesOptions = [
-    { value: "DOG", label: "Cachorro" },
-    { value: "CAT", label: "Gato" },
-];
-
-const genderOptions = [
-    { value: "MALE", label: "Macho" },
-    { value: "FEMALE", label: "Fêmea" },
-];
-
-const breedOptions = [
-  { value: "AKITA", label: "Akita" },
-  { value: "AMERICAN_STAFFORDSHIRE_TERRIER", label: "American Staffordshire Terrier" },
-  { value: "AMERICAN_BULLY", label: "American Bully" },
-  { value: "BASSET_HOUND", label: "Basset Hound" },
-  { value: "BEAGLE", label: "Beagle" },
-  { value: "AUSTRALIAN_CATTLE_DOG", label: "Boiadeiro Australiano" },
-  { value: "BERNESE_MOUNTAIN_DOG", label: "Boiadeiro Bernês" },
-  { value: "BORDER_COLLIE", label: "Border Collie" },
-  { value: "BORDER_TERRIER", label: "Border Terrier" },
-  { value: "BOSTON_TERRIER", label: "Boston Terrier" },
-  { value: "BOXER", label: "Boxer" },
-  { value: "FRENCH_BULLDOG", label: "Buldogue Francês" },
-  { value: "ENGLISH_BULLDOG", label: "Buldogue Inglês" },
-  { value: "BULL_TERRIER", label: "Bull Terrier" },
-  { value: "CANE_CORSO", label: "Cane Corso" },
-  { value: "CAVALIER_KING_CHARLES_SPANIEL", label: "Cavalier King Charles Spaniel" },
-  { value: "CHIHUAHUA", label: "Chihuahua" },
-  { value: "CHOW_CHOW", label: "Chow Chow" },
-  { value: "AMERICAN_COCKER_SPANIEL", label: "Cocker Spaniel Americano" },
-  { value: "ENGLISH_COCKER_SPANIEL", label: "Cocker Spaniel Inglês" },
-  { value: "COLLIE", label: "Collie" },
-  { value: "DACHSHUND", label: "Dachshund" },
-  { value: "DALMATIAN", label: "Dálmata" },
-  { value: "DOBERMAN", label: "Dobermann" },
-  { value: "DOGO_ARGENTINO", label: "Dogo Argentino" },
-  { value: "GREAT_DANE", label: "Dogue Alemão" },
-  { value: "FILA_BRASILEIRO", label: "Fila Brasileiro" },
-  { value: "FOX_TERRIER", label: "Fox Terrier" },
-  { value: "GOLDEN_RETRIEVER", label: "Golden Retriever" },
-  { value: "SIBERIAN_HUSKY", label: "Husky Siberiano" },
-  { value: "JACK_RUSSELL_TERRIER", label: "Jack Russell Terrier" },
-  { value: "LABRADOODLE", label: "Labradoodle" },
-  { value: "LABRADOR_RETRIEVER", label: "Labrador Retriever" },
-  { value: "LHASA_APSO", label: "Lhasa Apso" },
-  { value: "POMERANIAN", label: "Lulu da Pomerânia" },
-  { value: "MALTESE", label: "Maltês" },
-  { value: "GERMAN_SHEPHERD", label: "Pastor Alemão" },
-  { value: "AUSTRALIAN_SHEPHERD", label: "Pastor Australiano" },
-  { value: "MINIATURE_PINSCHER", label: "Pinscher" },
-  { value: "PIT_BULL", label: "Pitbull" },
-  { value: "POODLE", label: "Poodle" },
-  { value: "PUG", label: "Pug" },
-  { value: "ROTTWEILER", label: "Rottweiler" },
-  { value: "SHIH_TZU", label: "Shih Tzu" },
-  { value: "STAFFORDSHIRE_BULL_TERRIER", label: "Staffordshire Bull Terrier" },
-  { value: "NEWFOUNDLAND", label: "Terra Nova" },
-  { value: "SCOTTISH_TERRIER", label: "Terrier Escocês" },
-  { value: "WEIMARANER", label: "Weimaraner" },
-  { value: "WELSH_CORGI", label: "Welsh Corgi" },
-  { value: "YORKSHIRE_TERRIER", label: "Yorkshire Terrier" },
-
-  { value: "ABYSSINIAN", label: "Abissínio" },
-  { value: "ANGORA", label: "Angorá" },
-  { value: "BENGAL", label: "Bengal" },
-  { value: "BIRMAN", label: "Birmanês" },
-  { value: "CHARTREUX", label: "Chartreux" },
-  { value: "RUSSIAN_BLUE", label: "Azul Russo" },
-  { value: "HIMALAYAN", label: "Himalaio" },
-  { value: "MAINE_COON", label: "Maine Coon" },
-  { value: "MUNCHKIN", label: "Munchkin" },
-  { value: "SPHYNX", label: "Sphynx" },
-  { value: "SIAMESE", label: "Siamês" },
-  { value: "RAGDOLL", label: "Ragdoll" },
-  { value: "SCOTTISH_FOLD", label: "Scottish Fold" },
-  { value: "AMERICAN_BURMESE", label: "Burmês Americano" },
-  { value: "PERSIAN", label: "Persa" },
-  { value: "EXOTIC_SHORTHAIR", label: "Exótico de Pelo Curto" },
-  
-  { value: "MIXED_BREED", label: "Sem raça definida" },
-];
-
 
 export const CreatePetForm = ({ onSuccess, onCancel }: CreatePetFormProps) => {
     const { control, watch, setValue, formState, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreatePetFormData>({
@@ -171,11 +48,14 @@ export const CreatePetForm = ({ onSuccess, onCancel }: CreatePetFormProps) => {
             return [];
         }
 
-        return breedOptions.filter((option) => {
-            if (selectedSpecies === "DOG") return checkDogBreed(option.value);
-            if (selectedSpecies === "CAT") return checkCatBreed(option.value);
-            return false;
-        });
+        if (selectedSpecies === "DOG") {
+            return dogBreedOptions;
+        }
+        if (selectedSpecies === "CAT") {
+            return catBreedOptions;
+        }
+
+        return [];
     }, [selectedSpecies]);
 
     const handleCreatePet = async (data: CreatePetFormData) => {
@@ -250,7 +130,7 @@ return (
                                         setValue("breed", undefined as any);
                                     }}
                                     onBlur={onBlur}
-                                    options={speciesOptions}
+                                    options={petSpeciesOptions}
                                     variant={errors.species ? "danger" : "default"}
                                 />
                             )}
@@ -271,7 +151,7 @@ return (
                                 value={value}
                                 onChange={onChange}
                                 onBlur={onBlur}
-                                options={genderOptions}
+                                options={petGenderOptions}
                                 variant={errors.gender ? "danger" : "default"}
                             />
                         )}

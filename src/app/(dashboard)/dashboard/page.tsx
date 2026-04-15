@@ -19,18 +19,7 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { toast } from "@/src/lib/toast-store";
 import { XIcon } from "@/src/components/icons/outline";
 
-interface Pet {
-    id: string;
-    name: string;
-    species: string;
-    gender: string;
-    breed?: string;
-    birthDate: string;
-    weight: number;
-    coatColor: string;
-    chip?: string;
-    adoptionStatus: string;
-}
+import type { Pet } from "@/src/constants/interfaces"
 
 export default function DashboardPage() {
 
@@ -217,7 +206,7 @@ export default function DashboardPage() {
                                             Nascimento: {new Date(pet.birthDate).toLocaleDateString()}
                                         </p>
                                         <p className="text-xs sm:text-sm text-muted-fg text-end flex">
-                                            Identificação: {pet.chip === "NO_CHIP" ? pet.chip : "Sem chip"}
+                                            Identificação: {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}
                                         </p>
                                     </div>
 
@@ -232,7 +221,7 @@ export default function DashboardPage() {
                                             <ButtonLink
                                                 variant="primary"
                                                 size="sm"
-                                                href={`/dashboard/schedule?petId=${pet.id}`}
+                                                href={`/rules/emergency-rules?petId=${pet.id}`}
                                             >
                                                 Agendar consulta
                                             </ButtonLink>
