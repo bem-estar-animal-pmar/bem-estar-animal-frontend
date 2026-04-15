@@ -30,7 +30,6 @@ interface Pet {
     coatColor: string;
     chip?: string;
     adoptionStatus: string;
-    isTemporaryHome: boolean;
 }
 
 export default function DashboardPage() {
@@ -189,9 +188,7 @@ export default function DashboardPage() {
                                                 </Badge>
                                             </div>
                                             <p className="text-xs sm:text-sm text-muted-fg flex truncate">
-                                                {pet.isTemporaryHome ? "Lar temporário " : "" }
-                                                { pet.adoptionStatus }
-                                                {/* must update later to properly set status*/}
+                                                {pet.adoptionStatus}
                                             </p>
                                         </div>      
                                         <div className="flex w-full flex-wrap justify-between max-w-104 gap-2 pb-2">

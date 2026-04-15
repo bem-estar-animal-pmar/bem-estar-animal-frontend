@@ -30,7 +30,6 @@ interface Pet {
     coatColor: string;
     chip?: string;
     adoptionStatus: string;
-    isTemporaryHome: boolean;
 }
 
 interface NeuteringAppointment {
@@ -341,7 +340,6 @@ const NeuteringContent = () => {
                                                     </Badge>
                                                 </div>
                                                 <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                    {activePet.isTemporaryHome ? "Lar temporário " : "" }
                                                     {activePet.adoptionStatus}
                                                 </p>
                                             </div>      
