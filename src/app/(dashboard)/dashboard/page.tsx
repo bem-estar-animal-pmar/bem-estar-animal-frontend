@@ -91,7 +91,7 @@ export default function DashboardPage() {
                 </Button>
             </div>
             
-            <p className="text-muted-fg text-xs sm:text-sm max-w-316">
+            <p className="text-muted-fg text-sm sm:text-base max-w-316">
                 Esta é sua área do usuário, aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar 
                 consultas para eles. Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, 
                 entre em contato com a clínica para realizar a edição / remoção do pet.
