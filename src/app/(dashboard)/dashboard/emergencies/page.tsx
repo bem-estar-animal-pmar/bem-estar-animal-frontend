@@ -85,7 +85,6 @@ const EmergencyContent = () => {
         loadInitialData();
     }, []);
 
-    // Quando o usuário muda o tipo de requisição, resetamos os campos
     useEffect(() => {
         if (requestType === "MY_PET" && selectedPetId) {
             const pet = pets.find(p => p.id === selectedPetId);
@@ -204,61 +203,61 @@ const EmergencyContent = () => {
     }
 
     return (
-        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 py-8 px-4">
-            
-            <div className="flex-1 flex flex-col gap-8">
-                
-                <section>
-                    <h1 className="text-default-fg font-bold text-2xl sm:text-3xl lg:text-4xl pb-4">
-                        Atendimento <span className="text-primary-fg">Emergencial</span>
+        <div className="w-full flex flex-col lg:flex-row gap-x-8">
+            <div className="flex-1 flex flex-col">
+                <div className="w-full flex justify-between items-center flex-wrap gap-y-2 pb-4">
+                    <h1 className="text-default-fg font-semibold text-xl sm:text-2xl lg:text-3xl text-center lg:text-start">
+                        Atendimento de <span className="text-primary-fg">emergencia</span>
                     </h1>
-                    <p className="text-muted-fg text-sm sm:text-base leading-relaxed">
-                        Este serviço é destinado ao socorro de animais em situação de rua ou casos graves de pets já cadastrados. 
-                        Nossa equipe avaliará a gravidade e a disponibilidade de vagas para definir o horário do atendimento. 
-                        Por favor, forneça o máximo de detalhes possível.
-                    </p>
-                </section>
+                </div>
 
-                <section className="mt-4">
-                    <h2 className="text-default-fg font-bold text-xl mb-4">Como funciona o atendimento?</h2>
-                    <div className="flex flex-col md:flex-row gap-4 justify-between border-b pb-8">
-                        <div className="flex flex-col gap-2 relative">
-                            <div className="w-4 h-4 rounded-full bg-primary-fg mb-2"></div>
+                <p className="text-muted-fg text-sm sm:text-base pb-1">
+                    Este serviço é destinado ao socorro de animais em situação de rua ou casos graves de pets já cadastrados. 
+                </p>
+                <p className="text-muted-fg text-sm sm:text-base pb-4">
+                    Nossa equipe avaliará a gravidade e a disponibilidade de vagas para definir o horário do atendimento. Por favor, forneça o máximo de detalhes possível.     
+                </p>
+
+
+                <section className="pb-8">
+                    <h2 className="text-default-fg font-bold text-lg sm:text-xl lg:text-2xl mb-4">Como funciona o atendimento?</h2>
+                    <div className="flex flex-col md:flex-row gap-4 justify-between">
+                        <div className="flex flex-col gap-1 sm:gap-2 relative">
+                            <div className="w-3 sm:w-4 h-3 sm:h-4 rounded-full bg-primary-fg mb-1 sm:mb-2"></div>
                             <h3 className="font-semibold text-sm">1. Solicitação</h3>
                             <p className="text-xs text-muted-fg">Você descreve a situação e o porte do animal pelo formulário ao lado.</p>
                         </div>
-                        <div className="flex flex-col gap-2 relative">
-                            <div className="w-4 h-4 rounded-full bg-gray-300 mb-2"></div>
+                        <div className="flex flex-col gap-1 sm:gap-2 relative">
+                            <div className="w-3 sm:w-4 h-3 sm:h-4 rounded-full bg-gray-300 mb-1 sm:mb-2"></div>
                             <h3 className="font-semibold text-sm">2. Avaliação</h3>
                             <p className="text-xs text-muted-fg">Nossa equipe avalia a gravidade e define o horário de encaixe na clínica.</p>
                         </div>
-                        <div className="flex flex-col gap-2 relative">
-                            <div className="w-4 h-4 rounded-full bg-gray-300 mb-2"></div>
+                        <div className="flex flex-col gap-1 sm:gap-2 relative">
+                            <div className="w-3 sm:w-4 h-3 sm:h-4 rounded-full bg-gray-300 mb-1 sm:mb-2"></div>
                             <h3 className="font-semibold text-sm">3. Atendimento</h3>
                             <p className="text-xs text-muted-fg">Você leva o animal até a clínica e nós realizamos todos os procedimentos.</p>
                         </div>
                     </div>
                 </section>
 
-                <section>
-                    <h2 className="text-default-fg font-bold text-xl pb-6 border-b border-primary-border mb-6">
-                        Meus Pedidos de Atendimento
+                <section className="w-full p-4 md:p-6 border border-primary-border rounded-md hidden lg:block">
+                    <h2 className="text-default-fg font-bold text-lg sm:text-xl pb-6">
+                        Histórico de agendamentos
                     </h2>
                     
-                    {appointments.length === 0 ? (
+                    {appointments.length === 0 ? 
                         <div className="bg-muted-bg p-6 rounded-lg text-center border border-dashed border-primary-border">
                             <p className="text-muted-fg text-sm">Você ainda não possui solicitações emergenciais.</p>
                         </div>
-                    ) : (
+                        : 
                         <div className="flex flex-col gap-4">
                             {appointments.map((appt) => {
-                                const statusInfo = statusMap[appt.status] || { label: appt.status, classes: "bg-gray-100" };
-                                const displayDate = appt.scheduleDate 
-                                    ? new Date(appt.scheduleDate).toLocaleDateString() 
-                                    : "Aguardando triagem";
+                                const statusInfo = statusMap[appt.status];
+                                const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
+                                const period = appt.period ? appt.period === "MORNING" ? "Manhã" : "Tarde" : " "
 
                                 return (
-                                    <Card key={appt.id} className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                                    <Card key={appt.id} className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shadow-sm!">
                                         <div className="flex flex-col gap-1">
                                             <div className="flex items-center gap-2">
                                                 <Badge variant="primary" size="sm" pill="true">
@@ -283,7 +282,7 @@ const EmergencyContent = () => {
                                             <div className="text-xs text-right">
                                                 <p className="text-default-fg font-medium">{displayDate}</p>
                                                 {appt.period && (
-                                                    <p className="text-muted-fg">Período da {appt.period === "MORNING" ? "Manhã" : "Tarde"}</p>
+                                                    <p className="text-muted-fg">{period}</p>
                                                 )}
                                             </div>
                                         </div>
@@ -291,22 +290,22 @@ const EmergencyContent = () => {
                                 )
                             })}
                         </div>
-                    )}
+                    }
                 </section>
             </div>
 
-            <aside className="w-full lg:w-114 relative">
-                <Card className="sticky top-8 shadow-xl! border-t-4 border-t-red-600 rounded-2xl p-6 flex flex-col gap-6">
-                    <div>
-                        <h2 className="text-xl font-bold text-default-fg mb-1">Novo Atendimento</h2>
+            <aside className="flex md:max-w-124 lg:max-w-108 self-center pb-8">
+                <Card className="border-t-4 border-primary-border rounded-2xl p-6 flex flex-col">
+                    <div className="pb-4">
+                        <h2 className="text-xl font-semibold text-default-fg mb-1">Solicitar atendimento</h2>
                         <p className="text-sm text-muted-fg">Preencha os dados abaixo para solicitar uma avaliação clínica.</p>
                     </div>
 
-                    <div className="flex w-full p-1 bg-gray-100 rounded-lg">
+                    <div className="flex w-full p-1 bg-gray-100 rounded-lg mb-4">
                         <button
                             type="button"
                             onClick={() => setRequestType("STRAY")}
-                            className={`flex-1 text-sm py-2 rounded-md transition-colors font-medium ${
+                            className={`flex-1 text-sm py-2 rounded-md transition-colors font-medium cursor-pointer ${
                                 requestType === "STRAY" ? "bg-white shadow-sm text-default-fg" : "text-muted-fg hover:text-default-fg"
                             }`}
                         >
@@ -315,7 +314,7 @@ const EmergencyContent = () => {
                         <button
                             type="button"
                             onClick={() => setRequestType("MY_PET")}
-                            className={`flex-1 text-sm py-2 rounded-md transition-colors font-medium ${
+                            className={`flex-1 text-sm py-2 rounded-md transition-colors font-medium cursor-pointer ${
                                 requestType === "MY_PET" ? "bg-white shadow-sm text-default-fg" : "text-muted-fg hover:text-default-fg"
                             }`}
                         >
@@ -437,6 +436,59 @@ const EmergencyContent = () => {
                     </form>
                 </Card>
             </aside>
+
+            <section className="w-full p-4 md:p-6 border border-primary-border rounded-md block lg:hidden">
+                <h2 className="text-default-fg font-bold text-lg sm:text-xl pb-6">
+                    Histórico de agendamentos
+                </h2>
+                
+                {appointments.length === 0 ? 
+                    <div className="bg-muted-bg p-6 rounded-lg text-center border border-dashed border-primary-border">
+                        <p className="text-muted-fg text-sm">Você ainda não possui solicitações emergenciais.</p>
+                    </div>
+                    : 
+                    <div className="flex flex-col gap-4">
+                        {appointments.map((appt) => {
+                            const statusInfo = statusMap[appt.status];
+                            const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
+                            const period = appt.period ? appt.period === "MORNING" ? "Manhã" : "Tarde" : " "
+
+                            return (
+                                <Card key={appt.id} className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shadow-sm!">
+                                    <div className="flex flex-col gap-1">
+                                        <div className="flex items-center gap-2">
+                                            <Badge variant="primary" size="sm" pill="true">
+                                                {appt.species === "DOG" ? "Cachorro" : "Gato"}
+                                            </Badge>
+                                            <span className="text-xs text-muted-fg">
+                                                Porte {appt.size === "SMALL" ? "Pequeno" : appt.size === "MEDIUM" ? "Médio" : "Grande"}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm font-medium text-default-fg mt-1">
+                                            {appt.pet ? `Pet: ${appt.pet.name}` : "Animal de rua"}
+                                        </p>
+                                        <p className="text-xs text-muted-fg line-clamp-1 max-w-md">
+                                            Motivo: {appt.description}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex flex-col items-start sm:items-end gap-2 shrink-0 w-full sm:w-auto">
+                                        <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusInfo.classes}`}>
+                                            {statusInfo.label}
+                                        </span>
+                                        <div className="text-xs text-right">
+                                            <p className="text-default-fg font-medium">{displayDate}</p>
+                                            {appt.period && (
+                                                <p className="text-muted-fg">{period}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </Card>
+                            )
+                        })}
+                    </div>
+                }
+            </section>
         </div>
     )
 }
