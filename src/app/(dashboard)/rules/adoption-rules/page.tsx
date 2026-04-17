@@ -1,0 +1,137 @@
+"use client"
+import { ButtonLink } from "@/src/components/ui/ButtonLink"
+import { Card } from "@/src/components/ui/Card"
+import { TextLink } from "@/src/components/ui"
+
+import Image from "next/image"
+import adoption_one from "@/public/adoptionone.webp"
+import adoption_two from "@/public/adoptiontwo.webp"
+import adoption_three from "@/public/adoptionthree.webp"
+import adoption_four from "@/public/adoptionfour.webp"
+
+export default function AdoptionRulesPage() {
+    return (
+        <div className="w-full flex flex-col">
+                
+            <div className="flex flex-col w-full pb-8">
+                <h1 className="text-default-fg font-semibold text-xl sm:text-2xl md:text-3xl pb-4">
+                    Regulamento e instruções <span className="text-primary-fg">para adoção</span>
+                </h1>
+
+                <p className="text-muted-fg text-sm md:text-base pb-2">
+                    O Bem-Estar Animal disponibiliza um serviço de vitrine de adoção para pessoas que encontraram animais em situação rua 
+                    cadastrarem esses pets para adoção. É importante reforçar que <span className="text-default-fg font-medium">nós não disponibilizamos abrigo</span> para 
+                    os pets em questão.
+                </p>
+                
+                <p className="text-muted-fg text-sm md:text-base pb-8">
+                    Ao cadastrar o pet para adoção, a pessoa se responsabiliza por ser lar temporário do pet durante todo o processo até que o pet seja adotado.
+                </p>
+
+                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
+                    Fluxo de adoção
+                </h2>
+                    
+                <div className="flex flex-col items-center lg:items-start lg:flex-row gap-4 pb-8">
+                
+                    <div className="flex gap-4 flex-col sm:flex-row justify-center h-full">
+                        <Card className="flex flex-col p-5 gap-2 shadow-sm max-w-92!">
+                            <Image
+                                src={adoption_one}
+                                alt="Exemplo 1 Adoção"
+                                className="w-full max-w-64 self-center h-auto mb-2"
+                            />
+                            <h3 className="font-semibold text-base text-default-fg z-10">1. Solicitação</h3>
+                            <p className="text-sm text-muted-fg z-10">
+                                Você cadastra os dados e a foto do animal no sistema e cria um pedido formal para colocá-lo para adoção.
+                            </p>
+                        </Card>
+
+                        <Card className="flex flex-col p-5 gap-2 shadow-sm max-w-92!">
+                            <Image
+                                src={adoption_two}
+                                alt="Exemplo 2 Adoção"
+                                className="w-full max-w-64 self-center h-auto mb-2"
+                            />
+                            <h3 className="font-semibold text-base text-default-fg z-10">2. Triagem e Contato</h3>
+                            <p className="text-sm text-muted-fg z-10">
+                                Nossa equipe clínica avaliará o pedido e entrará em contato com você para confirmar os dados e validar a solicitação.
+                            </p>
+                        </Card>
+                    </div>
+
+                    <div className="flex gap-4 flex-col sm:flex-row justify-center h-full">
+                        <Card className="flex flex-col p-5 gap-2 shadow-sm  max-w-92!">
+                            <Image
+                                src={adoption_three}
+                                alt="Exemplo 3 Adoção"
+                                className="w-full max-w-64 self-center h-auto mb-2"
+                            />
+                            <h3 className="font-semibold text-base text-default-fg z-10">3. Vitrine Pública</h3>
+                            <p className="text-sm text-muted-fg z-10">
+                                Após aprovado, o status muda para "Para Adoção" e o pet passa a ser exibido na vitrine pública do site para interessados.
+                            </p>
+                        </Card>
+
+                        <Card className="flex flex-col p-5 gap-2 shadow-sm max-w-92!">
+                            <Image
+                                src={adoption_four}
+                                alt="Exemplo 4 Adoção"
+                                className="w-full max-w-64 self-center h-auto mb-2"
+                            />
+                            <h3 className="font-semibold text-base text-default-fg z-10">4. Lar Temporário</h3>
+                            <p className="text-sm text-muted-fg z-10">
+                                Durante todo esse tempo, a responsabilidade pelo bem-estar e abrigo do animal é 100% sua, como lar temporário.
+                            </p>
+                        </Card>
+                    </div>
+
+
+                </div>
+
+                <div className="bg-card border-l border-l-primary-border border-y border-r border-primary-border rounded-xl p-6 mb-8">
+                    <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
+                        Deveres e Regras do Lar Temporário
+                    </h2>
+                    <ul className="list-disc pl-5 flex flex-col gap-3 text-sm md:text-base text-default-fg">
+                        <li><span className="font-semibold">Responsabilidade Integral:</span> Ao solicitar a inclusão de um pet na vitrine, você assume automaticamente o papel de lar temporário até a conclusão da adoção.</li>
+                        <li><span className="font-semibold">Alimentação e Cuidados:</span> Fornecer alimentação adequada, água fresca, abrigo seguro contra sol e chuva, e manter o ambiente limpo.</li>
+                        <li><span className="font-semibold">Saúde:</span> Informar imediatamente à clínica caso o animal apresente qualquer problema de saúde durante a estadia no lar temporário.</li>
+                        <li><span className="font-semibold">Contato Atualizado:</span> Manter seu número de telefone e WhatsApp atualizados no sistema, pois os possíveis adotantes serão direcionados a você.</li>
+                        <li><span className="font-semibold">Adoção Concluída:</span> Quando encontrar um adotante, é sua responsabilidade comunicar a equipe ou atualizar o status no painel para remover o animal da vitrine.</li>
+                        <li><span className="font-semibold">Abandono é Crime:</span> O abandono de animais nas ruas ou nas dependências da clínica configura crime ambiental (Lei Federal nº 9.605/98), sujeito a penalidades severas.</li>
+                    </ul>
+                </div>
+
+                <p className="text-muted-fg text-sm md:text-base pb-8">
+                    Nota: o serviço descrito refere-se apenas à colocar animais para adoção, se você deseja 
+                    <span className="font-medium text-default-fg"> adotar um pet</span>, clique aqui.
+                </p>
+
+                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
+                    Documentações em PDF
+                </h2>
+
+                <div className="gap-y-2 flex flex-col pb-8">
+                    <TextLink target="_blank" variant="primary" className="underline! w-fit" href="#">
+                        - Termo de Responsabilidade - Lar Temporário
+                    </TextLink>
+                    <TextLink target="_blank" variant="primary" className="underline! w-fit" href="#">
+                        - Guia de Cuidados Básicos
+                    </TextLink>
+                </div>
+
+                <div className="flex w-full justify-end">
+                    <ButtonLink 
+                        variant="primary" 
+                        size="lg" 
+                        href="/dashboard/adoptions"
+                    >
+                        Li e concordo com as regras
+                    </ButtonLink>
+                </div>
+
+            </div>
+        </div>
+    )
+}

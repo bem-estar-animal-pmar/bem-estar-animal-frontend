@@ -31,7 +31,7 @@ export const Navbar = () => {
                 Consulta
             </NavLink>
             <NavLink
-                href="/rules/adption-rules"
+                href="/rules/adoption-rules"
                 variant="primary"
                 pill="true"
                 className="px-2! sm:px-3!"
