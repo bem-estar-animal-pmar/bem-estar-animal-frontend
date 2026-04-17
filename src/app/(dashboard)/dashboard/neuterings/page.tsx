@@ -148,7 +148,7 @@ const NeuteringContent = () => {
                     </h1>
                 </div>
 
-                <p className="text-muted-fg text-sm sm:text-base pb-2">
+                <p className="text-muted-fg text-sm sm:text-base pb-8">
                     Nesta página você pode realizar pedidos de castração para o seu pet. O agendamento está sujeito a aprovação 
                     e limites de vagas disponíveis por dia e espécie. Certifique-se de ter lido as {" "}
                     <TextLink 
@@ -160,21 +160,6 @@ const NeuteringContent = () => {
                     </TextLink>  {" "}
                     antes de prosseguir.
                 </p>
-
-                <Accordion 
-                    title="Informações sobre o processo de castração"
-                    size="md"
-                    className="mb-4! shadow-none!"
-                >
-                    <p className="text-muted-fg text-xs sm:text-sm pb-2">
-                        Ao fazer a solicitação, o pedido ficará como pendente será avaliado pela clínica e entraremos em contato para confirmá-lo.  Após 
-                        o agendamento ser confirmado, o solicitante deve levar o animal à clínica no dia e período combinados. 
-                    </p>
-                    <p className="text-muted-fg text-xs sm:text-sm">
-                        Excessões são casos onde os animais precisam de exames (ler regras), nesse caso os pedidos ficam como 'aguardando 
-                        exames', e o solicitante deve realizá-los e entrar em contato com a clínica para confirmar o agendamento.
-                    </p>
-                </Accordion>
 
                 <div className="flex flex-col w-full gap-8 mb-4 md:mb-8 items-center border-2 border-dashed border-primary-border rounded-xl p-4">
                     <div className="flex flex-col sm:flex-row w-full gap-4 max-w-2xl">
@@ -258,7 +243,7 @@ const NeuteringContent = () => {
                                                 </div>
                                                 <div className="flex flex-col">   
                                                     <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                        Peso: {activePet.weight} kg
+                                                        Peso: {activePet.weight} kg ({activePet.size})
                                                     </p>
                                                     <p className="text-xs sm:text-sm text-muted-fg flex">
                                                         Pelagem: {activePet.coatColor}
@@ -285,7 +270,7 @@ const NeuteringContent = () => {
                     </div>
                 </div>
 
-                <div className="w-full p-4 md:p-6 border border-primary-border rounded-md ">
+                <div className="w-full p-4 md:p-6 border border-primary-border rounded-md mb-8">
                     <h2 className="text-default-fg font-bold text-lg sm:text-xl pb-6">
                         Histórico de agendamentos
                     </h2>
@@ -353,6 +338,21 @@ const NeuteringContent = () => {
                         </div>
                     )}
                 </div>
+
+                <Accordion 
+                    title="Informações sobre o processo de castração"
+                    size="md"
+                    className="shadow-none!"
+                >
+                    <p className="text-muted-fg text-xs sm:text-sm pb-2">
+                        Ao fazer a solicitação, o pedido ficará como pendente será avaliado pela clínica e entraremos em contato para confirmá-lo.  Após 
+                        o agendamento ser confirmado, o solicitante deve levar o animal à clínica no dia e período combinados. 
+                    </p>
+                    <p className="text-muted-fg text-xs sm:text-sm">
+                        Excessões são casos onde os animais precisam de exames (ler regras), nesse caso os pedidos ficam como 'aguardando 
+                        exames', e o solicitante deve realizá-los e entrar em contato com a clínica para confirmar o agendamento.
+                    </p>
+                </Accordion>
 
                 <Dialog 
                     size="md"

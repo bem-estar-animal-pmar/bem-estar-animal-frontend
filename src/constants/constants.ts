@@ -10,6 +10,12 @@ export const petGenderOptions = [
     { value: "FEMALE", label: "Fêmea" },
 ];
 
+export const petSizeOptions = [
+    { value: "SMALL", label: "Pequeno" },
+    { value: "MEDIUM", label: "Médio" },
+    { value: "LARGE", label: "Grande" },
+];
+
 export const catBreedOptions = [
     { value: "ABYSSINIAN", label: "Abissínio" },
     { value: "ANGORA", label: "Angorá" },
@@ -93,4 +99,14 @@ export const neuteringStatusMap: Record<string, { label: string; classes: string
     COMPLETED: { label: "Concluído", classes: "bg-emerald-100! text-emerald-800! border-emerald-200!" },
     CANCELLED: { label: "Cancelado", classes: "bg-gray-100! text-gray-800! border-gray-200!" },
     NO_SHOW: { label: "Não Compareceu", classes: "bg-red-100! text-red-800! border-red-200!" },
+};
+
+/* emergencies */
+
+export const emergenciesStatusMap: Record<string, { label: string; classes: string }> = {
+    PENDING: { label: "Em Análise", classes: "bg-yellow-100 text-yellow-800 border-yellow-200" },
+    CONFIRMED: { label: "Agendado", classes: "bg-green-100 text-green-800 border-green-200" },
+    COMPLETED: { label: "Atendido", classes: "bg-emerald-100 text-emerald-800 border-emerald-200" },
+    CANCELLED: { label: "Cancelado", classes: "bg-gray-100 text-gray-800 border-gray-200" },
+    NO_SHOW: { label: "Não Compareceu", classes: "bg-red-100 text-red-800 border-red-200" },
 };

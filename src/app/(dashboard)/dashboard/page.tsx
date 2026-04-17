@@ -191,7 +191,7 @@ export default function DashboardPage() {
                                             </div>
                                             <div className="flex flex-col">   
                                                 <p className="text-xs sm:text-sm text-muted-fg flex truncate">
-                                                    Peso: {pet.weight} kg
+                                                    Peso: {pet.weight} kg ({pet.size})
                                                 </p>
                                                 <p className="text-xs sm:text-sm text-muted-fg flex">
                                                     Cor da pelagem: {pet.coatColor}

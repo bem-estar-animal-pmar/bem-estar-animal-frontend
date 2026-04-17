@@ -8,6 +8,7 @@ export interface Pet {
     breed?: string;
     birthDate: string;
     weight: number;
+    size: string;
     coatColor: string;
     chip?: string;
     adoptionStatus: string;
@@ -31,4 +32,27 @@ export interface NeuteringAppointment {
         gender: string;
         breed: string;
     }
+}
+
+/* emergencies */
+
+export interface EmergencyAppointment {
+    id: string;
+    status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+    species: "DOG" | "CAT";
+    size: "SMALL" | "MEDIUM" | "LARGE";
+    description: string;
+    scheduleDate?: string;
+    period?: "MORNING" | "AFTERNOON";
+    createdAt: string;
+    pet?: { 
+        id: string;
+        name: string;
+    };
+}
+
+export interface RequestEmergencyFormProps {
+    pets: Pet[];
+    defaultPetId: string;
+    onSuccess: () => void;
 }

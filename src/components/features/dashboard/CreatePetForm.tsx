@@ -8,7 +8,7 @@ import { format } from "date-fns"
 
 import { CreatePetFormProps } from "@/src/constants/interfaces";
 import { CreatePetFormData, createPetSchema } from "@/src/constants/schemas";
-import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions } from "@/src/constants/constants";
+import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions } from "@/src/constants/constants";
 
 import { Select } from "../../ui/Select";
 import { DatePicker } from "../../ui/DatePicker";
@@ -36,6 +36,7 @@ export const CreatePetForm = ({ onSuccess, onCancel }: CreatePetFormProps) => {
             gender: undefined,
             breed: undefined,
             weight: 0,
+            size: undefined,
             coatColor: "",
             birthDate: undefined, 
         },
@@ -136,7 +137,7 @@ return (
                             )}
                         />
                         {errors.species && <span className="text-danger-fg text-sm">{errors.species.message}</span>}
-                    </div>
+                </div>
 
                 <div className="flex-1">
                     <Label htmlFor="gender">Gênero</Label>
@@ -208,21 +209,43 @@ return (
                 </div>
             </div>
 
-            <div>
-                <Label htmlFor="coatColor">Cor da pelagem</Label>
-                <Controller
-                    name="coatColor"
-                    control={control}
-                    render={({ field }) => (
-                    <Input
-                        id="coatColor"
-                        placeholder="Ex: Preto, Caramelo..."
-                        {...field}
-                        variant={errors.coatColor ? "danger" : "default"}
+            <div className="flex gap-4 w-full">
+                <div className="w-2/4">
+                    <Label htmlFor="coatColor">Cor da pelagem</Label>
+                    <Controller
+                        name="coatColor"
+                        control={control}
+                        render={({ field }) => (
+                        <Input
+                            id="coatColor"
+                            placeholder="Ex: Preto, Branco..."
+                            {...field}
+                            variant={errors.coatColor ? "danger" : "default"}
+                        />
+                        )}
                     />
-                    )}
-                />
-                {errors.coatColor && <span className="text-danger-fg text-sm">{errors.coatColor.message}</span>}
+                    {errors.coatColor && <span className="text-danger-fg text-sm">{errors.coatColor.message}</span>}
+                </div>
+                <div className="w-2/4">
+                    <Label htmlFor="size">Porte</Label>
+                    <Controller
+                        name="size"
+                        control={control}
+                        render={({ field: { value, onChange, name, onBlur } }) => (
+                        <Select
+                            id="size"
+                            name={name}
+                            placeholder={"Selecione a porte..."}
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            options={petSizeOptions}
+                            variant={errors.size ? "danger" : "default"}
+                        />
+                        )}
+                    />
+                    {errors.size && <span className="text-danger-fg text-sm">{errors.size.message}</span>}
+                </div>
             </div>
 
             <div>
