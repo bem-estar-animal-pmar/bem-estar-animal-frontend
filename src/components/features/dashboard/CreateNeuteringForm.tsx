@@ -9,14 +9,14 @@ import { Button } from "@/src/components/ui/Button"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { toast } from "@/src/lib/toast-store"
 
-interface NeuteringDialogFormProps {
+interface NeuteringFormProps {
     onCancel: () => void;
     onSuccess: () => void;
     petId: string;
     scheduleDate: Date | undefined;
 }
 
-export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }: NeuteringDialogFormProps) => {
+export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }: NeuteringFormProps) => {
     const [selectedPeriod, setSelectedPeriod] = useState<"MORNING" | "AFTERNOON" | "">("");
     const [animalFastAccepted, setAnimalFastAccepted] = useState(false);
     const [animalChipAccepted, setAnimalChipAccepted] = useState(false);

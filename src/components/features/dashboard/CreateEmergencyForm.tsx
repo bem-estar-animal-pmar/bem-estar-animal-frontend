@@ -11,8 +11,14 @@ import { Card } from "@/src/components/ui/Card";
 import { Textarea } from "@/src/components/ui/TextArea";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
-import { RequestEmergencyFormProps } from "@/src/constants/interfaces";
 import { petSizeOptions, petSpeciesOptions } from "@/src/constants/constants";
+import { Pet } from "@/src/constants/interfaces";
+
+export interface RequestEmergencyFormProps {
+    pets: Pet[];
+    defaultPetId: string;
+    onSuccess: () => void;
+}
 
 export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEmergencyFormProps) => {
     const [targetSelection, setTargetSelection] = useState("STRAY");

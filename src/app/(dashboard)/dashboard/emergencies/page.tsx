@@ -11,7 +11,7 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { CreateEmergencyForm } from "@/src/components/features/dashboard/CreateEmergencyForm"
 
 import { Pet, EmergencyAppointment } from "@/src/constants/interfaces"
-import { emergenciesStatusMap } from "@/src/constants/constants"
+import { emergencyStatusMap } from "@/src/constants/constants"
 
 const EmergencyContent = () => {
     const searchParams = useSearchParams();
@@ -115,7 +115,7 @@ const EmergencyContent = () => {
                         : 
                         <div className="flex flex-col gap-4">
                             {appointments.map((appt) => {
-                                const statusInfo = emergenciesStatusMap[appt.status];
+                                const statusInfo = emergencyStatusMap[appt.status];
                                 const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
                                 const period = appt.period ? appt.period === "MORNING" ? "Manhã" : "Tarde" : " "
 
@@ -176,7 +176,7 @@ const EmergencyContent = () => {
                     : 
                     <div className="flex flex-col gap-4">
                         {appointments.map((appt) => {
-                            const statusInfo = emergenciesStatusMap[appt.status];
+                            const statusInfo = emergencyStatusMap[appt.status];
                             const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
                             const period = appt.period ? appt.period === "MORNING" ? "Manhã" : "Tarde" : " "
 

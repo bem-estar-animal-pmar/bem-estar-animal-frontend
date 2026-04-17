@@ -18,20 +18,11 @@ export default function AdoptionRulesPage() {
                     Regulamento e instruções <span className="text-primary-fg">para adoção</span>
                 </h1>
 
-                <p className="text-muted-fg text-sm md:text-base pb-2">
+                <p className="text-muted-fg text-sm md:text-base pb-4">
                     O Bem-Estar Animal disponibiliza um serviço de vitrine de adoção para pessoas que encontraram animais em situação rua 
                     cadastrarem esses pets para adoção. É importante reforçar que <span className="text-default-fg font-medium">nós não disponibilizamos abrigo</span> para 
                     os pets em questão.
                 </p>
-                
-                <p className="text-muted-fg text-sm md:text-base pb-8">
-                    Ao cadastrar o pet para adoção, a pessoa se responsabiliza por ser lar temporário do pet durante todo o processo até que o pet seja adotado.
-                </p>
-
-                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
-                    Fluxo de adoção
-                </h2>
-                    
                 <div className="flex flex-col items-center lg:items-start lg:flex-row gap-4 pb-8">
                 
                     <div className="flex gap-4 flex-col sm:flex-row justify-center h-full">
@@ -85,26 +76,24 @@ export default function AdoptionRulesPage() {
                             </p>
                         </Card>
                     </div>
-
-
                 </div>
 
                 <div className="bg-card border-l border-l-primary-border border-y border-r border-primary-border rounded-xl p-6 mb-8">
                     <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
                         Deveres e Regras do Lar Temporário
                     </h2>
-                    <ul className="list-disc pl-5 flex flex-col gap-3 text-sm md:text-base text-default-fg">
-                        <li><span className="font-semibold">Responsabilidade Integral:</span> Ao solicitar a inclusão de um pet na vitrine, você assume automaticamente o papel de lar temporário até a conclusão da adoção.</li>
-                        <li><span className="font-semibold">Alimentação e Cuidados:</span> Fornecer alimentação adequada, água fresca, abrigo seguro contra sol e chuva, e manter o ambiente limpo.</li>
-                        <li><span className="font-semibold">Saúde:</span> Informar imediatamente à clínica caso o animal apresente qualquer problema de saúde durante a estadia no lar temporário.</li>
-                        <li><span className="font-semibold">Contato Atualizado:</span> Manter seu número de telefone e WhatsApp atualizados no sistema, pois os possíveis adotantes serão direcionados a você.</li>
-                        <li><span className="font-semibold">Adoção Concluída:</span> Quando encontrar um adotante, é sua responsabilidade comunicar a equipe ou atualizar o status no painel para remover o animal da vitrine.</li>
-                        <li><span className="font-semibold">Abandono é Crime:</span> O abandono de animais nas ruas ou nas dependências da clínica configura crime ambiental (Lei Federal nº 9.605/98), sujeito a penalidades severas.</li>
+                    <ul className="list-disc pl-5 flex flex-col gap-3 text-sm md:text-base text-muted-fg">
+                        <li><span className="font-semibold text-default-fg">Responsabilidade integral:</span> Ao solicitar a inclusão de um pet na vitrine, você assume automaticamente o papel de lar temporário até a conclusão da adoção.</li>
+                        <li><span className="font-semibold text-default-fg">Alimentação e cuidados:</span> Fornecer alimentação adequada, água fresca, abrigo seguro contra sol e chuva, e manter o ambiente limpo.</li>
+                        <li><span className="font-semibold text-default-fg">Saúde:</span> Informar imediatamente à clínica caso o animal apresente qualquer problema de saúde durante a estadia no lar temporário.</li>
+                        <li><span className="font-semibold text-default-fg">Contato atualizado:</span> Manter seu número de telefone e WhatsApp atualizados no sistema, pois os possíveis adotantes serão direcionados a você.</li>
+                        <li><span className="font-semibold text-default-fg">Adoção concluída:</span> Caso encontre um adotante antes de nós, é sua responsabilidade comunicar a equipe para remover o animal da vitrine.</li>
+                        <li><span className="font-semibold text-default-fg">Abandono é crime:</span> O abandono de animais nas ruas ou nas dependências da clínica configura crime ambiental (Lei Federal nº 9.605/98), sujeito a penalidades severas.</li>
                     </ul>
                 </div>
 
                 <p className="text-muted-fg text-sm md:text-base pb-8">
-                    Nota: o serviço descrito refere-se apenas à colocar animais para adoção, se você deseja 
+                    <span className="font-semibold text-default-fg">Nota: </span> o serviço descrito refere-se apenas à colocar animais para adoção, se você deseja 
                     <span className="font-medium text-default-fg"> adotar um pet</span>, clique aqui.
                 </p>
 

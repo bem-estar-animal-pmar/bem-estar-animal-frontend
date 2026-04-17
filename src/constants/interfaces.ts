@@ -14,11 +14,6 @@ export interface Pet {
     adoptionStatus: string;
 }
 
-export interface CreatePetFormProps {
-    onSuccess: () => void;
-    onCancel: () => void;
-}
-
 /* neuterings */
 
 export interface NeuteringAppointment {
@@ -51,8 +46,13 @@ export interface EmergencyAppointment {
     };
 }
 
-export interface RequestEmergencyFormProps {
-    pets: Pet[];
-    defaultPetId: string;
-    onSuccess: () => void;
+/* give up */
+
+export interface GiveUpRequest {
+    id: string;
+    status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED_BY_USER";
+    reason?: string;
+    petId: string;
+    pet: { id: string; name: string; species: string };
+    createdAt: string;
 }

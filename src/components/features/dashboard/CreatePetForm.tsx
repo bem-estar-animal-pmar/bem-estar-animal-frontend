@@ -6,7 +6,6 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns"
 
-import { CreatePetFormProps } from "@/src/constants/interfaces";
 import { CreatePetFormData, createPetSchema } from "@/src/constants/schemas";
 import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions } from "@/src/constants/constants";
 
@@ -26,6 +25,11 @@ want to include pet's birthday on its data showing)
 when sending to backend -> gets date with utc -3 for example, strips utc -3, backends saves as date utc-0
 when getting from backend -> gets date with utc 0, strips utc 0, frontend MUST show as date utc -3 without actually 
 converting */
+
+interface CreatePetFormProps {
+    onSuccess: () => void;
+    onCancel: () => void;
+}
 
 export const CreatePetForm = ({ onSuccess, onCancel }: CreatePetFormProps) => {
     const { control, watch, setValue, formState, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreatePetFormData>({

@@ -39,3 +39,22 @@ export const createPetSchema = z.object({
 
 
 export type CreatePetFormData = z.infer<typeof createPetSchema>;
+
+
+/* give up */
+
+export const giveUpFormSchema = z.object({
+    petId: z.string().min(1, "Selecione um pet"),
+    reason: z.string()
+        .min(10, "Por favor, forneça um motivo mais detalhado")
+        .max(500, "O texto do motivo é muito longo")
+        .optional(),
+    temporaryHomeAccepted: z.boolean().refine(val => val === true, {
+        message: "You must confirm to be a temporary home during the pet treatment"
+    }),
+    termsAccepted: z.boolean().refine(val => val === true, {
+        message: "You must agree that you have read the neutering terms"
+    }),
+});
+
+export type GiveUpFormData = z.infer<typeof giveUpFormSchema>;

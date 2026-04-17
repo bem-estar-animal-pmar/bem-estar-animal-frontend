@@ -103,10 +103,19 @@ export const neuteringStatusMap: Record<string, { label: string; classes: string
 
 /* emergencies */
 
-export const emergenciesStatusMap: Record<string, { label: string; classes: string }> = {
-    PENDING: { label: "Em Análise", classes: "bg-yellow-100 text-yellow-800 border-yellow-200" },
-    CONFIRMED: { label: "Agendado", classes: "bg-green-100 text-green-800 border-green-200" },
-    COMPLETED: { label: "Atendido", classes: "bg-emerald-100 text-emerald-800 border-emerald-200" },
-    CANCELLED: { label: "Cancelado", classes: "bg-gray-100 text-gray-800 border-gray-200" },
-    NO_SHOW: { label: "Não Compareceu", classes: "bg-red-100 text-red-800 border-red-200" },
+export const emergencyStatusMap: Record<string, { label: string; classes: string }> = {
+    PENDING: { label: "Em Análise", classes: "bg-yellow-100! text-yellow-800! border-yellow-200!" },
+    CONFIRMED: { label: "Agendado", classes: "bg-green-100! text-green-800! border-green-200!" },
+    COMPLETED: { label: "Atendido", classes: "bg-emerald-100! text-emerald-800! border-emerald-200!" },
+    CANCELLED: { label: "Cancelado", classes: "bg-gray-100! text-gray-800! border-gray-200!" },
+    NO_SHOW: { label: "Não Compareceu", classes: "bg-red-100! text-red-800! border-red-200!" },
+};
+
+/* give up requests */
+
+export const giveUpStatusMap: Record<string, { label: string, classes: string }> = {
+    PENDING: { label: "Pendente", classes: "bg-yellow-100! text-yellow-800! border-yellow-200!" },
+    APPROVED: { label: "Aprovado", classes: "bg-green-100! text-green-800! border-green-200!" },
+    REJECTED: { label: "Rejeitado", classes: "bg-red-100! text-red-800! border-red-200!" },
+    CANCELLED_BY_USER: { label: "Cancelado", classes: "bg-gray-100! text-gray-800! border-gray-200!" },
 };
