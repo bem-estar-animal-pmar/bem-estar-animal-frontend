@@ -5,6 +5,7 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns"
+import { translateError } from "@/src/lib/error-map";
 
 import { CreatePetFormData, createPetSchema } from "@/src/constants/schemas";
 import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions } from "@/src/constants/constants";
@@ -91,7 +92,7 @@ export const CreatePetForm = ({ onSuccess, onCancel }: CreatePetFormProps) => {
             onSuccess();
         } catch (err: unknown) {
             if (err instanceof Error) {
-                toast.danger(err.message);
+                toast.danger(translateError(err.message));
                 return;
             }
             toast.danger("Ocorreu um erro inesperado.");

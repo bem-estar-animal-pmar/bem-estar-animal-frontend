@@ -8,6 +8,7 @@ import { Select, Button, Label, Textarea } from "@/src/components/ui";
 import { toast } from "@/src/lib/toast-store";
 
 import { giveUpFormSchema, GiveUpFormData } from "@/src/constants/schemas";
+import { translateError } from "@/src/lib/error-map";
 
 interface CreateGiveUpFormProps {
     pets: Pet[];
@@ -41,7 +42,7 @@ export const CreateGiveUpForm = ({ pets, onSuccess}: CreateGiveUpFormProps) => {
             onSuccess();
         } catch (err: unknown) {
             if (err instanceof Error) {
-                toast.danger(err.message);
+                toast.danger(translateError(err.message));
                 return;
             }
             toast.danger("Ocorreu um erro inesperado.");

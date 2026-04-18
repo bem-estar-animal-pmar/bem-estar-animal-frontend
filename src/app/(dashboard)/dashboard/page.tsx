@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "@/src/lib/auth-client";
 import { ApiError } from "@/src/lib/api-error";
+import { translateTable } from "@/src/lib/table-map";
 
 import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
@@ -20,6 +21,7 @@ import { toast } from "@/src/lib/toast-store";
 import { XIcon } from "@/src/components/icons/outline";
 
 import type { Pet } from "@/src/constants/interfaces"
+import { translateError } from "@/src/lib/error-map";
 
 export default function DashboardPage() {
 
@@ -55,12 +57,12 @@ export default function DashboardPage() {
                 setFetchError(true);
                 if (err.details) {
                     const firstError = err.details[0]?.message
-                    toast.danger(err.message, {
-                        message: firstError
+                    toast.danger(translateError(err.message), {
+                        message: translateError(firstError)
                     })
                     return;
                 }
-                toast.danger(err.message);
+                toast.danger(translateError(err.message));
                 return
             }
             setFetchError(true);
@@ -177,21 +179,21 @@ export default function DashboardPage() {
                                                 </Badge>
                                             </div>
                                             <p className="text-xs sm:text-sm text-muted-fg flex truncate">
-                                                {pet.adoptionStatus}
+                                                {translateTable(pet.adoptionStatus)}
                                             </p>
                                         </div>      
                                         <div className="flex w-full flex-wrap justify-between max-w-104 gap-2 pb-2">
                                             <div className="flex flex-col max-w-48">   
                                                 <p className="text-xs sm:text-sm text-muted-fg flex truncate">
-                                                    Raça: {pet.breed}
+                                                    Raça: {translateTable(pet.breed)}
                                                 </p>
                                                 <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                    Genero: {pet.gender}
+                                                    Genero: {translateTable(pet.gender)}
                                                 </p>
                                             </div>
                                             <div className="flex flex-col">   
                                                 <p className="text-xs sm:text-sm text-muted-fg flex truncate">
-                                                    Peso: {pet.weight} kg ({pet.size})
+                                                    Peso: {pet.weight} kg ({translateTable(pet.size)})
                                                 </p>
                                                 <p className="text-xs sm:text-sm text-muted-fg flex">
                                                     Cor da pelagem: {pet.coatColor}

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { toast } from "@/src/lib/toast-store"
 import { ApiError } from "@/src/lib/api-error"
+import { translateTable } from "@/src/lib/table-map"
+import { translateError } from "@/src/lib/error-map"
 
 import Image from "next/image"
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
@@ -56,10 +58,10 @@ export default function AdoptionsPage() {
             if (err instanceof ApiError) {
                 if (err.details) {
                     const firstError = err.details[0]?.message;
-                    toast.danger(err.message, { message: firstError });
+                    toast.danger(translateError(err.message), { message: translateError(firstError) });
                     return;
                 }
-                toast.danger(err.message);
+                toast.danger(translateError(err.message));
                 return;
             }
             toast.danger("Erro desconhecido ao carregar dados.");
@@ -87,7 +89,7 @@ export default function AdoptionsPage() {
             loadInitialData();
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(err.message, { message: err.details?.[0]?.message });
+                toast.danger(translateError(err.message), { message: translateError(err.details?.[0]?.message) });
                 return;
             }
             toast.danger("Erro desconhecido ao cancelar.");
@@ -133,7 +135,7 @@ export default function AdoptionsPage() {
             <div className="flex justify-center pb-8">
                 <Card
                     size="lg"
-                    className="max-w-144 border-primary-border"
+                    className="max-w-148 border-primary-border"
                 >
                     <p className="font-semibold text-default-fg">Formulário de envio para adoção</p>
                     <CreateGiveUpForm

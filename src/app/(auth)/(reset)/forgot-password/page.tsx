@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { requestPasswordReset } from "@/src/lib/auth-client";
 import { toast } from "@/src/lib/toast-store";
+import { translateError } from "@/src/lib/error-map";
+
+import Image from "next/image";
+import animal_logo from "@/public/animal-logo.svg"
 
 import { Card } from "@/src/components/ui/Card";
 import { Button } from "@/src/components/ui/Button";
@@ -29,7 +33,7 @@ export default function ForgotPasswordPage() {
                 setLoading(false);
             },
             onError: (ctx) => {
-                toast.danger(ctx.error.code || ctx.error.message);
+                toast.danger(translateError(ctx.error.code || ctx.error.message));
                 setLoading(false);
             }
         });
@@ -39,17 +43,11 @@ export default function ForgotPasswordPage() {
         <main className="flex min-h-screen items-center justify-center bg-default p-2 sm:p-8 md:p-12">
             <Card className="max-w-200" size="xl">
                 <div className="flex w-full justify-center">
-                    {/* image logo goes here
                     <Image
-                        src={logo}
-                        alt="Logo"
-                        className="dark:hidden w-full max-w-50 h-auto mb-2"
+                        src={animal_logo}
+                        alt="Logo do Bem-estar Animal"
+                        className="w-full max-w-50 h-auto mb-2"
                     />
-                    <Image
-                        src={logo_dark}
-                        alt="Logo"
-                        className="hidden dark:block w-full max-w-50 h-auto mb-2"
-                    /> */}
 				</div>
                 <h1 className="text-center text-lg text-default-fg font-semibold pb-1">
                     Esqueci minha senha

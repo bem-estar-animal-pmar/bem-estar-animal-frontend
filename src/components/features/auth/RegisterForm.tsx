@@ -10,8 +10,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { cpf } from 'cpf-cnpj-validator'; 
-
 import { toast } from "@/src/lib/toast-store";
+import { translateError } from "@/src/lib/error-map";
+
 import { Button, Input, Label } from "@/src/components/ui";
 
 /* makes a zod schema almost identical to the backend one, with a few changes */
@@ -94,11 +95,13 @@ export function RegisterForm() {
                     router.push(`/check-email?email=${safeEmail}`);
                 },
                 onError: (ctx) => {
-                    toast.danger(ctx.error.code || ctx.error.message);
+                    toast.danger(translateError(ctx.error.code || ctx.error.message));
                     setLoading(false);
                 }
             }
         );
+        
+        setLoading(false);
     };
     
     return (

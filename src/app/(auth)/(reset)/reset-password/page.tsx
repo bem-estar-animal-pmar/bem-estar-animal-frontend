@@ -5,10 +5,14 @@ import { useEffect, Suspense } from "react";
 import { resetPassword } from "@/src/lib/auth-client";
 import { toast } from "@/src/lib/toast-store";
 
+import Image from "next/image";
+import animal_logo from "@/public/animal-logo.svg"
+
 import { Card } from "@/src/components/ui/Card";
 import { Loading } from "@/src/components/layout/Loading";
 import { ResetPasswordForm } from "@/src/components/features/auth/ResetPasswordForm";
 import type { ResetPasswordFormData } from "@/src/components/features/auth/ResetPasswordForm";
+import { translateError } from "@/src/lib/error-map";
 
 /* even though this is a client component, next.js still tries to pre-render it on the server at build time to generate a fast, 
 static HTML file to send to the user immediately 
@@ -48,7 +52,7 @@ const ResetPasswordContent = () => {
         });
 
         if (error?.code) {
-            toast.danger(error.code);
+            toast.danger(translateError(error.code));
             return;
         } 
 
@@ -60,17 +64,11 @@ const ResetPasswordContent = () => {
         <main className="flex min-h-screen items-center justify-center bg-default p-2 sm:p-8 md:p-12">
             <Card className="max-w-200" size="xl">
                 <div className="flex w-full justify-center">
-                    {/* image logo goes here
                     <Image
-                        src={logo}
-                        alt="Logo"
-                        className="dark:hidden w-full max-w-50 h-auto mb-2"
+                        src={animal_logo}
+                        alt="Logo do Bem-estar Animal"
+                        className="w-full max-w-50 h-auto mb-2"
                     />
-                    <Image
-                        src={logo_dark}
-                        alt="Logo"
-                        className="hidden dark:block w-full max-w-50 h-auto mb-2"
-                    /> */}
 				</div>
                 <h1 className="text-center text-lg text-default-fg font-semibold pb-1">
 					Alteração de senha

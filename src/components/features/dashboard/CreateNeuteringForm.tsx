@@ -8,6 +8,7 @@ import { Select } from "@/src/components/ui/Select"
 import { Button } from "@/src/components/ui/Button"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { toast } from "@/src/lib/toast-store"
+import { translateError } from "@/src/lib/error-map"
 
 interface NeuteringFormProps {
     onCancel: () => void;
@@ -69,10 +70,10 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }
             if (err instanceof ApiError) {
                 if (err.details) {
                     const firstError = err.details[0]?.message
-                    toast.warning(err.message, { message: firstError })
+                    toast.warning(translateError(err.message), { message: firstError })
                     return;
                 }
-                toast.warning(err.message);
+                toast.warning(translateError(err.message));
                 return;
             }
             toast.danger("Erro desconhecido ao solicitar castração.");

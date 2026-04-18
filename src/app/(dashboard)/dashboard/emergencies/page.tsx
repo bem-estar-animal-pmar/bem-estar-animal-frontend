@@ -3,6 +3,8 @@
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { ApiError } from "@/src/lib/api-error"
+import { translateError } from "@/src/lib/error-map"
+import { translateTable } from "@/src/lib/table-map"
 import { toast } from "@/src/lib/toast-store"
 
 import { Card } from "@/src/components/ui/Card"
@@ -49,7 +51,7 @@ const EmergencyContent = () => {
 
         } catch (err: unknown) { 
             if (err instanceof ApiError) {
-                toast.danger(err.message, { message: err.details?.[0]?.message });
+                toast.danger(translateError(err.message), { message: translateError(err.details?.[0]?.message) });
                 return;
             }
             toast.danger("Erro desconhecido ao carregar dados.");
@@ -117,17 +119,17 @@ const EmergencyContent = () => {
                             {appointments.map((appt) => {
                                 const statusInfo = emergencyStatusMap[appt.status];
                                 const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
-                                const period = appt.period ? appt.period === "MORNING" ? "Manhã" : "Tarde" : " "
+                                const period = appt.period ? translateTable(appt.period) : ""
 
                                 return (
                                     <Card key={appt.id} className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shadow-sm!">
                                         <div className="flex flex-col gap-1">
                                             <div className="flex items-center gap-2">
                                                 <Badge variant="primary" size="sm" pill="true">
-                                                    {appt.species === "DOG" ? "Cachorro" : "Gato"}
+                                                    {translateTable(appt.species)}
                                                 </Badge>
                                                 <span className="text-xs text-muted-fg">
-                                                    Porte {appt.size === "SMALL" ? "Pequeno" : appt.size === "MEDIUM" ? "Médio" : "Grande"}
+                                                    Porte {translateTable(appt.size)}
                                                 </span>
                                             </div>
                                             <p className="text-sm font-medium text-default-fg mt-1">
@@ -178,17 +180,17 @@ const EmergencyContent = () => {
                         {appointments.map((appt) => {
                             const statusInfo = emergencyStatusMap[appt.status];
                             const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
-                            const period = appt.period ? appt.period === "MORNING" ? "Manhã" : "Tarde" : " "
+                            const period = appt.period ? translateTable(appt.period) : ""
 
                             return (
                                 <Card key={appt.id} className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shadow-sm!">
                                     <div className="flex flex-col gap-1">
                                         <div className="flex items-center gap-2">
                                             <Badge variant="primary" size="sm" pill="true">
-                                                {appt.species === "DOG" ? "Cachorro" : "Gato"}
+                                                {translateTable(appt.species)}
                                             </Badge>
                                             <span className="text-xs text-muted-fg">
-                                                Porte {appt.size === "SMALL" ? "Pequeno" : appt.size === "MEDIUM" ? "Médio" : "Grande"}
+                                                Porte {translateTable(appt.size)}
                                             </span>
                                         </div>
                                         <p className="text-sm font-medium text-default-fg mt-1">

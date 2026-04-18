@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
+import { translateError } from "@/src/lib/error-map";
+import { translateTable } from "@/src/lib/table-map";
 
 import { Label } from "@/src/components/ui/Label";
 import { Select } from "@/src/components/ui/Select";
@@ -105,7 +107,7 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.warning(err.message, { message: err.details?.[0]?.message });
+                toast.warning(translateError(err.message), { message: translateError(err.details?.[0]?.message) });
                 return;
             }
             toast.danger("Erro ao solicitar atendimento.");

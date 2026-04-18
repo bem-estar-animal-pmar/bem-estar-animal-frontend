@@ -8,6 +8,8 @@ import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
 import { ApiError } from "@/src/lib/api-error"
 import { getTodayInBrasilia } from "@/src/lib/scheduling"
+import { translateError } from "@/src/lib/error-map"
+import { translateTable } from "@/src/lib/table-map"
 
 import type { Pet, NeuteringAppointment } from "@/src/constants/interfaces"
 import { neuteringStatusMap } from "@/src/constants/constants"
@@ -73,12 +75,12 @@ const NeuteringContent = () => {
             if (err instanceof ApiError) {
                 if (err.details) {
                     const firstError = err.details[0]?.message
-                    toast.danger(err.message, {
-                        message: firstError
+                    toast.danger(translateError(err.message), {
+                        message: translateError(firstError)
                     })
                     return;
                 }
-                toast.danger(err.message);
+                toast.danger(translateError(err.message));
                 return;
             }
             toast.danger("Erro desconhecido ao carregar dados.");
@@ -109,12 +111,12 @@ const NeuteringContent = () => {
             if (err instanceof ApiError) {
                 if (err.details) {
                     const firstError = err.details[0]?.message
-                    toast.warning(err.message, {
-                        message: firstError
+                    toast.warning(translateError(err.message), {
+                        message: translateError(firstError)
                     })
                     return;
                 }
-                toast.warning(err.message);
+                toast.warning(translateError(err.message));
                 return
             }
             toast.danger("Erro desconhecido ao cancelar.");
@@ -225,25 +227,25 @@ const NeuteringContent = () => {
                                                         size="sm"
                                                         pill="true"
                                                     >
-                                                        {activePet.species}
+                                                        {translateTable(activePet.species)}
                                                     </Badge>
                                                 </div>
                                                 <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                    {activePet.adoptionStatus}
+                                                    {translateTable(activePet.adoptionStatus)}
                                                 </p>
                                             </div>      
                                             <div className="flex flex-wrap w-full justify-between gap-2 pb-2">
                                                 <div className="flex flex-col max-w-48">   
                                                     <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                        Raça: {activePet.breed}
+                                                        Raça: {translateTable(activePet.breed)}
                                                     </p>
                                                     <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                        Gênero: {activePet.gender === "MALE" ? "Macho" : "Fêmea"}
+                                                        Gênero: {translateTable(activePet.gender)}
                                                     </p>
                                                 </div>
                                                 <div className="flex flex-col">   
                                                     <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                        Peso: {activePet.weight} kg ({activePet.size})
+                                                        Peso: {activePet.weight} kg ({translateTable(activePet.size)})
                                                     </p>
                                                     <p className="text-xs sm:text-sm text-muted-fg flex">
                                                         Pelagem: {activePet.coatColor}
@@ -299,7 +301,7 @@ const NeuteringContent = () => {
                                                 <div className="flex flex-col">
                                                     <h3 className="font-semibold text-default-fg truncate">{appt.pet.name}</h3>
                                                     <p className="text-xs text-muted-fg">
-                                                        {appt.pet.species === "DOG" ? "Cachorro" : "Gato"} • {appt.pet.gender === "MALE" ? "Macho" : "Fêmea"}
+                                                       {translateTable(appt.pet.species)} • {translateTable(appt.pet.gender)}
                                                     </p>
                                                 </div>
                                             </div>
@@ -308,7 +310,7 @@ const NeuteringContent = () => {
                                                     <span className="text-muted-fg">Data:</span> {appt.scheduleDate.split("T")[0].split("-").reverse().join("/")}
                                                 </p>
                                                 <p className="text-sm text-default-fg">
-                                                    <span className="text-muted-fg">Período:</span> {appt.period === "MORNING" ? "Manhã" : "Tarde"}
+                                                    <span className="text-muted-fg">Período:</span> {translateTable(appt.period)}
                                                 </p>
                                             </div>
 
