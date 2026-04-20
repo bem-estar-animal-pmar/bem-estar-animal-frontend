@@ -14,8 +14,13 @@ export const AdminGuard = ({ children }: { children: React.ReactNode }) => {
             return;
         }
 
-        if (!session || session.user.role !== "ADMIN") {
+        if (!session) {
             router.replace("/login");
+            return;
+        }
+
+        if (session.user.role !== "ADMIN") {
+            router.replace("/dashboard");
             return;
         }
     }, [session, isPending, router]);
