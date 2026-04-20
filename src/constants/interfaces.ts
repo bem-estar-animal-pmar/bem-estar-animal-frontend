@@ -2,6 +2,7 @@
 
 export interface Pet {
     id: string;
+    ownerId?: string;
     name: string;
     species: string;
     gender: string;
