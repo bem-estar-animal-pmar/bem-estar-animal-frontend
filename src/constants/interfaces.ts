@@ -3,6 +3,10 @@
 export interface Pet {
     id: string;
     ownerId?: string;
+    owner: {
+        name: string;
+        lastName: string;
+    }
     name: string;
     species: string;
     gender: string;

@@ -159,7 +159,7 @@ export default function AdminPetsPage() {
                     <div className="flex flex-col md:flex-row gap-4 w-full max-w-132">
                         <div className="flex flex-col w-full max-w-64">
                             <Label htmlFor="pet-userId" className="mb-1">
-                                ID do Dono
+                                ID do Tutor
                             </Label>
                             <Input 
                                 id="pet-userId"
@@ -214,7 +214,7 @@ export default function AdminPetsPage() {
                         <div className="w-3/16">ESPÉCIE/RAÇA</div>
                         <div className="w-2/16">STATUS</div>
                         <div className="w-2/16">CHIP</div>
-                        <div className="w-4/16">DONO (ID)</div>
+                        <div className="w-4/16">Tutor</div>
                     </div>
                     
                     <div className="flex flex-col divide-y divide-default-border">
@@ -264,7 +264,8 @@ export default function AdminPetsPage() {
                                         {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}
                                     </div>
                                     <div className="w-4/16 text-xs text-muted-fg truncate" title={pet.ownerId}>
-                                        {pet.ownerId}
+                                        <span className="text-default-fg">{pet.owner.name} {pet.owner.lastName}</span>
+                                        <div>{pet.ownerId}</div>
                                     </div>
                                 </div>
                             ))

@@ -112,7 +112,7 @@ export const SearchPetIdForm = () => {
                 </div>
                 <div className="flex items-end gap-4 w-full max-w-80">
                     <div className="flex flex-col w-full max-w-40">
-                        <Label htmlFor="pet-search-userId" className="mb-1">ID do Dono</Label>
+                        <Label htmlFor="pet-search-userId" className="mb-1">ID do Tutor</Label>
                         <Input 
                             id="pet-search-userId"
                             placeholder="ID do usuário..." 
@@ -136,7 +136,7 @@ export const SearchPetIdForm = () => {
                     <div className="flex w-full gap-4 px-4 py-3 border-b border-default-border text-xs sm:text-sm font-medium text-muted-fg bg-neutral">
                         <div className="w-1/5">AÇÃO</div>
                         <div className="w-2/5">PET / RAÇA</div>
-                        <div className="w-2/5">DONO</div>
+                        <div className="w-2/5">TUTOR</div>
                     </div>
                     {/* body */}
                     <div className="flex flex-col w-full divide-y divide-default-border overflow-x-auto max-h-48 sm:max-h-64">
