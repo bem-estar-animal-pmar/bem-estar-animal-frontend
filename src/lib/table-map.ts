@@ -12,7 +12,7 @@ const tableTranslations: Record<string, string> = {
 
     FOR_ADOPTION: "Para Adoção",
     ADOPTED: "Foi Adotado",
-    HAS_OWNER: "Possui Dono",
+    HAS_OWNER: "Possui Tutor",
     TEMPORARY_HOME: "Lar Temporário",
     STRAY_ANIMAL: "Animal de Rua",
 

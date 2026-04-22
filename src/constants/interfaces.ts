@@ -3,9 +3,11 @@
 export interface Pet {
     id: string;
     ownerId?: string;
-    owner: {
+    owner?: { /* this prop exist only when admin requests pets on list and getById backend rotes*/
         name: string;
         lastName: string;
+        email: string;
+        phone: string;
     }
     name: string;
     species: string;

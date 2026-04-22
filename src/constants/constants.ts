@@ -16,6 +16,14 @@ export const petSizeOptions = [
     { value: "LARGE", label: "Grande" },
 ];
 
+export const adoptionStatusOptions = [
+    { label: "Possui Tutor", value: "HAS_OWNER" },
+    { label: "Para Adoção", value: "FOR_ADOPTION" },
+    { label: "Adotado", value: "ADOPTED" },
+    { label: "Lar Temporário", value: "TEMPORARY_HOME" },
+    { label: "Animal de Rua", value: "STRAY_ANIMAL" }
+];
+
 export const catBreedOptions = [
     { value: "ABYSSINIAN", label: "Abissínio" },
     { value: "ANGORA", label: "Angorá" },
