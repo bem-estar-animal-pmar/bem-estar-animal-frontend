@@ -24,10 +24,10 @@ import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp";
 
 interface AdminUpdatePetFormProps {
     pet: Pet;
+    onUpdateSuccess: () => void;
 }
 
-export const UpdatePetForm = ({ pet }: AdminUpdatePetFormProps) => {
-    const router = useRouter();
+export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const { control, watch, setValue, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UpdatePetFormData>({
@@ -87,10 +87,10 @@ export const UpdatePetForm = ({ pet }: AdminUpdatePetFormProps) => {
             if (!response.ok) {
                 throw new ApiError(resultData.message, resultData.code, resultData.details);
             }
-
+            
+            onUpdateSuccess();
             toast.success("Pet atualizado com sucesso!");
             setIsEditing(false);
-            router.refresh();
         } catch (err: unknown) {
             if (err instanceof ApiError) {
                 if (err.details) {

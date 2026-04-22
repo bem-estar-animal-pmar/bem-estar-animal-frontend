@@ -16,41 +16,40 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
     const { id: petId } = use(params);
-    console.log(petId)
     const [pet, setPet] = useState<Pet | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchSinglePet = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/details/${petId}`, {
-                    credentials: "include",
-                });
+    const fetchPet = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/details/${petId}`, {
+                credentials: "include",
+            });
 
-                const responseData = await response.json();
-                if (!response.ok) {
-                    throw new ApiError(responseData.message, responseData.code, responseData.details);
-                }
-                
-                setPet(responseData);
-            } catch (err: unknown) {
-                if (err instanceof ApiError) {
-                    if (err.details) {
-                        const firstError = err.details[0]?.message
-                        toast.danger(translateError(err.message), { message: firstError })
-                        return;
-                    }
-                    toast.danger(translateError(err.message));
+            const responseData = await response.json();
+            if (!response.ok) {
+                throw new ApiError(responseData.message, responseData.code, responseData.details);
+            }
+            
+            setPet(responseData);
+        } catch (err: unknown) {
+            if (err instanceof ApiError) {
+                if (err.details) {
+                    const firstError = err.details[0]?.message
+                    toast.danger(translateError(err.message), { message: firstError })
                     return;
                 }
-                toast.danger("Erro desconhecido ao carregar pets.");
-            } finally {
-                setIsLoading(false);
+                toast.danger(translateError(err.message));
+                return;
             }
-        };
-
+            toast.danger("Erro desconhecido ao carregar pets.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    useEffect(() => {
         if (petId) {
-            fetchSinglePet();
+            fetchPet();
         }
     }, [petId]);
 
@@ -121,6 +120,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                 )}
                 <UpdatePetForm 
                     pet={pet}
+                    onUpdateSuccess={fetchPet}
                 />
             </div>
         </div>
