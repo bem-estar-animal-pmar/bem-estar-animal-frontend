@@ -81,13 +81,13 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
             </div>
             <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full max-w-208">
                 {pet.owner && (
-                    <div className="flex flex-col pb-4 border-b-1 border-default-border mb-4">
+                    <div className="flex flex-col pb-4 border-b border-default-border mb-4">
                         <h3 className="text-lg font-semibold pb-4">
                             Informações do tutor
                         </h3>
                         <div className="flex">
                             <div className="flex-1">
-                                <Label>Nome Completo</Label>
+                                <Label>Nome completo</Label>
                                 <Input
                                     readOnly
                                     disabled

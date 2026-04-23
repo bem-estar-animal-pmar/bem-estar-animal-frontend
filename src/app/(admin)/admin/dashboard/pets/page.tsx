@@ -139,7 +139,7 @@ export default function AdminPetsPage() {
                     <div className="flex flex-col md:flex-row gap-4 w-full max-w-132">
                         <div className="flex flex-col w-full max-w-64">
                             <Label htmlFor="pet-userId" className="mb-1">
-                                ID do Tutor
+                                ID do tutor
                             </Label>
                             <Input 
                                 id="pet-userId"
@@ -150,7 +150,7 @@ export default function AdminPetsPage() {
                         </div>
                         <div className="flex flex-col w-full max-w-64">
                             <Label htmlFor="pet-chip" className="mb-1">
-                            Nº do Chip
+                            Nº do chip
                             </Label>
                             <Input 
                                 id="pet-chip"

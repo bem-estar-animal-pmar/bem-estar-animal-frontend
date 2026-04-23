@@ -126,7 +126,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                                 />
                             </div>
                             <div className="">
-                                <Label>Número do Chip</Label>
+                                <Label>Número do chip</Label>
                                 <Input 
                                     readOnly 
                                     disabled 
@@ -189,7 +189,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
 
                     <div className="flex flex-col sm:flex-row gap-4 w-full">
                         <div className="flex-1">
-                            <Label>Cor (Pelagem)</Label>
+                            <Label>Cor (pelagem)</Label>
                             <Input 
                                 readOnly 
                                 disabled 
@@ -198,7 +198,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                             />
                         </div>
                         <div className="flex-1">
-                            <Label>Data de Nascimento</Label>
+                            <Label>Data de nascimento</Label>
                             <Input 
                                 readOnly 
                                 disabled 
@@ -248,7 +248,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                             </div>
                             <div className="">
                                 <Label htmlFor="chip">
-                                    Número do Chip
+                                    Número do chip
                                 </Label>
                                 <Controller
                                     name="chip"
@@ -366,7 +366,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
                     <div className="flex-1">
-                        <Label htmlFor="coatColor">Cor (Pelagem)</Label>
+                        <Label htmlFor="coatColor">Cor (pelagem)</Label>
                         <Controller
                             name="coatColor"
                             control={control}
@@ -381,7 +381,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                         {errors.coatColor && <span className="text-danger-fg text-sm">{errors.coatColor.message}</span>}
                     </div>
                     <div className="flex-1">
-                        <Label htmlFor="birthDate">Data de Nascimento</Label>
+                        <Label htmlFor="birthDate">Data de nascimento</Label>
                         <Controller
                             name="birthDate"
                             control={control}
