@@ -1,14 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
-
+import { useState } from "react"
 import { ApiError } from "@/src/lib/api-error"
+import { format } from "date-fns"
+import { translateError } from "@/src/lib/error-map"
+
 import { Label } from "@/src/components/ui/Label"
 import { Select } from "@/src/components/ui/Select"
 import { Button } from "@/src/components/ui/Button"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { toast } from "@/src/lib/toast-store"
-import { translateError } from "@/src/lib/error-map"
 
 interface NeuteringFormProps {
     onCancel: () => void;
@@ -34,16 +35,10 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }
 
         try {
             setIsSubmitting(true);
-
-            const utcDate = new Date(Date.UTC(
-                scheduleDate.getFullYear(), 
-                scheduleDate.getMonth(), 
-                scheduleDate.getDate()
-            ));
-
+            
             const payload = {
                 petId,
-                scheduleDate: utcDate.toISOString(),
+                scheduleDate: format(scheduleDate, "yyyy-MM-dd"),
                 period: selectedPeriod,
                 animalFastAccepted,
                 animalChipAccepted,
