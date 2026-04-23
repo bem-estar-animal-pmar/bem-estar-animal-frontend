@@ -205,7 +205,7 @@ export default function DashboardPage() {
                                 <div className="flex w-full justify-between flex-wrap gap-y-2">
                                     <div className="flex flex-col w-full max-w-52">   
                                         <p className="text-xs sm:text-sm text-muted-fg flex truncate">
-                                            Nascimento: {new Date(pet.birthDate).toLocaleDateString()}
+                                            Nascimento: {pet.birthDate.split('T')[0].split('-').reverse().join('/')}
                                         </p>
                                         <p className="text-xs sm:text-sm text-muted-fg text-end flex">
                                             Identificação: {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}

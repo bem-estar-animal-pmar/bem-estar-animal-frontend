@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useForm, Controller } from "react-hook-form";
+import { format } from "date-fns"
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { ApiError } from "@/src/lib/api-error";
 import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
 import { toast } from "@/src/lib/toast-store";
-import { ApiError } from "@/src/lib/api-error";
+
+import Image from "next/image";
+import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp";
+
 import { updatePetSchema, UpdatePetFormData } from "@/src/constants/schemas"; 
 import type { Pet } from "@/src/constants/interfaces";
 import { 
@@ -20,7 +22,6 @@ import {
 } from "@/src/constants/constants";
 import { Select, DatePicker, Input, Button, Label } from "@/src/components/ui";
 
-import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp";
 
 interface AdminUpdatePetFormProps {
     pet: Pet;
@@ -39,7 +40,12 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
             weight: pet.weight,
             size: pet.size as any,
             coatColor: pet.coatColor,
-            birthDate: pet.birthDate ? new Date(pet.birthDate) : undefined,
+            birthDate: pet.birthDate ? (
+                () => {
+                    const dateOnly= pet.birthDate.split('T')[0]; 
+                    return new Date(`${dateOnly}T00:00:00`); 
+                }
+            )() : undefined,
             chip: pet.chip !== "NO_CHIP" ? pet.chip : "",
             adoptionStatus: pet.adoptionStatus as any,
         },
@@ -63,13 +69,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
         try {
             const payload = { 
                 ...data,
-                birthDate: data.birthDate
-                    ? new Date(Date.UTC(
-                        data.birthDate.getFullYear(),
-                        data.birthDate.getMonth(),
-                        data.birthDate.getDate()
-                    )).toISOString()
-                    : undefined,
+                birthDate: data.birthDate ? format(data.birthDate, "yyyy-MM-dd") : undefined,
                 chip: data.chip === "" ? undefined : data.chip,
                 coatColor: data.coatColor === "" ? undefined : data.coatColor
             };  
@@ -181,8 +181,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                                 disabled 
                                 value={translateTable(pet.size)} 
                                 className="cursor-default! opacity-100!"
-                            /
-                                >
+                            />
        
                 
                         </div>
@@ -203,7 +202,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                             <Input 
                                 readOnly 
                                 disabled 
-                                value={pet.birthDate ? new Date(pet.birthDate).toLocaleDateString() : "Não informado"} 
+                                value={pet.birthDate.split('T')[0].split('-').reverse().join('/')}
                                 className="cursor-default! opacity-100!"
                             />
                         </div>
