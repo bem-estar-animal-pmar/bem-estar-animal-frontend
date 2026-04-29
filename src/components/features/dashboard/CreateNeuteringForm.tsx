@@ -15,11 +15,9 @@ interface NeuteringFormProps {
     onCancel: () => void;
     onSuccess: () => void;
     petId: string;
-    scheduleDate: Date | undefined;
 }
 
-export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }: NeuteringFormProps) => {
-    const [selectedPeriod, setSelectedPeriod] = useState<"MORNING" | "AFTERNOON" | "">("");
+export const CreateNeuteringForm = ({ onCancel, onSuccess, petId }: NeuteringFormProps) => {
     const [animalFastAccepted, setAnimalFastAccepted] = useState(false);
     const [animalChipAccepted, setAnimalChipAccepted] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
@@ -28,7 +26,7 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }
     const handleCreateAppointment = async (e: React.SubmitEvent) => {
         e.preventDefault();
 
-        if (!petId || !scheduleDate || !selectedPeriod) {
+        if (!petId) {
             toast.warning("Preencha todos os campos para agendar.");
             return;
         }
@@ -38,8 +36,6 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }
             
             const payload = {
                 petId,
-                scheduleDate: format(scheduleDate, "yyyy-MM-dd"),
-                period: selectedPeriod,
                 animalFastAccepted,
                 animalChipAccepted,
                 termsAccepted
@@ -79,25 +75,10 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }
 
     return (
             <form onSubmit={handleCreateAppointment} className="flex flex-col gap-4">
-                <p className="text-sm text-muted-fg">
-                    Escolha o período desejado para a castração do seu pet no dia <strong>{scheduleDate?.toLocaleDateString()}</strong>.
-                </p>
-                
-                <div className="flex flex-col gap-2">
-                    <Label htmlFor="period">Período</Label>
-                    <Select 
-                        id="period"
-                        value={selectedPeriod}
-                        onChange={(val: any) => setSelectedPeriod(val)}
-                        options={[
-                            { value: "MORNING", label: "Manhã" },
-                            { value: "AFTERNOON", label: "Tarde" }
-                        ]}
-                        placeholder="Selecione um período..."
-                    />
-                </div>
-
                 <div className="gap-2 flex flex-col">
+                    <p className="text-sm text-muted-fg py-4">
+                        Antes de concluir a solicitação, você deve aceitar todos os termos abaixo.
+                    </p>
                     <label className="flex items-start gap-2 text-sm text-default-fg cursor-pointer">
                         <input 
                             type="checkbox" 
@@ -141,7 +122,7 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, scheduleDate }
                     <Button 
                         type="submit" 
                         variant="primary" 
-                        disabled={isSubmitting || !selectedPeriod}
+                        disabled={isSubmitting}
                     >
                         {isSubmitting ? <SpinnerIcon /> : "Confirmar Agendamento"}
                     </Button>

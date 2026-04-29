@@ -155,7 +155,7 @@ export default function DashboardPage() {
                         {pets.map((pet) => (
                             <Card 
                                 key={pet.id}
-                                className=""
+                                className="shadow-sm!"
                                 size="lg"
                             >
                                 <div className="flex w-full">
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                                                     size="sm"
                                                     pill="true"
                                                 >
-                                                    {pet.species}
+                                                    {translateTable(pet.species)}
                                                 </Badge>
                                             </div>
                                             <p className="text-xs sm:text-sm text-muted-fg flex truncate">

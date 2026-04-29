@@ -7,14 +7,15 @@ import Image from "next/image"
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
 import { ApiError } from "@/src/lib/api-error"
-import { getTodayInBrasilia } from "@/src/lib/scheduling"
+// Removido getTodayInBrasilia
 import { translateError } from "@/src/lib/error-map"
 import { translateTable } from "@/src/lib/table-map"
 
 import type { Pet, NeuteringAppointment } from "@/src/constants/interfaces"
 import { neuteringStatusMap } from "@/src/constants/constants"
 
-import { Badge, TextLink, Accordion, DatePicker, Label, Select, Button, Card, Dialog } from "@/src/components/ui"
+// Removido DatePicker do import
+import { Badge, TextLink, Accordion, Label, Select, Button, Card, Dialog } from "@/src/components/ui"
 import { CreateNeuteringForm } from "@/src/components/features/dashboard/CreateNeuteringForm"
 import { toast } from "@/src/lib/toast-store"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
@@ -30,7 +31,6 @@ const NeuteringContent = () => {
 
     /* scheduling states */
     const [selectedPetId, setSelectedPetId] = useState(petIdParam);
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
     /* loading states */
     const [isLoading, setIsLoading] = useState(true);
@@ -39,8 +39,6 @@ const NeuteringContent = () => {
     /* dialog state */
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     
-    const datePickerTodayDate = getTodayInBrasilia();
-
     useEffect(() => {
         loadInitialData();
     }, []);
@@ -127,7 +125,6 @@ const NeuteringContent = () => {
 
     const handleNeuteringCreated = () => {
         setIsDialogOpen(false);
-        setSelectedDate(undefined);
         loadInitialData();
     };
     
@@ -164,41 +161,37 @@ const NeuteringContent = () => {
                 </p>
 
                 <div className="flex flex-col w-full gap-8 mb-4 md:mb-8 items-center border-2 border-dashed border-primary-border rounded-xl p-4">
-                    <div className="flex flex-col sm:flex-row w-full gap-4 max-w-2xl">
-                        <div className="flex flex-col w-full sm:w-1/2 gap-2">
+                    <div className="flex flex-col sm:flex-row w-full gap-4 max-w-2xl items-end">
+                        <div className="flex flex-col w-full gap-2">
                             <Label htmlFor="pet">Selecione o pet</Label>
-                            <Select 
-                                id="pet"
-                                placeholder="Selecione um pet..."
-                                value={selectedPetId}
-                                variant="primary"
-                                className="w-full"
-                                selectClassName="rounded-full!"
-                                onChange={(id) => {
-                                    setSelectedPetId(id); 
-                                    setIsDialogOpen(false);
-                                    setSelectedDate(undefined);
-                                }}
-                                options={
-                                    pets.map(p => ({ value: p.id, label: p.name }))  
-                                }
-                            />
-                        </div>
+                            <div className="flex gap-4 w-full items-center">
+                                <Select 
+                                    id="pet"
+                                    placeholder="Selecione um pet..."
+                                    value={selectedPetId}
+                                    variant="primary"
+                                    className="w-full"
+                                    selectClassName="rounded-full!"
+                                    onChange={(id) => {
+                                        setSelectedPetId(id); 
+                                        setIsDialogOpen(false);
+                                    }}
+                                    options={
+                                        pets.map(p => ({ value: p.id, label: p.name }))  
+                                    }
+                                />
+                                <Button 
+                                    onClick={() => setIsDialogOpen(true)}
+                                    disabled={!selectedPetId}
+                                    variant="primary"
+                                    pill="true"
+                                    className="w-full max-w-48"
+                                    size="md"
+                                >
+                                    Solicitar Castração
+                                </Button>
+                            </div>
 
-                        <div className="flex flex-col w-full sm:w-1/2 gap-2">
-                            <Label htmlFor="date">Data da castração</Label>
-                            <DatePicker
-                                className="w-full"
-                                id="date"
-                                value={selectedDate}
-                                placeholder="Selecione no calendário"
-                                disabled={!selectedPetId}
-                                disabledBefore={datePickerTodayDate} 
-                                onChange={(date: Date | undefined) => {
-                                    setSelectedDate(date);
-                                    if (date) setIsDialogOpen(true);
-                                }}
-                            />
                         </div>
                     </div>
 
@@ -284,6 +277,8 @@ const NeuteringContent = () => {
                             {appointments.map((appt) => {
                                 const statusInfo = neuteringStatusMap[appt.status] || { label: appt.status, classes: "bg-gray-100 text-gray-800 border-gray-200" };
                                 const canCancel = ["PENDING", "CONFIRMED", "AWAITING_EXAMS"].includes(appt.status);
+                                const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
+                                const period = appt.period ? translateTable(appt.period) : ""
 
                                 return (
                                     <Card 
@@ -298,40 +293,38 @@ const NeuteringContent = () => {
                                                     className="w-12 h-12 rounded-full object-cover" 
                                                     alt="Avatar" 
                                                 />
-                                                <div className="flex flex-col">
+                                                <div className="flex flex-col pl-3">
                                                     <h3 className="font-semibold text-default-fg truncate">{appt.pet.name}</h3>
                                                     <p className="text-xs text-muted-fg">
                                                        {translateTable(appt.pet.species)} • {translateTable(appt.pet.gender)}
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col gap-1">
-                                                <p className="text-sm text-default-fg">
-                                                    <span className="text-muted-fg">Data:</span> {appt.scheduleDate.split("T")[0].split("-").reverse().join("/")}
-                                                </p>
-                                                <p className="text-sm text-default-fg">
-                                                    <span className="text-muted-fg">Período:</span> {translateTable(appt.period)}
-                                                </p>
+                                            <div className="flex flex-col gap-1 text-xs w-full max-w-30">
+                                                 <p className="text-default-fg font-medium">{displayDate}</p>
+                                                {appt.period && (
+                                                    <p className="text-muted-fg">Período: {period}</p>
+                                                )}
                                             </div>
 
-                                                <Badge
-                                                    className={` ${statusInfo.classes}`}
+                                            <Badge
+                                                className={` ${statusInfo.classes}`}
+                                            >
+                                                {statusInfo.label}
+                                            </Badge>
+                                            <div className="flex">
+                                            {canCancel ? (
+                                                <Button 
+                                                    variant="danger" 
+                                                    size="sm" 
+                                                    onClick={() => handleCancelAppointment(appt.id)}
+                                                    disabled={isCanceling === appt.id}
                                                 >
-                                                    {statusInfo.label}
-                                                </Badge>
-                                                <div className="flex">
-                                                {canCancel ? (
-                                                    <Button 
-                                                        variant="danger" 
-                                                        size="sm" 
-                                                        onClick={() => handleCancelAppointment(appt.id)}
-                                                        disabled={isCanceling === appt.id}
-                                                    >
-                                                        {isCanceling === appt.id ? <SpinnerIcon /> : "Cancelar Castração"}
-                                                    </Button>
-                                                ) : (
-                                                    <span className="text-xs text-muted-fg italic">Sem ações disponíveis</span>
-                                                )}
+                                                    {isCanceling === appt.id ? <SpinnerIcon /> : "Cancelar Castração"}
+                                                </Button>
+                                            ) : (
+                                                <span className="text-xs text-muted-fg italic">Sem ações disponíveis</span>
+                                            )}
                                             </div>
                                         </div>
                                     </Card>
@@ -360,13 +353,13 @@ const NeuteringContent = () => {
                     size="md"
                     isOpen={isDialogOpen}
                     onClose={() => setIsDialogOpen(false)}
-                    title="Concluir agendamento"
+                    title="Concluir solicitação"
                 >
+                    {/* REMOVIDO: scheduleDate={selectedDate} */}
                     <CreateNeuteringForm
                         onCancel={() => setIsDialogOpen(false)}
                         onSuccess={handleNeuteringCreated}
                         petId={selectedPetId}
-                        scheduleDate={selectedDate}
                     />
                 </Dialog>
             </div>   
