@@ -127,7 +127,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                 )}
                 <UpdatePetForm 
                     pet={pet}
-                    onUpdateSuccess={fetchPet}
+                    onUpdateSuccess={handleUpdatePet}
                 />
             </div>
         </div>

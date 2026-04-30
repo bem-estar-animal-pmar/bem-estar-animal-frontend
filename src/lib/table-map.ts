@@ -86,11 +86,11 @@ const tableTranslations: Record<string, string> = {
 
     /* neuterings  & emergencies */
     PENDING: "Pendente",
-    AWAITING_EXAMS: "Aguard. Exames",
+    AWAITING_EXAMS: "Aguard. exames",
     CONFIRMED: "Confirmado",
     COMPLETED: "Completo",
     CANCELLED: "Cancelado",
-    NO_SHOW: "Faltou",
+    NO_SHOW: "Não compareceu",
 
     MORNING: "Manhã",
     AFTERNOON: "Tarde",

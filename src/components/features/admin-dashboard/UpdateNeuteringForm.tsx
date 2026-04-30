@@ -19,6 +19,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
 
     const [chipWarningDialogOpen, setChipWarningDialogOpen] = useState(false);
     const [cancelWarningDialogOpen, setCancelWarningDialogOpen] = useState(false);
+    const [noShowWarningDialogOpen, setNoShowWarningDialogOpen] = useState(false);
     
     const initialDate = appointment.scheduleDate 
         ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`)
@@ -119,7 +120,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                 status: newStatus,
                 period: newPeriod !== "" ? newPeriod : undefined,
                 scheduleDate: formattedDate,
-                pet: { ...appointment.pet, chip: chip } // Retorna o chip atualizado para a interface
+                pet: { ...appointment.pet, chip: chip }
             });
         } catch (err: unknown) {
             if (err instanceof ApiError) {
@@ -150,7 +151,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
 
     if (!isEditing) {
         return (
-            <div className="flex flex-col gap-6 pt-4 relative">
+            <div className="flex flex-col gap-4 pt-4">
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col">
                         <Label className="mb-1">Status do Agendamento</Label>
@@ -197,22 +198,21 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                     )}
                 </div>
                 
-                <div className="flex flex-wrap justify-end gap-3 py-4 border-t border-default-border items-center">
+                <div className="flex justify-end gap-4 pt-4 border-t border-default-border items-center">
                     {isFinalStatus && (
-                        <span className="text-sm text-default-500 font-medium">
-                            Nenhuma ação disponível para este status.
+                        <span className="text-sm text-default-500 font-medium w-full! text-center text-red-500">
+                            Nenhuma ação disponível para este agendamento.
                         </span>
                     )}
 
-                    {/* cancel button */}
                     {!isFinalStatus && (
                         <Button 
-                            variant="outline" 
-                            className="text-danger border-danger hover:bg-danger-50"
+                            variant="danger" 
                             onClick={() => setCancelWarningDialogOpen(true)}
                             disabled={isLoading}
+                            className="w-fit!"
                         >
-                            Cancelar Agendamento
+                            Cancelar agendamento
                         </Button>
                     )}
 
@@ -229,40 +229,51 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                     {appointment.status === "CONFIRMED" && (
                         <>
                             <Button 
-                                variant="outline" 
-                                onClick={() => executeUpdate("NO_SHOW", formData.scheduleDate, formData.period)} 
-                                disabled={isLoading}
-                            >
-                                {isLoading ? "Salvando..." : "Marcar como No Show"}
-                            </Button>
-                            <Button 
                                 variant="primary" 
                                 onClick={handleCompleteRequest} 
                                 disabled={isLoading}
                             >
-                                {isLoading ? "Salvando..." : "Marcar como Concluído"}
+                                {isLoading ? "Salvando..." : "Marcar como concluído"}
                             </Button>
                         </>
                     )}
                 </div>
 
+                {appointment.status === "CONFIRMED" && (
+                    <Button 
+                        variant="outline" 
+                        onClick={() => setNoShowWarningDialogOpen(true)}
+                        disabled={isLoading}
+                        className="self-end! max-w-100! w-full! border-danger-border! text-danger-fg! hover:bg-transparent!"
+                    >
+                        {isLoading ? "Salvando..." : "Tutor não compareceu (bloquear)"}
+                    </Button>
+                )}     
+ 
                 <Dialog
                     isOpen={cancelWarningDialogOpen} 
                     onClose={() => setCancelWarningDialogOpen(false)} 
                     title="Aviso de chip"
-                    size="md"
+                    size="lg"
                 >
                     <p className="text-xs sm:text-sm text-default-fg py-4">
                         Tem certeza que deseja cancelar este agendamento? Esta ação é irreversível.
                     </p>
                     <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setCancelWarningDialogOpen(false)}>
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setCancelWarningDialogOpen(false)}
+                            className="border-danger-border! text-danger-fg! hover:bg-transparent!"
+                        >
                             Não, voltar
                         </Button>
-                        <Button variant="danger" onClick={() => {
-                            setCancelWarningDialogOpen(false);
-                            executeUpdate("CANCELLED", formData.scheduleDate, formData.period);
-                        }}>
+                        <Button 
+                            variant="danger" 
+                            onClick={() => {
+                                setCancelWarningDialogOpen(false);
+                                executeUpdate("CANCELLED", formData.scheduleDate, formData.period);
+                            }}
+                        >
                             Sim, tenho certeza
                         </Button>
                     </div>
@@ -272,20 +283,55 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                     isOpen={chipWarningDialogOpen} 
                     onClose={() => setChipWarningDialogOpen(false)} 
                     title="Aviso de chip"
-                    size="md"
+                    size="lg"
                 >
                     <p className="text-xs sm:text-sm text-default-fg py-4">
                         O número do chip não foi preenchido. Deseja realmente concluir o agendamento sem registrar um chip?
                     </p>
-                    <div className="flex justify-center gap-3 mt-2">
-                        <Button variant="outline" onClick={() => setChipWarningDialogOpen(false)}>
+                    <div className="flex justify-end gap-3">
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setChipWarningDialogOpen(false)}
+                        >
                             Voltar e Preencher
                         </Button>
-                        <Button variant="primary" onClick={() => {
-                            setChipWarningDialogOpen(false);
-                            executeUpdate("COMPLETED", formData.scheduleDate, formData.period);
-                        }}>
+                        <Button 
+                            variant="primary" 
+                            onClick={() => {
+                                setChipWarningDialogOpen(false);
+                                executeUpdate("COMPLETED", formData.scheduleDate, formData.period);
+                            }}
+                        >
                             Concluir sem Chip
+                        </Button>
+                    </div>
+                </Dialog>
+
+                <Dialog
+                    isOpen={noShowWarningDialogOpen} 
+                    onClose={() => setNoShowWarningDialogOpen(false)} 
+                    title="Confirmar não comparecimento"
+                    size="lg"
+                >
+                    <p className="text-xs sm:text-sm text-default-fg py-4">
+                        Tem certeza que deseja registrar que o tutor não compareceu? Esta ação aplicará um bloqueio à conta do usuário por 30 dias e é irreversível.
+                    </p>
+                    <div className="flex justify-end gap-2">
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setNoShowWarningDialogOpen(false)}
+                            className="border-danger-border! text-danger-fg! hover:bg-transparent!"
+                        >
+                            Não, voltar
+                        </Button>
+                        <Button 
+                            variant="danger" 
+                            onClick={() => {
+                                setNoShowWarningDialogOpen(false);
+                                executeUpdate("NO_SHOW", formData.scheduleDate, formData.period);
+                            }}
+                        >
+                            Sim, confirmar falta
                         </Button>
                     </div>
                 </Dialog>

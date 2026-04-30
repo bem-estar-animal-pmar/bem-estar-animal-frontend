@@ -78,7 +78,7 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
             <div className="flex w-full flex-wrap justify-between items-center border-b border-default-border mb-4 pb-2">
                 <div className="flex flex-col pb-4">
                     <h1 className="font-semibold text-xl sm:text-xl lg:text-2xl text-default-fg">
-                        Informações do agendamento
+                        Informações do agendamento de castração
                     </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
                         Visualize as informações e gerencie o agendamento do pet {appointment.pet?.name}.
