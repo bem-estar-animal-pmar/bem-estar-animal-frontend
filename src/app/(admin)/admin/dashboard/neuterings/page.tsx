@@ -55,7 +55,9 @@ export default function AdminNeuteringsPage() {
         const params = new URLSearchParams();
         Object.entries(filters).forEach(([key, value]) => {
             if (Array.isArray(value)) {
-                value.forEach(v => params.append(key, String(v)));
+                if (value.length > 0) {
+                    params.append(key, value.join(","));
+                }
             } else if (value !== "" && value !== null && value !== undefined) {
                 params.append(key, String(value));
             }

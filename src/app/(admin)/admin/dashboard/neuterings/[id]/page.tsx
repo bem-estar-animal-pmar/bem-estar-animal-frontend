@@ -11,7 +11,6 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { UpdateNeuteringForm } from "@/src/components/features/admin-dashboard/UpdateNeuteringForm";
 
 export default function AdminNeuteringDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-    const router = useRouter();
     const { id: appointmentId } = use(params);
     const [appointment, setAppointment] = useState<any | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -59,6 +58,13 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
         );
     }
 
+    const handleAppointmentUpdate = (updatedFields: any) => {
+        setAppointment((prev: any) => ({
+            ...prev,
+            ...updatedFields
+        }));
+    };
+
     if (!appointment) {
         return (
             <div className="p-8 text-center text-muted-fg">
@@ -79,58 +85,62 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
                     </p>
                 </div>
             </div>
+            <div className="flex flex-col md:flex-row gap-4 w-full">
+                <div className="w-full flex flex-col">
+                    <div> calendario dos agendamentos agui </div>
 
-            <div> calendario dos agendamentos agui </div>
+                    <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full max-w-208 mb-6">
+                        <h3 className="text-lg font-semibold pb-4">Gerenciar Agendamento</h3>
+                        <UpdateNeuteringForm 
+                            appointment={appointment} 
+                            onSuccess={handleAppointmentUpdate}
+                        />
+                    </div>                
+                </div>
+                <div className="w-full flex flex-col">
+                    <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full max-w-208 mb-6">
+                        <div className="flex flex-col sm:flex-row gap-8">
+                            <div className="flex-1 flex-col">
+                                <h3 className="text-lg font-semibold pb-4">Detalhes do Pet</h3>
+                                <div className="flex gap-6 mb-4">
+                                    <div className="flex flex-col flex-1">
+                                        <span className="text-sm font-medium text-default-fg">Nome do pet</span>
+                                        <span className="text-muted-fg text-xs sm:text-sm">{appointment.pet?.name}</span>
+                                    </div>
+                                    <div className="flex flex-col flex-1">
+                                        <span className="text-sm font-medium text-default-fg">Espécie</span>
+                                        <span className="text-muted-fg text-xs sm:text-sm">{translateTable(appointment.pet?.species)}</span>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full">
+                                    <span className="text-sm font-medium text-default-fg">ID do Tutor</span>
+                                    <span className="text-muted-fg text-xs sm:text-sm break-all">{appointment.pet?.ownerId}</span>
+                                </div>
+                            </div>
 
-            <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full max-w-208 mb-6">
-                <h3 className="text-lg font-semibold pb-4">Gerenciar Agendamento</h3>
-                <UpdateNeuteringForm 
-                    appointment={appointment} 
-                    onSuccess={fetchAppointment}
-                />
-            </div>
-            
-            <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full max-w-208 mb-6">
-                <div className="flex flex-col sm:flex-row gap-8">
-                    <div className="flex-1 flex-col">
-                        <h3 className="text-lg font-semibold pb-4">Detalhes do Pet</h3>
-                        <div className="flex gap-6 mb-4">
-                            <div className="flex flex-col flex-1">
-                                <span className="text-sm font-medium text-default-fg">Nome do pet</span>
-                                <span className="text-muted-fg text-xs sm:text-sm">{appointment.pet?.name}</span>
+                            <div className="flex-1 flex-col">
+                                <h3 className="text-lg font-semibold pb-4">Contato do Solicitante</h3>
+                                <div className="flex gap-6 mb-4">
+                                    <div className="flex flex-col flex-1">
+                                        <span className="text-sm font-medium text-default-fg">Nome</span>
+                                        <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.name}</span>
+                                    </div>
+                                    <div className="flex flex-col flex-1">
+                                        <span className="text-sm font-medium text-default-fg">Telefone / Celular</span>
+                                        <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.phone || "Não informado"}</span>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full">
+                                    <span className="text-sm font-medium text-default-fg">E-mail</span>
+                                    <span className="text-muted-fg text-xs sm:text-sm break-all">{appointment.user?.email}</span>
+                                </div>
                             </div>
-                            <div className="flex flex-col flex-1">
-                                <span className="text-sm font-medium text-default-fg">Espécie</span>
-                                <span className="text-muted-fg text-xs sm:text-sm">{translateTable(appointment.pet?.species)}</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col w-full">
-                            <span className="text-sm font-medium text-default-fg">ID do Tutor</span>
-                            <span className="text-muted-fg text-xs sm:text-sm break-all">{appointment.pet?.ownerId}</span>
                         </div>
                     </div>
 
-                    <div className="flex-1 flex-col">
-                        <h3 className="text-lg font-semibold pb-4">Contato do Solicitante</h3>
-                        <div className="flex gap-6 mb-4">
-                            <div className="flex flex-col flex-1">
-                                <span className="text-sm font-medium text-default-fg">Nome</span>
-                                <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.name}</span>
-                            </div>
-                            <div className="flex flex-col flex-1">
-                                <span className="text-sm font-medium text-default-fg">Telefone / Celular</span>
-                                <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.phone || "Não informado"}</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col w-full">
-                            <span className="text-sm font-medium text-default-fg">E-mail</span>
-                            <span className="text-muted-fg text-xs sm:text-sm break-all">{appointment.user?.email}</span>
-                        </div>
-                    </div>
+                    <div> calendario medico agui </div>
                 </div>
             </div>
-
-            <div> calendario medico agui </div>
         </div>
     );
 }

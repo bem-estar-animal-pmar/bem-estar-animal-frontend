@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
@@ -10,10 +10,10 @@ import { Button, Select, Label, DatePicker, Input } from "@/src/components/ui";
 
 interface AdminUpdateNeuteringFormProps {
     appointment: any;
-    onSuccess: () => void;
+    onSuccess: (updatedFields: any) => void;
 }
 
-export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuteringFormProps) => {
+export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeuteringFormProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     
@@ -23,13 +23,20 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
 
     const [formData, setFormData] = useState({
         scheduleDate: initialDate as Date | undefined,
-        period: appointment.period
+        period: appointment.period || "" 
     });
+
+    useEffect(() => {
+        setFormData({
+            scheduleDate: appointment.scheduleDate ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`) : undefined,
+            period: appointment.period || ""
+        });
+    }, [appointment]);
 
     const handleCancel = () => {
         setFormData({
             scheduleDate: initialDate as Date | undefined,
-            period: appointment.period
+            period: appointment.period || ""
         });
         setIsEditing(false);
     };
@@ -51,7 +58,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     status: newStatus,
-                    period: newPeriod,
+                    period: newPeriod !== "" ? newPeriod : undefined,
                     scheduleDate: formattedDate,
                 }),
                 credentials: "include",
@@ -64,7 +71,11 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
 
             toast.success("Agendamento atualizado com sucesso!");
             setIsEditing(false);
-            onSuccess();
+            onSuccess({
+                status: newStatus,
+                period: newPeriod !== "" ? newPeriod : undefined,
+                scheduleDate: formattedDate,
+            });
         } catch (err: unknown) {
             if (err instanceof ApiError) {
                 if (err.details) {
@@ -81,21 +92,9 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
         }
     };
 
-    const getStatusLabel = (val: string) => {
-        const statusMap: Record<string, string> = {
-            PENDING: "Pendente",
-            AWAITING_EXAMS: "Aguardando Exames",
-            CONFIRMED: "Confirmado",
-            COMPLETED: "Concluído",
-            CANCELLED: "Cancelado",
-            NO_SHOW: "Não Compareceu (No Show)"
-        };
-        return statusMap[val] || val;
-    };
-
     const isFinalStatus = ["NO_SHOW", "COMPLETED", "CANCELLED"].includes(appointment.status);
+    const isPendingOrAwaiting = appointment.status === "PENDING" || appointment.status === "AWAITING_EXAMS";
 
-    // ======= VISÃO DE LEITURA =======
     if (!isEditing) {
         return (
             <div className="flex flex-col gap-6 pt-4">
@@ -105,7 +104,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
                         <Input 
                             readOnly 
                             disabled 
-                            value={getStatusLabel(appointment.status)} 
+                            value={translateTable(appointment.status)} 
                             className="cursor-default! opacity-100!"
                         />
                     </div>
@@ -116,8 +115,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
                             <Input 
                                 readOnly 
                                 disabled 
-                                // Mesma lógica de split, reverse e join do PetForm
-                                value={appointment.scheduleDate ? appointment.scheduleDate.split('T')[0].split('-').reverse().join('/') : "Não informada"} 
+                                value={appointment.scheduleDate ? appointment.scheduleDate.split('T')[0].split('-').reverse().join('/') : "Aguardando definição"} 
                                 className="cursor-default! opacity-100!"
                             />
                         </div>
@@ -126,7 +124,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
                             <Input 
                                 readOnly 
                                 disabled 
-                                value={translateTable(appointment.period || "Não agendado")} 
+                                value={translateTable(appointment.period || "Aguardando definição")} 
                                 className="cursor-default! opacity-100!"
                             />
                         </div>
@@ -140,23 +138,14 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
                         </span>
                     )}
 
-                    {(appointment.status === "PENDING" || appointment.status === "AWAITING_EXAMS") && (
-                        <>
-                            <Button 
-                                variant="outline" 
-                                onClick={() => setIsEditing(true)} 
-                                disabled={isLoading}
-                            >
-                                Alterar Data
-                            </Button>
-                            <Button 
-                                variant="primary" 
-                                onClick={() => executeUpdate("CONFIRMED", formData.scheduleDate, formData.period)} 
-                                disabled={isLoading}
-                            >
-                                {isLoading ? "Salvando..." : "Confirmar Agendamento"}
-                            </Button>
-                        </>
+                    {isPendingOrAwaiting && (
+                        <Button 
+                            variant="primary" 
+                            onClick={() => setIsEditing(true)} 
+                            disabled={isLoading}
+                        >
+                            Definir data e confirmar
+                        </Button>
                     )}
 
                     {appointment.status === "CONFIRMED" && (
@@ -188,7 +177,9 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
             <form 
                 onSubmit={(e) => {
                     e.preventDefault();
-                    executeUpdate(appointment.status, formData.scheduleDate, formData.period);
+                    // Se estiver PENDENTE/AGUARDANDO EXAMES, o objetivo de salvar a data é CONFIRMAR
+                    const targetStatus = isPendingOrAwaiting ? "CONFIRMED" : appointment.status;
+                    executeUpdate(targetStatus, formData.scheduleDate, formData.period);
                 }} 
                 className="flex flex-col gap-6"
             >
@@ -209,6 +200,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
                             <Select
                                 id="period"
                                 options={[
+                                    { label: "Selecione...", value: "" },
                                     { label: "Manhã", value: "MORNING" },
                                     { label: "Tarde", value: "AFTERNOON" }
                                 ]}
@@ -228,8 +220,9 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuter
                     >
                         Cancelar
                     </Button>
-                    <Button type="submit" variant="primary" disabled={isLoading}>
-                        {isLoading ? "Salvando..." : "Salvar Alterações"}
+                    {/* Botão desabilitado até que data e período sejam preenchidos */}
+                    <Button type="submit" variant="primary" disabled={isLoading || (!formData.scheduleDate || !formData.period)}>
+                        {isLoading ? "Salvando..." : (isPendingOrAwaiting ? "Confirmar Agendamento" : "Salvar Alterações")}
                     </Button>
                 </div>
             </form>

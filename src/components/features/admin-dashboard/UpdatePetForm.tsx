@@ -25,7 +25,7 @@ import { Select, DatePicker, Input, Button, Label } from "@/src/components/ui";
 
 interface AdminUpdatePetFormProps {
     pet: Pet;
-    onUpdateSuccess: () => void;
+    onUpdateSuccess: (updatedFields: any) => void;
 }
 
 export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps) => {
@@ -88,7 +88,10 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                 throw new ApiError(resultData.message, resultData.code, resultData.details);
             }
             
-            onUpdateSuccess();
+            onUpdateSuccess({
+                ...payload,
+                breed: data.breed !== undefined ? data.breed : pet.breed
+            });
             toast.success("Pet atualizado com sucesso!");
             setIsEditing(false);
         } catch (err: unknown) {

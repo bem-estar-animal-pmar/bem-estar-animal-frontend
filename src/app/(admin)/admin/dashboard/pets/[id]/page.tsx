@@ -53,6 +53,13 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
         }
     }, [petId]);
 
+    const handleUpdatePet = (updatedFields: any) => {
+        setPet((prev: any) => ({
+            ...prev,
+            ...updatedFields
+        }));
+    };
+
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-64">
