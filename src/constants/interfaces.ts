@@ -33,6 +33,7 @@ export interface NeuteringAppointment {
         species: string;
         gender: string;
         breed: string;
+        chip: string;
     }
 }
 

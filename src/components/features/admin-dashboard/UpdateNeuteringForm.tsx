@@ -6,7 +6,7 @@ import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
 
-import { Button, Select, Label, DatePicker, Input } from "@/src/components/ui";
+import { Button, Select, Label, DatePicker, Input, Dialog } from "@/src/components/ui";
 
 interface AdminUpdateNeuteringFormProps {
     appointment: any;
@@ -16,6 +16,9 @@ interface AdminUpdateNeuteringFormProps {
 export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeuteringFormProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+
+    const [chipWarningDialogOpen, setChipWarningDialogOpen] = useState(false);
+    const [cancelWarningDialogOpen, setCancelWarningDialogOpen] = useState(false);
     
     const initialDate = appointment.scheduleDate 
         ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`)
@@ -26,14 +29,18 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
         period: appointment.period || "" 
     });
 
+    const [chip, setChip] = useState(appointment.pet.chip === "NO_CHIP" ? "" : appointment.pet.chip);
+
     useEffect(() => {
         setFormData({
             scheduleDate: appointment.scheduleDate ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`) : undefined,
             period: appointment.period || ""
         });
+        setChip(appointment.pet.chip === "NO_CHIP" ? "" : appointment.pet.chip);
     }, [appointment]);
 
-    const handleCancel = () => {
+
+    const handleCancelEdit = () => {
         setFormData({
             scheduleDate: initialDate as Date | undefined,
             period: appointment.period || ""
@@ -41,10 +48,47 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
         setIsEditing(false);
     };
 
+    const updatePetChip = async () => {
+        if (chip === appointment.pet.chip) {
+            return true;
+        }
+
+        try {
+            const petResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/${appointment.petId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chip: chip !== "" ? chip : undefined }),
+                credentials: "include",
+            });
+
+            const data = await petResponse.json();
+            if (!petResponse.ok) {
+                throw new ApiError(data.message, data.code, data.details);
+            }
+            return true;
+        } catch (err: unknown) {
+            if (err instanceof ApiError) {
+                toast.warning(translateError(err.message));
+            } else {
+                toast.danger("Erro ao atualizar o chip do pet.");
+            }
+            return false;
+        }
+    };
+
     const executeUpdate = async (newStatus: string, newDate: Date | undefined, newPeriod: string) => {
         setIsLoading(true);
 
         try {
+            /* if it is being set as completed update chip first */
+            if (newStatus === "COMPLETED") {
+                const isPetUpdated = await updatePetChip();
+                if (!isPetUpdated) {
+                    setIsLoading(false);
+                    return;
+                }
+            }
+
             const formattedDate = newDate
                 ? new Date(Date.UTC(
                     newDate.getFullYear(),
@@ -69,12 +113,13 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                 throw new ApiError(data.message, data.code, data.details);
             }
 
-            toast.success("Agendamento atualizado com sucesso!");
+            toast.success(newStatus === "CANCELLED" ? "Agendamento cancelado com sucesso!" : "Agendamento atualizado com sucesso!");
             setIsEditing(false);
             onSuccess({
                 status: newStatus,
                 period: newPeriod !== "" ? newPeriod : undefined,
                 scheduleDate: formattedDate,
+                pet: { ...appointment.pet, chip: chip } // Retorna o chip atualizado para a interface
             });
         } catch (err: unknown) {
             if (err instanceof ApiError) {
@@ -92,12 +137,20 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
         }
     };
 
+    const handleCompleteRequest = () => {
+        if (!chip || chip.trim() === "" || chip === "NO_CHIP") {
+            setChipWarningDialogOpen(true);
+            return;
+        } 
+        executeUpdate("COMPLETED", formData.scheduleDate, formData.period);
+    };
+
     const isFinalStatus = ["NO_SHOW", "COMPLETED", "CANCELLED"].includes(appointment.status);
     const isPendingOrAwaiting = appointment.status === "PENDING" || appointment.status === "AWAITING_EXAMS";
 
     if (!isEditing) {
         return (
-            <div className="flex flex-col gap-6 pt-4">
+            <div className="flex flex-col gap-6 pt-4 relative">
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col">
                         <Label className="mb-1">Status do Agendamento</Label>
@@ -129,13 +182,38 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             />
                         </div>
                     </div>
+
+                    {appointment.status === "CONFIRMED" && (
+                        <div className="flex flex-col pt-2">
+                            <Label className="mb-1" htmlFor="chip">Número do chip (pet)</Label>
+                            <Input 
+                                id="chip"
+                                placeholder="Insira o número do chip implantado..."
+                                value={chip}
+                                onChange={(e) => setChip(e.target.value)}
+                                disabled={isLoading}
+                            />
+                        </div>
+                    )}
                 </div>
                 
-                <div className="flex justify-end gap-3 py-4 border-t border-default-border items-center">
+                <div className="flex flex-wrap justify-end gap-3 py-4 border-t border-default-border items-center">
                     {isFinalStatus && (
                         <span className="text-sm text-default-500 font-medium">
                             Nenhuma ação disponível para este status.
                         </span>
+                    )}
+
+                    {/* cancel button */}
+                    {!isFinalStatus && (
+                        <Button 
+                            variant="outline" 
+                            className="text-danger border-danger hover:bg-danger-50"
+                            onClick={() => setCancelWarningDialogOpen(true)}
+                            disabled={isLoading}
+                        >
+                            Cancelar Agendamento
+                        </Button>
                     )}
 
                     {isPendingOrAwaiting && (
@@ -159,7 +237,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             </Button>
                             <Button 
                                 variant="primary" 
-                                onClick={() => executeUpdate("COMPLETED", formData.scheduleDate, formData.period)} 
+                                onClick={handleCompleteRequest} 
                                 disabled={isLoading}
                             >
                                 {isLoading ? "Salvando..." : "Marcar como Concluído"}
@@ -167,17 +245,59 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                         </>
                     )}
                 </div>
+
+                <Dialog
+                    isOpen={cancelWarningDialogOpen} 
+                    onClose={() => setCancelWarningDialogOpen(false)} 
+                    title="Aviso de chip"
+                    size="md"
+                >
+                    <p className="text-xs sm:text-sm text-default-fg py-4">
+                        Tem certeza que deseja cancelar este agendamento? Esta ação é irreversível.
+                    </p>
+                    <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => setCancelWarningDialogOpen(false)}>
+                            Não, voltar
+                        </Button>
+                        <Button variant="danger" onClick={() => {
+                            setCancelWarningDialogOpen(false);
+                            executeUpdate("CANCELLED", formData.scheduleDate, formData.period);
+                        }}>
+                            Sim, tenho certeza
+                        </Button>
+                    </div>
+                </Dialog>
+
+                <Dialog
+                    isOpen={chipWarningDialogOpen} 
+                    onClose={() => setChipWarningDialogOpen(false)} 
+                    title="Aviso de chip"
+                    size="md"
+                >
+                    <p className="text-xs sm:text-sm text-default-fg py-4">
+                        O número do chip não foi preenchido. Deseja realmente concluir o agendamento sem registrar um chip?
+                    </p>
+                    <div className="flex justify-center gap-3 mt-2">
+                        <Button variant="outline" onClick={() => setChipWarningDialogOpen(false)}>
+                            Voltar e Preencher
+                        </Button>
+                        <Button variant="primary" onClick={() => {
+                            setChipWarningDialogOpen(false);
+                            executeUpdate("COMPLETED", formData.scheduleDate, formData.period);
+                        }}>
+                            Concluir sem Chip
+                        </Button>
+                    </div>
+                </Dialog>
             </div>
         );
     }
 
-    // ======= VISÃO DE EDIÇÃO =======
     return (
         <div className="flex flex-col gap-4 py-2 pt-4">
             <form 
                 onSubmit={(e) => {
                     e.preventDefault();
-                    // Se estiver PENDENTE/AGUARDANDO EXAMES, o objetivo de salvar a data é CONFIRMAR
                     const targetStatus = isPendingOrAwaiting ? "CONFIRMED" : appointment.status;
                     executeUpdate(targetStatus, formData.scheduleDate, formData.period);
                 }} 
@@ -216,11 +336,10 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                         type="button" 
                         variant="outline" 
                         disabled={isLoading}
-                        onClick={handleCancel}
+                        onClick={handleCancelEdit}
                     >
-                        Cancelar
+                        Cancelar Edição
                     </Button>
-                    {/* Botão desabilitado até que data e período sejam preenchidos */}
                     <Button type="submit" variant="primary" disabled={isLoading || (!formData.scheduleDate || !formData.period)}>
                         {isLoading ? "Salvando..." : (isPendingOrAwaiting ? "Confirmar Agendamento" : "Salvar Alterações")}
                     </Button>
