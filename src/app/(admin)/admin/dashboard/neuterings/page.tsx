@@ -1,4 +1,3 @@
-// src/app/(admin)/admin/neuterings/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -8,58 +7,58 @@ import { translateTable } from "@/src/lib/table-map";
 import { toast } from "@/src/lib/toast-store";
 import { neuteringStatusMap } from "@/src/constants/constants";
 
-import { Button, Label, Input, Select, Dialog, Badge } from "@/src/components/ui";
+import { Button, Label, Input, Select, Dialog, Badge, ButtonLink } from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
-import { AdminUpdateNeuteringForm } from "@/src/components/features/admin-dashboard/UpdateNeuteringForm";
 import { SearchPetIdForm } from "@/src/components/features/admin-dashboard/SearchPetIdForm";
 
-export default function AdminNeuteringsPage() {
-    const [appointments, setAppointments] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<"ONGOING" | "FINISHED">("ONGOING");
+type TabType = "PENDING" | "CONFIRMED" | "FINISHED";
 
-    const [selectedAppt, setSelectedAppt] = useState<any | null>(null);
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+export default function AdminNeuteringsPage() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [appointments, setAppointments] = useState<any[]>([]);
+
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [isPetModalOpen, setIsPetModalOpen] = useState(false);
     
-    const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState<{ userId: string; petId: string; status: string[]; page: number }>({
         userId: "",
         petId: "",
-        status: "PENDING", /* start with pending to prevent pagination break */
+        status: ["PENDING", "AWAITING_EXAMS"], 
         page: 1 
     });
     
+    const [activeTab, setActiveTab] = useState<TabType>("PENDING");
     const [pagination, setPagination] = useState({
         currentPage: 1, hasNextPage: false, hasPrevPage: false
     });
 
-    /* changing tabs reset the filters */
-    const handleTabChange = (tab: "ONGOING" | "FINISHED") => {
+    const handleTabChange = (tab: TabType) => {
         setActiveTab(tab);
-        const defaultStatus = tab === "ONGOING" ? "PENDING" : "COMPLETED";
-        const newFilters = { ...filters, status: defaultStatus, page: 1 };
+        let defaultStatuses: string[] = [];
+        
+        if (tab === "PENDING") {
+            defaultStatuses = ["PENDING", "AWAITING_EXAMS"];
+        } else if (tab === "CONFIRMED") {
+            defaultStatuses = ["CONFIRMED"];
+        } else if (tab === "FINISHED") {
+            defaultStatuses = ["COMPLETED", "CANCELLED", "NO_SHOW"];
+        }
+
+        const newFilters = { ...filters, status: defaultStatuses, page: 1 };
         setFilters(newFilters);
         fetchAppointments(newFilters);
     };
 
-    useEffect(() => {
-        fetchAppointments();
-    }, []);
-
-    useEffect(() => {
-        if (!isUpdateModalOpen && selectedAppt) {
-            const timeout = setTimeout(() => setSelectedAppt(null), 300);
-            return () => clearTimeout(timeout);
-        }
-    }, [isUpdateModalOpen]);
-
-    const buildQueryString = (filters: Record<string, string | number>) => {
+    const buildQueryString = (filters: Record<string, any>) => {
         const params = new URLSearchParams();
         Object.entries(filters).forEach(([key, value]) => {
-            if (value) params.append(key, String(value));
+            if (Array.isArray(value)) {
+                value.forEach(v => params.append(key, String(v)));
+            } else if (value !== "" && value !== null && value !== undefined) {
+                params.append(key, String(value));
+            }
         });
         return params.toString();
     };
@@ -101,55 +100,75 @@ export default function AdminNeuteringsPage() {
         fetchAppointments(newFilters);
     };
 
-    const handleUpdateSuccess = () => {
-        setIsUpdateModalOpen(false);
+    useEffect(() => {
         fetchAppointments();
-    };
+    }, []);
 
-    /* options are based on active tabs */
-    const statusOptionsForTab = activeTab === "ONGOING" 
-        ? [ { label: "Pendente", value: "PENDING" }, { label: "Aguard. Exames", value: "AWAITING_EXAMS" }, { label: "Confirmado", value: "CONFIRMED" } ]
-        : [ { label: "Concluído", value: "COMPLETED" }, { label: "Cancelado", value: "CANCELLED" }, { label: "Não compareceu", value: "NO_SHOW" } ];
+    const statusOptionsForTab = activeTab === "PENDING" 
+        ? [ 
+            { label: "Todos (Pendentes)", value: "PENDING,AWAITING_EXAMS" }, 
+            { label: "Pendente", value: "PENDING" }, 
+            { label: "Aguard. Exames", value: "AWAITING_EXAMS" } 
+          ]
+        : activeTab === "CONFIRMED"
+        ? [ { label: "Confirmado", value: "CONFIRMED" } ]
+        : [ 
+            { label: "Todos (Finalizados)", value: "COMPLETED,CANCELLED,NO_SHOW" }, 
+            { label: "Concluído", value: "COMPLETED" }, 
+            { label: "Cancelado", value: "CANCELLED" }, 
+            { label: "Não compareceu", value: "NO_SHOW" } 
+          ];
 
     return (
         <div className="w-full flex flex-col">
             <div className="flex flex-wrap gap-4 justify-between items-center pb-4">
                 <div>
-                    <h1 className="text-2xl font-semibold text-default-fg">Gestão de castrações</h1>
-                    <p className="text-muted-fg text-sm mt-1">Gerencie agendamentos, status e faltas.</p>
+                    <h1 className="text-2xl font-semibold text-default-fg">Gestão de pedidos castração</h1>
+                    <p className="text-muted-fg text-sm sm:text-base mt-1">Gerencie agendamentos, status e faltas.</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => setIsUserModalOpen(true)}>Buscar Usuário</Button>
-                    <Button variant="outline" onClick={() => setIsPetModalOpen(true)}>Buscar Pet</Button>
+                    <Button variant="outline" onClick={() => setIsUserModalOpen(true)}>
+                        Buscar Usuário
+                    </Button>
+                    <Button variant="outline" onClick={() => setIsPetModalOpen(true)}>
+                        Buscar Pet
+                    </Button>
                 </div>
             </div>
 
-            {/* Navegação de Abas */}
-            <div className="flex border-b border-default-border mb-4">
+            <div className="flex border-b border-default-border mb-4 overflow-x-auto">
                 <button 
-                    className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === "ONGOING" ? "border-primary-border text-primary-fg" : "border-transparent text-muted-fg hover:text-default-fg"}`}
-                    onClick={() => handleTabChange("ONGOING")}
+                    className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === "PENDING" ? "border-primary-border text-primary-fg" : "border-transparent text-muted-fg hover:text-default-fg"}`}
+                    onClick={() => handleTabChange("PENDING")}
+                >
+                    Pendentes
+                </button>
+                <button 
+                    className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === "CONFIRMED" ? "border-primary-border text-primary-fg" : "border-transparent text-muted-fg hover:text-default-fg"}`}
+                    onClick={() => handleTabChange("CONFIRMED")}
                 >
                     Em Andamento
                 </button>
                 <button 
-                    className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === "FINISHED" ? "border-primary-border text-primary-fg" : "border-transparent text-muted-fg hover:text-default-fg"}`}
+                    className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === "FINISHED" ? "border-primary-border text-primary-fg" : "border-transparent text-muted-fg hover:text-default-fg"}`}
                     onClick={() => handleTabChange("FINISHED")}
                 >
                     Finalizados
                 </button>
             </div>
 
-            {/* Filtros */}
-            <div className="flex flex-col w-full border-default-border border rounded-lg py-2 mb-4">
-                <form onSubmit={handleSearch} className="flex flex-wrap items-end gap-4 px-4 py-2 bg-neutral">
+            <div className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border py-2 mb-4">
+                <h2 className="text-default-fg font-semibold text-base sm:text-lg px-4 pb-2 mt-2">
+                    Filtrar pedidos de castração
+                </h2>
+                <form onSubmit={handleSearch} className="flex flex-wrap gap-4 px-4 py-4 bg-neutral">
                     <div className="flex flex-col w-full max-w-48">
                         <Label htmlFor="status" className="mb-1">Status</Label>
                         <Select 
                             id="status"
                             options={statusOptionsForTab}
-                            value={filters.status}
-                            onChange={(val) => setFilters({...filters, status: val})}
+                            value={filters.status.join(",")}
+                            onChange={(val) => setFilters({...filters, status: val.split(",")})}
                         />
                     </div>
                     <div className="flex flex-col w-full max-w-64">
@@ -166,10 +185,13 @@ export default function AdminNeuteringsPage() {
                             value={filters.petId} onChange={(e) => setFilters({...filters, petId: e.target.value})}
                         />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col md:flex-row justify-center items-end gap-4">
                         <Button type="submit" variant="primary">Filtrar</Button>
                         <Button type="button" variant="outline" onClick={() => {
-                            const cleared = { userId: "", petId: "", status: activeTab === "ONGOING" ? "PENDING" : "COMPLETED", page: 1 };
+                            const defaultStatuses = activeTab === "PENDING" ? ["PENDING", "AWAITING_EXAMS"] 
+                                                  : activeTab === "CONFIRMED" ? ["CONFIRMED"] 
+                                                  : ["COMPLETED", "CANCELLED", "NO_SHOW"];
+                            const cleared = { userId: "", petId: "", status: defaultStatuses, page: 1 };
                             setFilters(cleared);
                             fetchAppointments(cleared);
                         }}>Limpar</Button>
@@ -177,7 +199,6 @@ export default function AdminNeuteringsPage() {
                 </form>
             </div>
 
-            {/* Tabela */}
             <div className="w-full overflow-x-auto border border-default-border rounded-xl bg-card">
                 <div className="flex flex-col">
                     <div className="flex w-full gap-4 px-6 py-4 bg-neutral border-b border-default-border text-xs sm:text-sm font-medium text-muted-fg">
@@ -196,37 +217,39 @@ export default function AdminNeuteringsPage() {
                         ) : (
                             appointments.map((app) => {
                                 const statusInfo = neuteringStatusMap[app.status] || { label: app.status, classes: "bg-gray-100 text-gray-800 border-gray-200" };
+                                const displayDate = app.scheduleDate ? app.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Sem data";
+                                const period = app.period ? translateTable(app.period) : ""
 
                                 return (
                                 <div key={app.id} className="flex w-full gap-4 px-6 py-4 items-center text-sm">
                                     <div className="w-2/12">
-                                        {activeTab === "ONGOING" ? (
-                                            <Button size="sm" variant="outline" onClick={() => { setSelectedAppt(app); setIsUpdateModalOpen(true); }}>
-                                                Gerenciar
-                                            </Button>
-                                        ) : (
-                                            <span className="text-muted-fg text-xs">Bloqueado</span>
-                                        )}
+                                        <ButtonLink 
+                                            size="sm" 
+                                            variant="outline" 
+                                            href={`/admin/dashboard/neuterings/${app.id}`}
+                                            className="w-fit!"
+                                        >
+                                            Atualizar
+                                        </ButtonLink>
                                     </div>
                                     <div className="flex flex-col w-3/12">
-                                        <span className="text-default-fg">
-                                            {app.scheduleDate.split("T")[0].split("-").reverse().join("/")}
-                                        </span>
-                                        <span className="text-xs text-muted-fg">{translateTable(app.period)}</span>
+                                        <p className="text-default-fg font-medium">{displayDate}</p>
+                                        {app.period && (
+                                            <p className="text-muted-fg">Período: {period}</p>
+                                        )}
                                     </div>
                                     <div className="flex flex-col w-3/12">
                                         <span className="text-default-fg font-medium truncate">{app.pet.name}</span>
                                         <span className="text-xs text-muted-fg">{translateTable(app.pet.species)}</span>
                                     </div>
                                     <div className="w-2/12">
-                                        <Badge
-                                            className={` ${statusInfo.classes}`}
-                                        >
+                                        <Badge className={` ${statusInfo.classes}`}>
                                             {statusInfo.label}
                                         </Badge>
                                     </div>
                                     <div className="w-2/12 text-muted-fg truncate" title={app.user?.email}>
-                                        {app.user.name || "N/A"} {app.user.lastName || "N/A"}
+                                        <span className="text-default-fg">{app.user.name} {app.user.lastName}</span>
+                                        <div>{app.userId}</div>
                                     </div>
                                 </div>);
                             })
@@ -245,23 +268,12 @@ export default function AdminNeuteringsPage() {
                 </div>
             </div>
 
-            {/* Modais */}
             <Dialog isOpen={isUserModalOpen} onClose={() => setIsUserModalOpen(false)} title="Buscar Usuário" size="lg" className="max-w-232!">
                 <SearchUserIdForm />
             </Dialog>
 
             <Dialog isOpen={isPetModalOpen} onClose={() => setIsPetModalOpen(false)} title="Buscar Pet" size="lg" className="max-w-232!">
                 <SearchPetIdForm />
-            </Dialog>
-
-            <Dialog className="max-w-132!" isOpen={isUpdateModalOpen} onClose={() => { setIsUpdateModalOpen(false); setSelectedAppt(null); }} size="lg" title="Gerenciar Agendamento">
-                {selectedAppt && (
-                    <AdminUpdateNeuteringForm 
-                        appointment={selectedAppt} 
-                        onSuccess={handleUpdateSuccess} 
-                        onCancel={() => setIsUpdateModalOpen(false)} 
-                    />
-                )}
             </Dialog>
         </div>
     );

@@ -6,50 +6,53 @@ import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
 
-import { Button, Select, Label, DatePicker } from "@/src/components/ui";
+import { Button, Select, Label, DatePicker, Input } from "@/src/components/ui";
 
 interface AdminUpdateNeuteringFormProps {
     appointment: any;
     onSuccess: () => void;
-    onCancel: () => void;
 }
 
-export const AdminUpdateNeuteringForm = ({ appointment, onSuccess, onCancel }: AdminUpdateNeuteringFormProps) => {
+export const UpdateNeuteringForm = ({ appointment, onSuccess}: AdminUpdateNeuteringFormProps) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     
-    // Inicia a data com um objeto Date para o DatePicker
-    const initialDate = appointment.scheduleDate
-    ? new Date(
-        new Date(appointment.scheduleDate).getUTCFullYear(),
-        new Date(appointment.scheduleDate).getUTCMonth(),
-        new Date(appointment.scheduleDate).getUTCDate()
-      )
-    : undefined;
+    const initialDate = appointment.scheduleDate 
+        ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`)
+        : undefined;
 
     const [formData, setFormData] = useState({
-        status: appointment.status,
         scheduleDate: initialDate as Date | undefined,
         period: appointment.period
     });
 
-    const handleUpdate = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleCancel = () => {
+        setFormData({
+            scheduleDate: initialDate as Date | undefined,
+            period: appointment.period
+        });
+        setIsEditing(false);
+    };
+
+    const executeUpdate = async (newStatus: string, newDate: Date | undefined, newPeriod: string) => {
         setIsLoading(true);
 
         try {
+            const formattedDate = newDate
+                ? new Date(Date.UTC(
+                    newDate.getFullYear(),
+                    newDate.getMonth(),
+                    newDate.getDate()
+                )).toISOString()
+                : undefined;
+
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/neuterings/${appointment.id}/status`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    status: formData.status,
-                    period: formData.period,
-                    scheduleDate: formData.scheduleDate
-                        ? new Date(Date.UTC(
-                            formData.scheduleDate.getFullYear(),
-                            formData.scheduleDate.getMonth(),
-                            formData.scheduleDate.getDate()
-                        )).toISOString()
-                        : undefined,
+                    status: newStatus,
+                    period: newPeriod,
+                    scheduleDate: formattedDate,
                 }),
                 credentials: "include",
             });
@@ -60,6 +63,7 @@ export const AdminUpdateNeuteringForm = ({ appointment, onSuccess, onCancel }: A
             }
 
             toast.success("Agendamento atualizado com sucesso!");
+            setIsEditing(false);
             onSuccess();
         } catch (err: unknown) {
             if (err instanceof ApiError) {
@@ -77,83 +81,151 @@ export const AdminUpdateNeuteringForm = ({ appointment, onSuccess, onCancel }: A
         }
     };
 
-    const statusOptions = [
-        { label: "Pendente", value: "PENDING" },
-        { label: "Aguardando Exames", value: "AWAITING_EXAMS" },
-        { label: "Confirmado", value: "CONFIRMED" },
-        { label: "Concluído", value: "COMPLETED" },
-        { label: "Cancelado", value: "CANCELLED" },
-    ];
+    const getStatusLabel = (val: string) => {
+        const statusMap: Record<string, string> = {
+            PENDING: "Pendente",
+            AWAITING_EXAMS: "Aguardando Exames",
+            CONFIRMED: "Confirmado",
+            COMPLETED: "Concluído",
+            CANCELLED: "Cancelado",
+            NO_SHOW: "Não Compareceu (No Show)"
+        };
+        return statusMap[val] || val;
+    };
 
-    if (appointment.status === "CONFIRMED") {
-        statusOptions.push({ label: "Não Compareceu (No Show)", value: "NO_SHOW" });
-    }
+    const isFinalStatus = ["NO_SHOW", "COMPLETED", "CANCELLED"].includes(appointment.status);
 
-    return (
-        <div className="flex flex-col gap-4 py-2">
-            
-            {/* Seção de Detalhes do Agendamento (Apenas Leitura) */}
-            <div className="text-sm flex flex-col gap-3">
-                <div>
-                    <h3 className="font-semibold text-default-fg mb-1 border-b border-default-border pb-1">Detalhes do Pet</h3>
-                    <div className="grid grid-cols-2 gap-y-1 mt-2">
-                        <p><span className="text-muted-fg">Nome:</span> {appointment.pet?.name}</p>
-                        <p><span className="text-muted-fg">Espécie:</span> {translateTable(appointment.pet?.species)}</p>
-                        <p className="col-span-2 truncate" title={appointment.pet?.ownerId}>
-                            <span className="text-muted-fg">ID do Tutor:</span> {appointment.pet?.ownerId}
-                        </p>
+    // ======= VISÃO DE LEITURA =======
+    if (!isEditing) {
+        return (
+            <div className="flex flex-col gap-6 pt-4">
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col">
+                        <Label className="mb-1">Status do Agendamento</Label>
+                        <Input 
+                            readOnly 
+                            disabled 
+                            value={getStatusLabel(appointment.status)} 
+                            className="cursor-default! opacity-100!"
+                        />
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 w-full">
+                        <div className="flex flex-col w-full sm:w-1/2">
+                            <Label className="mb-1">Data</Label>
+                            <Input 
+                                readOnly 
+                                disabled 
+                                // Mesma lógica de split, reverse e join do PetForm
+                                value={appointment.scheduleDate ? appointment.scheduleDate.split('T')[0].split('-').reverse().join('/') : "Não informada"} 
+                                className="cursor-default! opacity-100!"
+                            />
+                        </div>
+                        <div className="flex flex-col w-full sm:w-1/2">
+                            <Label className="mb-1">Período</Label>
+                            <Input 
+                                readOnly 
+                                disabled 
+                                value={translateTable(appointment.period || "Não agendado")} 
+                                className="cursor-default! opacity-100!"
+                            />
+                        </div>
                     </div>
                 </div>
+                
+                <div className="flex justify-end gap-3 py-4 border-t border-default-border items-center">
+                    {isFinalStatus && (
+                        <span className="text-sm text-default-500 font-medium">
+                            Nenhuma ação disponível para este status.
+                        </span>
+                    )}
 
-                <div>
-                    <h3 className="font-semibold text-default-fg mb-1 border-b border-default-border pb-1 mt-1">Contato do Solicitante</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1 mt-2">
-                        <p className="truncate"><span className="text-muted-fg">Nome:</span> {appointment.user?.name}</p>
-                        <p className="truncate"><span className="text-muted-fg">Celular:</span> {appointment.user?.phone || "Não informado"}</p>
-                        <p className="col-span-1 sm:col-span-2 truncate"><span className="text-muted-fg">Email:</span> {appointment.user?.email}</p>
-                    </div>
+                    {(appointment.status === "PENDING" || appointment.status === "AWAITING_EXAMS") && (
+                        <>
+                            <Button 
+                                variant="outline" 
+                                onClick={() => setIsEditing(true)} 
+                                disabled={isLoading}
+                            >
+                                Alterar Data
+                            </Button>
+                            <Button 
+                                variant="primary" 
+                                onClick={() => executeUpdate("CONFIRMED", formData.scheduleDate, formData.period)} 
+                                disabled={isLoading}
+                            >
+                                {isLoading ? "Salvando..." : "Confirmar Agendamento"}
+                            </Button>
+                        </>
+                    )}
+
+                    {appointment.status === "CONFIRMED" && (
+                        <>
+                            <Button 
+                                variant="outline" 
+                                onClick={() => executeUpdate("NO_SHOW", formData.scheduleDate, formData.period)} 
+                                disabled={isLoading}
+                            >
+                                {isLoading ? "Salvando..." : "Marcar como No Show"}
+                            </Button>
+                            <Button 
+                                variant="primary" 
+                                onClick={() => executeUpdate("COMPLETED", formData.scheduleDate, formData.period)} 
+                                disabled={isLoading}
+                            >
+                                {isLoading ? "Salvando..." : "Marcar como Concluído"}
+                            </Button>
+                        </>
+                    )}
                 </div>
             </div>
+        );
+    }
 
-            {/* Formulário de Edição */}
-            <form onSubmit={handleUpdate} className="flex flex-col gap-4">
-                <div className="flex flex-col">
-                    <Label htmlFor="status" className="mb-1">Status do Agendamento</Label>
-                    <Select
-                        id="status"
-                        options={statusOptions}
-                        value={formData.status}
-                        onChange={(val) => setFormData({ ...formData, status: val })}
-                    />
+    // ======= VISÃO DE EDIÇÃO =======
+    return (
+        <div className="flex flex-col gap-4 py-2 pt-4">
+            <form 
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    executeUpdate(appointment.status, formData.scheduleDate, formData.period);
+                }} 
+                className="flex flex-col gap-6"
+            >
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col w-full sm:w-1/2">
+                            <Label htmlFor="scheduleDate" className="mb-1">Nova Data</Label>
+                            <DatePicker
+                                id="scheduleDate"
+                                className="w-full"
+                                value={formData.scheduleDate}
+                                placeholder="Selecione no calendário"
+                                onChange={(date: Date | undefined) => setFormData({ ...formData, scheduleDate: date })}
+                            />
+                        </div>
+                        <div className="flex flex-col w-full sm:w-1/2">
+                            <Label htmlFor="period" className="mb-1">Novo Período</Label>
+                            <Select
+                                id="period"
+                                options={[
+                                    { label: "Manhã", value: "MORNING" },
+                                    { label: "Tarde", value: "AFTERNOON" }
+                                ]}
+                                value={formData.period}
+                                onChange={(val) => setFormData({ ...formData, period: val })}
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex flex-col w-full sm:w-1/2">
-                        <Label htmlFor="scheduleDate" className="mb-1">Data</Label>
-                        <DatePicker
-                            id="scheduleDate"
-                            className="w-full"
-                            value={formData.scheduleDate}
-                            placeholder="Selecione no calendário"
-                            onChange={(date: Date | undefined) => setFormData({ ...formData, scheduleDate: date })}
-                        />
-                    </div>
-                    <div className="flex flex-col w-full sm:w-1/2">
-                        <Label htmlFor="period" className="mb-1">Período</Label>
-                        <Select
-                            id="period"
-                            options={[
-                                { label: "Manhã", value: "MORNING" },
-                                { label: "Tarde", value: "AFTERNOON" }
-                            ]}
-                            value={formData.period}
-                            onChange={(val) => setFormData({ ...formData, period: val })}
-                        />
-                    </div>
-                </div>
-
-                <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-default-border">
-                    <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
+                <div className="flex justify-end gap-3 pt-4 border-t border-default-border">
+                    <Button 
+                        type="button" 
+                        variant="outline" 
+                        disabled={isLoading}
+                        onClick={handleCancel}
+                    >
                         Cancelar
                     </Button>
                     <Button type="submit" variant="primary" disabled={isLoading}>
