@@ -8,18 +8,20 @@ import animal_logo from "@/public/animal-logo.svg"
 export const AdminHeader = () => {
 
     return (
-        <header className="flex fixed w-full items-center justify-center h-18 bg-white/80 backdrop-blur-xs z-50 border-b-2 border-default-border">
+        <header className="flex fixed w-full items-center justify-center h-18 bg-white/80 backdrop-blur-xs z-50 border-b border-default-border">
             <div className="flex w-full max-w-384 items-center justify-between px-3 sm:px-4 md:px-8 lg:px-12">
                 <div className="flex">
-                    <Link href="/dashboard">
+                    <Link href="/admin/dashboard">
                         <Image
                             src={animal_logo}
                             alt="Logo do Bem-Estar Animal"
-                            className="w-full max-w-16 sm:max-18 lg:max-w-20"
+                            className="w-full max-w-16 sm:max-w-18 lg:max-w-20"
                         />
                     </Link>
                 </div>
-                <AdminNavbar />
+                <div className="flex justify-center w-full sm:mr-18 lg:mr-20 bg-neutral">
+                    <AdminNavbar />
+                </div>
             </div>
         </header>
     )
