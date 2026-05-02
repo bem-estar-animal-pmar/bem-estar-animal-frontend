@@ -10,7 +10,7 @@ import { translateError } from "@/src/lib/error-map";
 import type { Pet } from "@/src/constants/interfaces";
 
 import { Input, Label } from "@/src/components/ui";
-import { UpdatePetForm } from "@/src/components/features/admin-dashboard/UpdatePetForm";
+import { UpdatePetSection } from "@/src/components/features/admin-dashboard/UpdatePetSection";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -47,6 +47,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
             setIsLoading(false);
         }
     };
+
     useEffect(() => {
         if (petId) {
             fetchPet();
@@ -86,49 +87,37 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                     </p>
                 </div>
             </div>
-            <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full max-w-208">
+
+            <div className="flex flex-col md:flex-row gap-4 w-full">
+                <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full mb-6">
+                    <h3 className="text-lg font-semibold">Gerenciar pet</h3>
+                    <UpdatePetSection 
+                        pet={pet}
+                        onUpdateSuccess={handleUpdatePet}
+                    />
+                </div>
+
                 {pet.owner && (
-                    <div className="flex flex-col pb-4 border-b border-default-border mb-4">
-                        <h3 className="text-lg font-semibold pb-4">
+                    <div className="flex flex-col gap-4 bg-card border border-default-border rounded-xl p-6 w-full mb-6 h-fit">
+                        <h3 className="text-lg font-semibold">
                             Informações do tutor
                         </h3>
-                        <div className="flex">
-                            <div className="flex-1">
-                                <Label>Nome completo</Label>
-                                <Input
-                                    readOnly
-                                    disabled
-                                    value={`${pet.owner.name} ${pet.owner.lastName}`}
-                                    className="cursor-default! opacity-100! border-0!"
-                                />
-                            </div>
+                        <div className="flex flex-col w-full">
+                            <p className="text-sm font-medium text-default-fg">Nome completo</p>
+                            <span className="text-muted-fg text-xs sm:text-sm">{pet.owner.name} {pet.owner.lastName}</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-4 w-full">
-                            <div className="flex-1">
-                                <Label>E-mail</Label>
-                                <Input
-                                    readOnly
-                                    disabled
-                                    value={pet.owner.email}
-                                    className="cursor-default! opacity-100! border-0!"
-                                />
+                        <div className="flex gap-6 mb-4">
+                            <div className="flex flex-col flex-1">
+                                <p className="text-sm font-medium text-default-fg">E-mail</p>
+                                <span className="text-muted-fg text-xs sm:text-sm">{pet.owner.email}</span>
                             </div>
-                            <div className="flex-1">
-                                <Label>Telefone</Label>
-                                <Input
-                                    readOnly
-                                    disabled
-                                    value={pet.owner.phone || "Não informado"}
-                                    className="cursor-default! opacity-100! border-0!"
-                                />
+                            <div className="flex flex-col flex-1">
+                                <p className="text-sm font-medium text-default-fg">Telefone</p>
+                                <span className="text-muted-fg text-xs sm:text-sm">{pet.owner.phone}</span>
                             </div>
                         </div>
                     </div>
                 )}
-                <UpdatePetForm 
-                    pet={pet}
-                    onUpdateSuccess={handleUpdatePet}
-                />
             </div>
         </div>
     );

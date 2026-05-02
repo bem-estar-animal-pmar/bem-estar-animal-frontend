@@ -20,16 +20,17 @@ import {
     petSpeciesOptions, 
     petSizeOptions 
 } from "@/src/constants/constants";
-import { Select, DatePicker, Input, Button, Label } from "@/src/components/ui";
+import { Select, DatePicker, Input, Button, Label, Dialog } from "@/src/components/ui";
 
 
-interface AdminUpdatePetFormProps {
+interface AdminUpdatePetSectionProps {
     pet: Pet;
     onUpdateSuccess: (updatedFields: any) => void;
 }
 
-export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps) => {
+export const UpdatePetSection = ({ pet, onUpdateSuccess }: AdminUpdatePetSectionProps) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [updateWarningDialogOpen, setUpdateWarningDialogOpen] = useState(false);
 
     const { control, watch, setValue, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UpdatePetFormData>({
         resolver: zodResolver(updatePetSchema) as any,
@@ -214,11 +215,39 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                 <div className="flex justify-end gap-3 py-4 border-t border-default-border">
                     <Button 
                         variant="primary" 
-                        onClick={() => setIsEditing(true)}
+                        onClick={() => setUpdateWarningDialogOpen(true)}
                     >
                         Atualizar
                     </Button>
                 </div>
+
+            <Dialog
+                isOpen={updateWarningDialogOpen} 
+                onClose={() => setUpdateWarningDialogOpen(false)} 
+                title="Confirmar"
+                size="lg"
+            >
+                <p className="text-xs sm:text-sm text-default-fg py-4">
+                    Tem certeza que deseja continuar? Apenas modifique detalhes do pet de alguém se for estritamente necessário ou por pedido do tutor.
+                </p>
+                <div className="flex justify-end gap-2">
+                    <Button 
+                        variant="outline" 
+                        onClick={() => setUpdateWarningDialogOpen(false)}
+                    >
+                        Não, voltar
+                    </Button>
+                    <Button 
+                        variant="primary" 
+                        onClick={() => {
+                            setUpdateWarningDialogOpen(false);
+                            setIsEditing(true);
+                        }}
+                    >
+                        Sim, tenho certeza
+                    </Button>
+                </div>
+            </Dialog>
             </div>
         );
     }

@@ -9,7 +9,7 @@ import { toast } from "@/src/lib/toast-store";
 import { petSpeciesOptions } from "@/src/constants/constants";
 import type { Pet } from "@/src/constants/interfaces";
 
-import { Button, Label, Input, Select, Dialog, Badge, ButtonLink }  from "@/src/components/ui";
+import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, Card }  from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
 
@@ -90,11 +90,13 @@ export default function AdminPetsPage() {
 
     return (
         <div className="w-full flex flex-col">
-            <div className="flex flex-wrap justify-between items-center border-b border-default-border mb-4 pb-2">
+            <div className="flex flex-wrap gap-4 justify-between items-center border-b border-default-border mb-4 pb-2">
                 <div className="flex flex-col pb-4">
-                    <h1 className="font-semibold text-xl sm:text-xl lg:text-2xl text-default-fg">Gestão de pets</h1>
+                    <h1 className="font-semibold text-xl sm:text-xl lg:text-2xl text-default-fg">
+                        Busca de pets
+                    </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
-                        Visualize, filtre e edite o registro geral de pets.
+                        Visualize, filtre e edite o registro geral de pets dos tutores.
                     </p>
                 </div>
                 <Button 
@@ -104,12 +106,11 @@ export default function AdminPetsPage() {
                     Buscar Usuários
                 </Button>
             </div>
-
-            <div className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border py-2 mb-4">
-                <h2 className="text-default-fg font-semibold text-base sm:text-lg px-4 pb-2 mt-2">
+            <div className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border mb-4 bg-card">
+                <h2 className="text-default-fg font-semibold text-xs sm:text-base lg:text-lg px-4 py-4">
                     Filtrar pets
                 </h2>
-                <form onSubmit={handlePetSearch} className="flex gap-4 px-4 py-4 bg-neutral">
+                <form onSubmit={handlePetSearch} className="flex gap-4 px-4 py-4">
                     <div className="flex flex-col md:flex-row gap-4 w-full max-w-116">
                         <div className="flex flex-col w-full max-w-64">
                             <Label htmlFor="pet-name" className="mb-1">
@@ -198,55 +199,59 @@ export default function AdminPetsPage() {
                     
                     <div className="flex flex-col divide-y divide-default-border">
                         {isLoadingPets ? (
-                            <div className="flex justify-center items-center py-8">
-                                <SpinnerIcon />
+                            <div className="flex justify-center items-center h-16 py-8">
+                                <SpinnerIcon size={24}/>
                             </div>
-                        ) : pets.length === 0 ? (
-                            <div className="text-center py-8 text-muted-fg text-xs sm:text-sm">
-                                Nenhum pet encontrado com os filtros atuais.
-                            </div>
-                        ) : (
-                            pets.map((pet) => (
-                                <div 
-                                    key={pet.id} 
-                                    className="flex w-full gap-4 px-6 py-4 items-center text-sm"
-                                >
-                                    <div className="w-2/16">
-                                        <ButtonLink
-                                            size="sm"
-                                            variant="outline"
-                                            className="w-fit!"
-                                            href={`/admin/dashboard/pets/${pet.id}`}
-                                        >
-                                            Detalhes
-                                        </ButtonLink>
-                                    </div>
-                                    <div className="w-3/16 font-medium text-default-fg truncate">
-                                        {pet.name}
-                                    </div>
-                                    <div className="flex flex-col w-3/16">
-                                        <span className="text-default-fg">
-                                            {translateTable(pet.species)}
-                                        </span>
-                                        <span className="text-xs text-muted-fg truncate">
-                                            {translateTable(pet.breed)}
-                                        </span>
-                                    </div>
-                                    <div className="w-2/16">
-                                        <Badge>
-                                            {translateTable(pet.adoptionStatus)}
-                                        </Badge>
-                                    </div>
-                                    <div className="w-2/16 fext-xs text-muted-fg truncate">
-                                        {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}
-                                    </div>
-                                    <div className="w-4/16 text-xs text-muted-fg truncate" title={pet.ownerId}>
-                                        <span className="text-default-fg">{pet.owner!.name} {pet.owner!.lastName}</span>
-                                        <div>{pet.ownerId}</div>
-                                    </div>
+                        ) : pets.length === 0 ? 
+                            (
+                                <div className="text-center py-8 text-muted-fg text-xs sm:text-sm">
+                                    Nenhum pet encontrado com os filtros atuais.
                                 </div>
-                            ))
-                        )}
+                            ) 
+                                : 
+                            (
+                                pets.map((pet) => (
+                                    <div 
+                                        key={pet.id} 
+                                        className="flex w-full gap-4 px-6 py-4 items-center text-sm"
+                                    >
+                                        <div className="w-2/16">
+                                            <ButtonLink
+                                                size="sm"
+                                                variant="outline"
+                                                className="w-fit!"
+                                                href={`/admin/dashboard/pets/${pet.id}`}
+                                            >
+                                                Detalhes
+                                            </ButtonLink>
+                                        </div>
+                                        <div className="w-3/16 font-medium text-default-fg truncate">
+                                            {pet.name}
+                                        </div>
+                                        <div className="flex flex-col w-3/16">
+                                            <span className="text-default-fg">
+                                                {translateTable(pet.species)}
+                                            </span>
+                                            <span className="text-xs text-muted-fg truncate">
+                                                {translateTable(pet.breed)}
+                                            </span>
+                                        </div>
+                                        <div className="w-2/16">
+                                            <Badge>
+                                                {translateTable(pet.adoptionStatus)}
+                                            </Badge>
+                                        </div>
+                                        <div className="w-2/16 text-xs sm:text-sm text-muted-fg truncate">
+                                            {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}
+                                        </div>
+                                        <div className="w-4/16 text-xs text-muted-fg truncate" title={pet.ownerId}>
+                                            <span className="text-default-fg">{pet.owner!.name} {pet.owner!.lastName}</span>
+                                            <div>{pet.ownerId}</div>
+                                        </div>
+                                    </div>
+                                ))
+                            )
+                        }
                     </div>
                     
                     {!isLoadingPets && pets.length > 0 && (
