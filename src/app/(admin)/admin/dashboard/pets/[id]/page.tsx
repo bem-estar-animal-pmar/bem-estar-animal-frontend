@@ -9,8 +9,8 @@ import { translateError } from "@/src/lib/error-map";
 
 import type { Pet } from "@/src/constants/interfaces";
 
-import { Card, Input, Label } from "@/src/components/ui";
-import { UpdatePetSection } from "@/src/components/features/admin-dashboard/UpdatePetForm";
+import { Card } from "@/src/components/ui";
+import { UpdatePetForm } from "@/src/components/features/admin-dashboard/UpdatePetForm";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -94,7 +94,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                     className="shadow-none!"
                 >
                     <h3 className="text-base lg:text-lg font-semibold pb-4">Gerenciar pet</h3>
-                    <UpdatePetSection 
+                    <UpdatePetForm
                         pet={pet}
                         onUpdateSuccess={handleUpdatePet}
                     />

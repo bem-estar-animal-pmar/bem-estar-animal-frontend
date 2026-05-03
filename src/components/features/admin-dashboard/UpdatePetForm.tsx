@@ -23,12 +23,12 @@ import {
 import { Select, DatePicker, Input, Button, Label, Dialog } from "@/src/components/ui";
 
 
-interface AdminUpdatePetSectionProps {
+interface AdminUpdatePetFormProps {
     pet: Pet;
     onUpdateSuccess: (updatedFields: any) => void;
 }
 
-export const UpdatePetSection = ({ pet, onUpdateSuccess }: AdminUpdatePetSectionProps) => {
+export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [updateWarningDialogOpen, setUpdateWarningDialogOpen] = useState(false);
 
