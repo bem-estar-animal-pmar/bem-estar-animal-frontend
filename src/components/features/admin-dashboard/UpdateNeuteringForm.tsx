@@ -151,7 +151,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
 
     if (!isEditing) {
         return (
-            <div className="flex flex-col gap-4 pt-4">
+            <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col">
                         <Label className="mb-1">Status do Agendamento</Label>

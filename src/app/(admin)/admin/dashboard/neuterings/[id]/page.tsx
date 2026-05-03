@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
 import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
@@ -9,6 +8,8 @@ import { translateTable } from "@/src/lib/table-map";
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { UpdateNeuteringForm } from "@/src/components/features/admin-dashboard/UpdateNeuteringForm";
+import { MedicalRecordSection } from "@/src/components/features/admin-dashboard/MedicalRecordSection";
+import { Card } from "@/src/components/ui";
 
 export default function AdminNeuteringDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: appointmentId } = use(params);
@@ -65,6 +66,13 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
         }));
     };
 
+    const handleMedicalRecordUpdate = (updatedRecord: any) => {
+        setAppointment((prev: any) => ({
+            ...prev,
+            medicalRecord: updatedRecord
+        }));
+    };
+
     if (!appointment) {
         return (
             <div className="p-8 text-center text-muted-fg">
@@ -88,57 +96,62 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
             <div className="flex flex-col md:flex-row gap-4 w-full">
                 <div className="w-full flex flex-col">
                     <div> calendario dos agendamentos agui </div>
-
-                    <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full max-w-208 mb-6">
-                        <h3 className="text-lg font-semibold pb-4">Gerenciar Agendamento</h3>
+                    <Card
+                        size="lg"
+                        className="shadow-none! max-w-208"
+                    >
+                        <h3 className="text-base lg:text-lg font-semibold pb-4">Gerenciar Agendamento</h3>
                         <UpdateNeuteringForm 
                             appointment={appointment} 
                             onSuccess={handleAppointmentUpdate}
                         />
-                    </div>                
+                    </Card>        
                 </div>
-                <div className="w-full flex flex-col">
-                    <div className="flex flex-col bg-card border border-default-border rounded-xl p-6 w-full max-w-208 mb-6">
-                        <div className="flex flex-col sm:flex-row gap-8">
-                            <div className="flex-1 flex-col">
-                                <h3 className="text-lg font-semibold pb-4">Detalhes do Pet</h3>
-                                <div className="flex gap-6 mb-4">
-                                    <div className="flex flex-col flex-1">
-                                        <span className="text-sm font-medium text-default-fg">Nome do pet</span>
-                                        <span className="text-muted-fg text-xs sm:text-sm">{appointment.pet?.name}</span>
-                                    </div>
-                                    <div className="flex flex-col flex-1">
-                                        <span className="text-sm font-medium text-default-fg">Espécie</span>
-                                        <span className="text-muted-fg text-xs sm:text-sm">{translateTable(appointment.pet?.species)}</span>
-                                    </div>
+                <div className="w-full flex flex-col gap-4">
+                    <Card
+                        size="lg"
+                        className="shadow-none! flex flex-col gap-4 lg:flex-row max-w-208"
+                    >
+                        <div className="flex-1 flex-col">
+                            <h3 className="text-lg font-semibold pb-4">Detalhes do Pet</h3>
+                            <div className="flex gap-6 mb-4">
+                                <div className="flex flex-col flex-1">
+                                    <p className="text-sm font-medium text-default-fg">Nome do pet</p>
+                                    <span className="text-muted-fg text-xs sm:text-sm">{appointment.pet?.name}</span>
                                 </div>
-                                <div className="flex flex-col w-full">
-                                    <span className="text-sm font-medium text-default-fg">ID do Tutor</span>
-                                    <span className="text-muted-fg text-xs sm:text-sm break-all">{appointment.pet?.ownerId}</span>
+                                <div className="flex flex-col flex-1">
+                                    <p className="text-sm font-medium text-default-fg">Espécie</p>
+                                    <span className="text-muted-fg text-xs sm:text-sm">{translateTable(appointment.pet?.species)}</span>
                                 </div>
                             </div>
-
-                            <div className="flex-1 flex-col">
-                                <h3 className="text-lg font-semibold pb-4">Contato do Solicitante</h3>
-                                <div className="flex gap-6 mb-4">
-                                    <div className="flex flex-col flex-1">
-                                        <span className="text-sm font-medium text-default-fg">Nome</span>
-                                        <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.name}</span>
-                                    </div>
-                                    <div className="flex flex-col flex-1">
-                                        <span className="text-sm font-medium text-default-fg">Telefone / Celular</span>
-                                        <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.phone || "Não informado"}</span>
-                                    </div>
-                                </div>
-                                <div className="flex flex-col w-full">
-                                    <span className="text-sm font-medium text-default-fg">E-mail</span>
-                                    <span className="text-muted-fg text-xs sm:text-sm break-all">{appointment.user?.email}</span>
-                                </div>
+                            <div className="flex flex-col w-full">
+                                <p className="text-sm font-medium text-default-fg">ID do Tutor</p>
+                                <p className="text-muted-fg text-xs sm:text-sm break-all">{appointment.pet?.ownerId}</p>
                             </div>
                         </div>
-                    </div>
+                        <div className="flex-1 flex-col">
+                            <h3 className="text-lg font-semibold pb-4">Contato do Solicitante</h3>
+                            <div className="flex gap-6 mb-4">
+                                <div className="flex flex-col flex-1">
+                                    <span className="text-sm font-medium text-default-fg">Nome</span>
+                                    <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.name}</span>
+                                </div>
+                                <div className="flex flex-col flex-1">
+                                    <span className="text-sm font-medium text-default-fg">Telefone / Celular</span>
+                                    <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.phone || "Não informado"}</span>
+                                </div>
+                            </div>
+                            <div className="flex flex-col w-full">
+                                <span className="text-sm font-medium text-default-fg">E-mail</span>
+                                <span className="text-muted-fg text-xs sm:text-sm break-all">{appointment.user?.email}</span>
+                            </div>
+                        </div>
+                    </Card>
 
-                    <div> calendario medico agui </div>
+                    <MedicalRecordSection 
+                        medicalRecord={appointment.medicalRecord} 
+                        onUpdateSuccess={handleMedicalRecordUpdate} 
+                    />
                 </div>
             </div>
         </div>

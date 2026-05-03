@@ -7,7 +7,7 @@ import { translateTable } from "@/src/lib/table-map";
 import { toast } from "@/src/lib/toast-store";
 import { neuteringStatusMap } from "@/src/constants/constants";
 
-import { Button, Label, Input, Select, Dialog, Badge, ButtonLink } from "@/src/components/ui";
+import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, Tabs, ButtonTab } from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
@@ -21,11 +21,17 @@ export default function AdminNeuteringsPage() {
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [isPetModalOpen, setIsPetModalOpen] = useState(false);
+
+    const tabStatusGroup: Record<string, string[]> = {
+        "PENDING": ["PENDING", "AWAITING_EXAMS"],
+        "CONFIRMED": ["CONFIRMED"],
+        "FINISHED": ["COMPLETED", "CANCELLED", "NO_SHOW"]
+    }
     
     const [filters, setFilters] = useState<{ userId: string; petId: string; status: string[]; page: number }>({
         userId: "",
         petId: "",
-        status: ["PENDING", "AWAITING_EXAMS"], 
+        status: tabStatusGroup["PENDING"], 
         page: 1 
     });
     
@@ -36,17 +42,11 @@ export default function AdminNeuteringsPage() {
 
     const handleTabChange = (tab: TabType) => {
         setActiveTab(tab);
-        let defaultStatuses: string[] = [];
-        
-        if (tab === "PENDING") {
-            defaultStatuses = ["PENDING", "AWAITING_EXAMS"];
-        } else if (tab === "CONFIRMED") {
-            defaultStatuses = ["CONFIRMED"];
-        } else if (tab === "FINISHED") {
-            defaultStatuses = ["COMPLETED", "CANCELLED", "NO_SHOW"];
-        }
-
-        const newFilters = { ...filters, status: defaultStatuses, page: 1 };
+        const newFilters = { 
+            ...filters, 
+            status: tabStatusGroup[tab], 
+            page: 1 
+        };
         setFilters(newFilters);
         fetchAppointments(newFilters);
     };
@@ -123,10 +123,14 @@ export default function AdminNeuteringsPage() {
 
     return (
         <div className="w-full flex flex-col">
-            <div className="flex flex-wrap gap-4 justify-between items-center pb-4">
-                <div>
-                    <h1 className="text-2xl font-semibold text-default-fg">Gestão de pedidos castração</h1>
-                    <p className="text-muted-fg text-sm sm:text-base mt-1">Gerencie agendamentos, status e faltas.</p>
+            <div className="flex flex-wrap gap-4 justify-between items-center">
+                <div className="flex flex-col pb-4">
+                    <h1 className="font-semibold text-xl sm:text-xl lg:text-2xl text-default-fg">
+                        Gestão de pedidos castração
+                    </h1>
+                    <p className="text-muted-fg text-sm sm:text-base">
+                        Gerencie agendamentos, status e faltas.
+                    </p>
                 </div>
                 <div className="flex gap-2">
                     <Button variant="outline" onClick={() => setIsUserModalOpen(true)}>
@@ -138,29 +142,29 @@ export default function AdminNeuteringsPage() {
                 </div>
             </div>
 
-            <div className="flex border-b border-default-border mb-4 overflow-x-auto">
-                <button 
-                    className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === "PENDING" ? "border-primary-border text-primary-fg" : "border-transparent text-muted-fg hover:text-default-fg"}`}
+            <Tabs>
+                <ButtonTab
+                    isActive={activeTab === "PENDING"}
                     onClick={() => handleTabChange("PENDING")}
                 >
                     Pendentes
-                </button>
-                <button 
-                    className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === "CONFIRMED" ? "border-primary-border text-primary-fg" : "border-transparent text-muted-fg hover:text-default-fg"}`}
+                </ButtonTab>
+                <ButtonTab
+                    isActive={activeTab === "CONFIRMED"}
                     onClick={() => handleTabChange("CONFIRMED")}
                 >
-                    Em Andamento
-                </button>
-                <button 
-                    className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === "FINISHED" ? "border-primary-border text-primary-fg" : "border-transparent text-muted-fg hover:text-default-fg"}`}
+                    Em andamento
+                </ButtonTab>
+                <ButtonTab
+                    isActive={activeTab === "FINISHED"}
                     onClick={() => handleTabChange("FINISHED")}
                 >
                     Finalizados
-                </button>
-            </div>
+                </ButtonTab>
+            </Tabs>
 
-            <div className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border py-2 mb-4">
-                <h2 className="text-default-fg font-semibold text-base sm:text-lg px-4 pb-2 mt-2">
+            <div className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border mb-4">
+                <h2 className="text-default-fg font-semibold text-xs sm:text-base lg:text-lg px-4 py-4">
                     Filtrar pedidos de castração
                 </h2>
                 <form onSubmit={handleSearch} className="flex flex-wrap gap-4 px-4 py-4 bg-neutral">
@@ -169,26 +173,31 @@ export default function AdminNeuteringsPage() {
                         <Select 
                             id="status"
                             options={statusOptionsForTab}
+                            disabled={activeTab === "CONFIRMED"}
                             value={filters.status.join(",")}
                             onChange={(val) => setFilters({...filters, status: val.split(",")})}
                         />
                     </div>
                     <div className="flex flex-col w-full max-w-64">
-                        <Label htmlFor="userId" className="mb-1">ID do Dono</Label>
+                        <Label htmlFor="userId" className="mb-1">ID do tutor</Label>
                         <Input 
                             id="userId" placeholder="ID do usuário..." 
                             value={filters.userId} onChange={(e) => setFilters({...filters, userId: e.target.value})}
                         />
                     </div>
                     <div className="flex flex-col w-full max-w-64">
-                        <Label htmlFor="petId" className="mb-1">ID do Pet</Label>
+                        <Label htmlFor="petId" className="mb-1">ID do pet</Label>
                         <Input 
-                            id="petId" placeholder="ID do pet..." 
-                            value={filters.petId} onChange={(e) => setFilters({...filters, petId: e.target.value})}
+                            id="petId" 
+                            placeholder="ID do pet..." 
+                            value={filters.petId} 
+                            onChange={(e) => setFilters({...filters, petId: e.target.value})}
                         />
                     </div>
                     <div className="flex flex-col md:flex-row justify-center items-end gap-4">
-                        <Button type="submit" variant="primary">Filtrar</Button>
+                        <Button type="submit" variant="primary">
+                            Filtrar
+                        </Button>
                         <Button type="button" variant="outline" onClick={() => {
                             const defaultStatuses = activeTab === "PENDING" ? ["PENDING", "AWAITING_EXAMS"] 
                                                   : activeTab === "CONFIRMED" ? ["CONFIRMED"] 
@@ -196,7 +205,9 @@ export default function AdminNeuteringsPage() {
                             const cleared = { userId: "", petId: "", status: defaultStatuses, page: 1 };
                             setFilters(cleared);
                             fetchAppointments(cleared);
-                        }}>Limpar</Button>
+                        }}>
+                            Limpar
+                        </Button>
                     </div>
                 </form>
             </div>
@@ -205,20 +216,22 @@ export default function AdminNeuteringsPage() {
                 <div className="flex flex-col">
                     <div className="flex w-full gap-4 px-6 py-4 bg-neutral border-b border-default-border text-xs sm:text-sm font-medium text-muted-fg">
                         <div className="w-2/12">AÇÃO</div>
-                        <div className="w-3/12">DATA E PERÍODO</div>
+                        <div className="w-2/12">DATA E PERÍODO</div>
                         <div className="w-3/12">PET / ESPÉCIE</div>
                         <div className="w-2/12">STATUS</div>
-                        <div className="w-2/12">TUTOR</div>
+                        <div className="w-3/12">TUTOR</div>
                     </div>
                     
                     <div className="flex flex-col divide-y divide-default-border">
                         {isLoading ? (
-                            <div className="flex justify-center items-center py-8"><SpinnerIcon /></div>
+                            <div className="flex justify-center items-center py-8">
+                                <SpinnerIcon />
+                            </div>
                         ) : appointments.length === 0 ? (
                             <div className="text-center py-8 text-muted-fg text-sm">Nenhum agendamento encontrado.</div>
                         ) : (
                             appointments.map((app) => {
-                                const statusInfo = neuteringStatusMap[app.status] || { label: app.status, classes: "bg-gray-100 text-gray-800 border-gray-200" };
+                                const statusInfo = neuteringStatusMap[app.status];
                                 const displayDate = app.scheduleDate ? app.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Sem data";
                                 const period = app.period ? translateTable(app.period) : ""
 
@@ -233,11 +246,11 @@ export default function AdminNeuteringsPage() {
                                         >
                                             Atualizar
                                         </ButtonLink>
-                                    </div>
-                                    <div className="flex flex-col w-3/12">
+                                    </div>  
+                                    <div className="flex flex-col w-2/12">
                                         <p className="text-default-fg font-medium">{displayDate}</p>
                                         {app.period && (
-                                            <p className="text-muted-fg">Período: {period}</p>
+                                            <p className="text-muted-fg text-xs">Período: {period}</p>
                                         )}
                                     </div>
                                     <div className="flex flex-col w-3/12">
@@ -249,7 +262,7 @@ export default function AdminNeuteringsPage() {
                                             {statusInfo.label}
                                         </Badge>
                                     </div>
-                                    <div className="w-2/12 text-muted-fg truncate" title={app.user?.email}>
+                                    <div className="w-3/12 text-xs text-muted-fg truncate" title={app.user?.email}>
                                         <span className="text-default-fg">{app.user.name} {app.user.lastName}</span>
                                         <div>{app.userId}</div>
                                     </div>
@@ -259,7 +272,7 @@ export default function AdminNeuteringsPage() {
                     </div>
                     
                     {!isLoading && appointments.length > 0 && (
-                        <div className="flex justify-between items-center px-6 py-4 bg-muted/30 border-t border-default-border">
+                        <div className="flex justify-between items-center px-6 py-4 border-t border-default-border">
                             <span className="text-sm text-muted-fg">Página {pagination.currentPage}</span>
                             <div className="flex gap-2">
                                 <Button variant="outline" size="sm" onClick={() => handlePageChange(pagination.currentPage - 1)} disabled={!pagination.hasPrevPage}>Anterior</Button>

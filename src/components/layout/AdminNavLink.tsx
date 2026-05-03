@@ -38,7 +38,7 @@ export const AdminNavLink = ({ children, href, className = "", variant = "defaul
     return (
         <Link 
             href={href}
-            className={` px-4 py-1 transition-colors duration-200 border
+            className={` px-4 py-1 transition-colors duration-200 border  focus-visible:outline-none focus-visible:shadow-ring-primary
                 inline-flex focus:outline-none cursor-pointer ${rounding} ${colors} ${sizing} ${className}`}
             {...props}
         >

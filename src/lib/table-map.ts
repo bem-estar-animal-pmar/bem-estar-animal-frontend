@@ -90,7 +90,7 @@ const tableTranslations: Record<string, string> = {
     CONFIRMED: "Confirmado",
     COMPLETED: "Completo",
     CANCELLED: "Cancelado",
-    NO_SHOW: "Não compareceu",
+    NO_SHOW: "Ausente",
 
     MORNING: "Manhã",
     AFTERNOON: "Tarde",
