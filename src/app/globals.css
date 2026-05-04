@@ -99,8 +99,8 @@
 	/* -------------------------------------------- */
 
 	/* css for borders */
-	--border-default: var(--neutral-200); 
-	--border-default-accent: var(--neutral-300); 
+	--border-default: var(--neutral-300); 
+	--border-default-accent: var(--neutral-400); 
 
 	--border-primary: var(--primary-200); 
 	--border-primary-accent: var(--primary-500); 

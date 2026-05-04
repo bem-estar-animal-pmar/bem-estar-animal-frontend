@@ -10,6 +10,7 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { UpdateNeuteringForm } from "@/src/components/features/admin-dashboard/UpdateNeuteringForm";
 import { MedicalRecordSection } from "@/src/components/features/admin-dashboard/MedicalRecordSection";
 import { Card } from "@/src/components/ui";
+import { NeuteringCalendar } from "@/src/components/features/dashboard/NeuteringCalendar";
 
 export default function AdminNeuteringDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: appointmentId } = use(params);
@@ -94,11 +95,10 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
                 </div>
             </div>
             <div className="flex flex-col md:flex-row gap-4 w-full">
-                <div className="w-full flex flex-col">
-                    <div> calendario dos agendamentos agui </div>
+                <div className="w-full flex flex-col gap-4">
                     <Card
                         size="lg"
-                        className="shadow-none! max-w-208"
+                        className="shadow-sm! max-w-208"
                     >
                         <h3 className="text-base lg:text-lg font-semibold pb-4">Gerenciar Agendamento</h3>
                         <UpdateNeuteringForm 
@@ -106,11 +106,12 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
                             onSuccess={handleAppointmentUpdate}
                         />
                     </Card>        
+                    <NeuteringCalendar />
                 </div>
                 <div className="w-full flex flex-col gap-4">
                     <Card
                         size="lg"
-                        className="shadow-none! flex flex-col gap-4 lg:flex-row max-w-208"
+                        className="shadow-sm flex flex-col gap-4 lg:flex-row max-w-208"
                     >
                         <div className="flex-1 flex-col">
                             <h3 className="text-lg font-semibold pb-4">Detalhes do Pet</h3>

@@ -70,7 +70,7 @@ export function MedicalRecordSection({ medicalRecord, onUpdateSuccess }: Medical
     return (
         <Card
             size="lg"
-            className="shadow-none! h-fit!"
+            className="shadow-sm! h-fit!"
         >
             <h3 
                 className="text-base lg:text-lg font-semibold pb-4"
