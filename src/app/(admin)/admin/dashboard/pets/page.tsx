@@ -9,7 +9,7 @@ import { toast } from "@/src/lib/toast-store";
 import { petSpeciesOptions } from "@/src/constants/constants";
 import type { Pet } from "@/src/constants/interfaces";
 
-import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, Card }  from "@/src/components/ui";
+import { Button, Label, Input, Select, Dialog, Badge, ButtonLink }  from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
 
@@ -89,10 +89,10 @@ export default function AdminPetsPage() {
     };
 
     return (
-        <div className="w-full flex flex-col">
-            <div className="flex flex-wrap gap-4 justify-between items-center border-b border-default-border mb-4 pb-2">
-                <div className="flex flex-col pb-4">
-                    <h1 className="font-semibold text-xl sm:text-xl lg:text-2xl text-default-fg">
+        <div className="w-full flex flex-col gap-4">
+            <section className="flex flex-wrap gap-4 justify-between items-center border-b border-default-border pb-6">
+                <div className="flex flex-col">
+                    <h1 className="font-semibold text-base sm:text-xl lg:text-2xl text-default-fg">
                         Busca de pets
                     </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
@@ -105,12 +105,13 @@ export default function AdminPetsPage() {
                 >
                     Buscar Usuários
                 </Button>
-            </div>
-            <div className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border mb-4 bg-card">
-                <h2 className="text-default-fg font-semibold text-xs sm:text-base lg:text-lg px-4 py-4">
+            </section>
+
+            <section className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border bg-card">
+                <h2 className="text-default-fg font-semibold text-base lg:text-lg px-4 py-4">
                     Filtrar pets
                 </h2>
-                <form onSubmit={handlePetSearch} className="flex gap-4 px-4 py-4">
+                <form onSubmit={handlePetSearch} className="flex flex-wrap gap-4 px-4 py-4">
                     <div className="flex flex-col md:flex-row gap-4 w-full max-w-116">
                         <div className="flex flex-col w-full max-w-64">
                             <Label htmlFor="pet-name" className="mb-1">
@@ -151,7 +152,7 @@ export default function AdminPetsPage() {
                         </div>
                         <div className="flex flex-col w-full max-w-64">
                             <Label htmlFor="pet-chip" className="mb-1">
-                            Nº do chip
+                                Nº do chip
                             </Label>
                             <Input 
                                 id="pet-chip"
@@ -161,7 +162,7 @@ export default function AdminPetsPage() {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col md:flex-row justify-center items-end gap-4">
+                    <div className="flex justify-center items-end gap-4">
                         <Button 
                             type="submit" 
                             variant="primary"
@@ -184,11 +185,10 @@ export default function AdminPetsPage() {
                         </Button>
                     </div>
                 </form>
-            </div>
+            </section>
 
-            <div className="w-full overflow-x-auto border border-default-border rounded-xl bg-card">
-                <div className="flex flex-col">
-                    <div className="flex w-full gap-4 px-6 py-4 bg-neutral border-b border-default-border text-xs sm:text-sm font-medium text-muted-fg">    
+            <section className="flex flex-col w-full border border-default-border rounded-xl bg-card divide-y divide-default-border">
+                    <div className="flex w-full gap-4 px-6 py-4 text-xs sm:text-sm font-medium text-muted-fg">    
                         <div className="w-2/16">AÇÃO</div>
                         <div className="w-3/16">PET</div>
                         <div className="w-3/16">ESPÉCIE/RAÇA</div>
@@ -197,7 +197,7 @@ export default function AdminPetsPage() {
                         <div className="w-4/16">Tutor</div>
                     </div>
                     
-                    <div className="flex flex-col divide-y divide-default-border">
+                    <div className="flex flex-col divide-y divide-default-border max-h-108 overflow-y-auto">
                         {isLoadingPets ? (
                             <div className="flex justify-center items-center h-16 py-8">
                                 <SpinnerIcon size={24}/>
@@ -205,7 +205,7 @@ export default function AdminPetsPage() {
                         ) : pets.length === 0 ? 
                             (
                                 <div className="text-center py-8 text-muted-fg text-xs sm:text-sm">
-                                    Nenhum pet encontrado com os filtros atuais.
+                                    Nenhum pet encontrado.
                                 </div>
                             ) 
                                 : 
@@ -255,7 +255,7 @@ export default function AdminPetsPage() {
                     </div>
                     
                     {!isLoadingPets && pets.length > 0 && (
-                        <div className="flex justify-between items-center px-6 py-4 bg-muted/30 border-t border-default-border">
+                        <div className="flex justify-between items-center px-6 py-4">
                             <span className="text-sm text-muted-fg">
                                 Página {pagination.currentPage}
                             </span>
@@ -279,8 +279,7 @@ export default function AdminPetsPage() {
                             </div>
                         </div>
                     )}
-                </div>
-            </div>
+            </section>
 
             <Dialog 
                 isOpen={searchUserDialogOpen} 
