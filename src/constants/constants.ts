@@ -109,6 +109,30 @@ export const neuteringStatusMap: Record<string, { label: string; classes: string
     NO_SHOW: { label: "Ausente", classes: "bg-red-100! text-red-800! border-red-200!" },
 };
 
+export const BRACHYCEPHALIC_BREEDS = [
+    "PUG",
+    "BOSTON_TERRIER",
+    "FRENCH_BULLDOG",
+    "ENGLISH_BULLDOG",
+    "BOXER",
+    "SHIH_TZU",
+    "LHASA_APSO",
+    "CHIHUAHUA",
+    "AMERICAN_BULLY",
+    "CAVALIER_KING_CHARLES_SPANIEL",
+    "MALTESE",
+    "STAFFORDSHIRE_BULL_TERRIER",
+    /* not on enum */
+    "PEKINGESE",  
+    "DOGUE_DE_BORDEAUX",
+    "SHAR_PEI",
+
+    "AMERICAN_BURMESE",
+    "HIMALAYAN",
+    "PERSIAN",
+    "EXOTIC_SHORTHAIR"
+];
+
 /* emergencies */
 
 export const emergencyStatusMap: Record<string, { label: string; classes: string }> = {

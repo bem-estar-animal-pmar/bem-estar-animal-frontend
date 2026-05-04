@@ -4,30 +4,40 @@ import { useState } from "react"
 import { ApiError } from "@/src/lib/api-error"
 import { format } from "date-fns"
 import { translateError } from "@/src/lib/error-map"
-
-import { Label } from "@/src/components/ui/Label"
-import { Select } from "@/src/components/ui/Select"
-import { Button } from "@/src/components/ui/Button"
-import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { toast } from "@/src/lib/toast-store"
+import { getTodayInBrasilia } from "@/src/lib/scheduling"
+
+import { DatePicker, Label, Select, Button } from "@/src/components/ui"
+import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 
 interface NeuteringFormProps {
     onCancel: () => void;
     onSuccess: () => void;
     petId: string;
+    isBrachycephalic: boolean;
 }
 
-export const CreateNeuteringForm = ({ onCancel, onSuccess, petId }: NeuteringFormProps) => {
+export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, isBrachycephalic = false, }: NeuteringFormProps) => {
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+    const [selectedPeriod, setSelectedPeriod] = useState<"MORNING" | "AFTERNOON" | "">("");
+
     const [animalFastAccepted, setAnimalFastAccepted] = useState(false);
     const [animalChipAccepted, setAnimalChipAccepted] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    const datePickerTodayDate = getTodayInBrasilia();
 
     const handleCreateAppointment = async (e: React.SubmitEvent) => {
         e.preventDefault();
 
         if (!petId) {
-            toast.warning("Preencha todos os campos para agendar.");
+            toast.warning("Pet inválido.");
+            return;
+        }
+        const missingDate = !selectedDate || !selectedPeriod;
+        if (!isBrachycephalic && missingDate) {
+            toast.warning("Preencha todos os campos para agendar");
             return;
         }
 
@@ -36,6 +46,8 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId }: NeuteringFor
             
             const payload = {
                 petId,
+                scheduleDate: selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined,
+                period: selectedPeriod ? selectedPeriod : undefined,
                 animalFastAccepted,
                 animalChipAccepted,
                 termsAccepted
@@ -75,10 +87,42 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId }: NeuteringFor
 
     return (
             <form onSubmit={handleCreateAppointment} className="flex flex-col gap-4">
-                <div className="gap-2 flex flex-col">
-                    <p className="text-sm text-muted-fg py-4">
-                        Antes de concluir a solicitação, você deve aceitar todos os termos abaixo.
+
+                <div className="flex flex-col gap-2 pt-4">
+                    <Label htmlFor="date">Data da castração</Label>
+                    <DatePicker
+                        className="w-full"
+                        id="date"
+                        value={selectedDate}
+                        placeholder="Selecione no calendário"
+                        disabledBefore={datePickerTodayDate} 
+                        disabled={isBrachycephalic}
+                        onChange={(date: Date | undefined) => {
+                            setSelectedDate(date);
+                        }}
+                    />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <Label htmlFor="period">Período</Label>
+                    <Select 
+                        id="period"
+                        value={selectedPeriod}
+                        onChange={(val: any) => setSelectedPeriod(val)} 
+                        disabled={isBrachycephalic}
+                        options={[
+                            { value: "MORNING", label: "Manhã" },
+                            { value: "AFTERNOON", label: "Tarde" }
+                        ]}
+                        placeholder="Selecione um período..."
+                    />
+                </div>
+                {isBrachycephalic && (
+                    <p className="text-xs italic text-danger-fg">
+                        A data e período serão definidas pela clínica por se tratar de um animal braquicefálico que precisa de exames específicos.
                     </p>
+                )}
+
+                <div className="gap-2 flex flex-col">
                     <label className="flex items-start gap-2 text-sm text-default-fg cursor-pointer">
                         <input 
                             type="checkbox" 

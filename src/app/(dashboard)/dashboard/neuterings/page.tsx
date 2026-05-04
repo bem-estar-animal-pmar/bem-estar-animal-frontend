@@ -2,22 +2,20 @@
 
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
+import { ApiError } from "@/src/lib/api-error"
+import { translateError } from "@/src/lib/error-map"
+import { translateTable } from "@/src/lib/table-map"
+import { toast } from "@/src/lib/toast-store"
+import type { Pet, NeuteringAppointment } from "@/src/constants/interfaces"
+import { neuteringStatusMap, BRACHYCEPHALIC_BREEDS} from "@/src/constants/constants"
+
 
 import Image from "next/image"
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
-import { ApiError } from "@/src/lib/api-error"
-// Removido getTodayInBrasilia
-import { translateError } from "@/src/lib/error-map"
-import { translateTable } from "@/src/lib/table-map"
 
-import type { Pet, NeuteringAppointment } from "@/src/constants/interfaces"
-import { neuteringStatusMap } from "@/src/constants/constants"
-
-// Removido DatePicker do import
 import { Badge, TextLink, Accordion, Label, Select, Button, Card, Dialog } from "@/src/components/ui"
 import { CreateNeuteringForm } from "@/src/components/features/dashboard/CreateNeuteringForm"
-import { toast } from "@/src/lib/toast-store"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 
 /* main component */
@@ -360,6 +358,7 @@ const NeuteringContent = () => {
                         onCancel={() => setIsDialogOpen(false)}
                         onSuccess={handleNeuteringCreated}
                         petId={selectedPetId}
+                        isBrachycephalic={BRACHYCEPHALIC_BREEDS.includes(activePet?.breed || "")}
                     />
                 </Dialog>
             </div>   
