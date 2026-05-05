@@ -1,5 +1,4 @@
 /* pets */
-
 export interface Pet {
     id: string;
     ownerId?: string;
@@ -17,12 +16,13 @@ export interface Pet {
     weight: number;
     size: string;
     coatColor: string;
+    isNeutered: boolean;
+    allowEmergency: boolean;
     chip?: string;
     adoptionStatus: string;
 }
 
 /* neuterings */
-
 export interface NeuteringAppointment {
     id: string;
     scheduleDate?: string;
@@ -38,7 +38,6 @@ export interface NeuteringAppointment {
 }
 
 /* emergencies */
-
 export interface EmergencyAppointment {
     id: string;
     status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
@@ -51,11 +50,11 @@ export interface EmergencyAppointment {
     pet?: { 
         id: string;
         name: string;
+        allowEmergency: string;
     };
 }
 
 /* give up */
-
 export interface GiveUpRequest {
     id: string;
     status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED_BY_USER";

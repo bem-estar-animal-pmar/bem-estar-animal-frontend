@@ -54,6 +54,8 @@ export const updatePetSchema = z.object({
     coatColor: z.string()
         .max(28, "A cor da pelagem deve ter menos de 28 caracteres")
         .optional(),
+    allowEmergency: z.boolean()
+        .optional(),
     birthDate: z.coerce.date()
         .optional(),
     chip: z.string()

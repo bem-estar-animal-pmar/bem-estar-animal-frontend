@@ -91,7 +91,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
             <div className="flex flex-col md:flex-row gap-4 w-full">
                 <Card
                     size="lg"
-                    className="shadow-none!"
+                    className="shadow-sm!"
                 >
                     <h3 className="text-base lg:text-lg font-semibold pb-4">Gerenciar pet</h3>
                     <UpdatePetForm
@@ -103,7 +103,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                 {pet.owner && (
                     <Card   
                         size="lg"
-                        className="shadow-none! h-fit!"
+                        className="shadow-sm! h-fit!"
                     >
                         <h3 className="text-base lg:text-lg font-semibold pb-4">
                             Informações do tutor

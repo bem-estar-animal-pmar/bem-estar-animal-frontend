@@ -22,7 +22,6 @@ import {
 } from "@/src/constants/constants";
 import { Select, DatePicker, Input, Button, Label, Dialog } from "@/src/components/ui";
 
-
 interface AdminUpdatePetFormProps {
     pet: Pet;
     onUpdateSuccess: (updatedFields: any) => void;
@@ -49,6 +48,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
             )() : undefined,
             chip: pet.chip !== "NO_CHIP" ? pet.chip : "",
             adoptionStatus: pet.adoptionStatus as any,
+            allowEmergency: pet.allowEmergency, // Adicionado aqui
         },
     });
 
@@ -72,7 +72,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                 ...data,
                 birthDate: data.birthDate ? format(data.birthDate, "yyyy-MM-dd") : undefined,
                 chip: data.chip === "" ? undefined : data.chip,
-                coatColor: data.coatColor === "" ? undefined : data.coatColor
+                coatColor: data.coatColor === "" ? undefined : data.coatColor,
             };  
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/${pet.id}`, {
@@ -139,11 +139,11 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                         </div>
                     </div>
 
-                        <Image 
-                            className="w-24 h-24 sm:w-36 sm:h-36 sm:mr-4 rounded-full object-cover border border-default-border"
-                            src={pet_avatar_placeholder}
-                            alt="Foto de perfil do pet"
-                        />
+                    <Image 
+                        className="w-24 h-24 sm:w-36 sm:h-36 sm:mr-4 rounded-full object-cover border border-default-border"
+                        src={pet_avatar_placeholder}
+                        alt="Foto de perfil do pet"
+                    />
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
@@ -185,8 +185,6 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                             value={translateTable(pet.size)} 
                             className="cursor-default! opacity-100!"
                         />
-    
-            
                     </div>
                 </div>
 
@@ -211,7 +209,29 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                     </div>
                 </div>
 
-                <div className="flex justify-end">
+                {/* NOVOS CAMPOS AQUI */}
+                <div className="flex flex-col sm:flex-row gap-4 w-full">
+                    <div className="flex-1">
+                        <Label>Castrado?</Label>
+                        <Input 
+                            readOnly 
+                            disabled 
+                            value={pet.isNeutered ? "Sim" : "Não"} 
+                            className="cursor-default! opacity-100!"
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <Label>Permite Emergências?</Label>
+                        <Input 
+                            readOnly 
+                            disabled 
+                            value={pet.allowEmergency ? "Sim" : "Não"} 
+                            className="cursor-default! opacity-100!"
+                        />
+                    </div>
+                </div>
+
+                <div className="flex justify-end mt-2">
                     <Button 
                         variant="primary" 
                         onClick={() => setUpdateWarningDialogOpen(true)}
@@ -254,48 +274,47 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
     return (
         <form onSubmit={handleSubmit(handleUpdatePet)} className="flex flex-col gap-4">
             <div className="flex w-full justify-between items-end gap-4">
-                    <div className="flex flex-col gap-y-4 w-full max-w-96">
-                        <div className="">
-                            <Label 
-                                htmlFor="name"
-                                className="mb-1"
-                            >
-                                Nome do pet
-                            </Label>
-                            <Controller
-                                name="name"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        id="name"
-                                        placeholder="Ex: Rex"
-                                        {...field}
-                                        variant={errors.name ? "danger" : "default"}
-                                    />
-                                )}
-                            />
-                            {errors.name && <span className="text-danger-fg text-sm">{errors.name.message}</span>}
-                        </div>
-                        <div className="">
-                            <Label htmlFor="chip">
-                                Número do chip
-                            </Label>
-                            <Controller
-                                name="chip"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        id="chip"
-                                        placeholder="Sem chip registrado..."
-                                        {...field}
-                                        variant={errors.chip ? "danger" : "default"}
-                                    />
-                                )}
-                            />
-                            {errors.chip && <span className="text-danger-fg text-sm">{errors.chip.message}</span>}
-                        </div>
+                <div className="flex flex-col gap-y-4 w-full max-w-96">
+                    <div className="">
+                        <Label 
+                            htmlFor="name"
+                            className="mb-1"
+                        >
+                            Nome do pet
+                        </Label>
+                        <Controller
+                            name="name"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    id="name"
+                                    placeholder="Ex: Rex"
+                                    {...field}
+                                    variant={errors.name ? "danger" : "default"}
+                                />
+                            )}
+                        />
+                        {errors.name && <span className="text-danger-fg text-sm">{errors.name.message}</span>}
                     </div>
-
+                    <div className="">
+                        <Label htmlFor="chip">
+                            Número do chip
+                        </Label>
+                        <Controller
+                            name="chip"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    id="chip"
+                                    placeholder="Sem chip registrado..."
+                                    {...field}
+                                    variant={errors.chip ? "danger" : "default"}
+                                />
+                            )}
+                        />
+                        {errors.chip && <span className="text-danger-fg text-sm">{errors.chip.message}</span>}
+                    </div>
+                </div>
 
                 <Image 
                     className="w-24 h-24 sm:w-36 sm:h-36 sm:mr-4 rounded-full object-cover border border-default-border"
@@ -428,7 +447,50 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                 </div>
             </div>
 
-            <div className="flex justify-end gap-4">
+            {/* NOVOS CAMPOS AQUI */}
+            <div className="flex flex-col sm:flex-row gap-4 w-full">
+                <div className="flex-1">
+                    <Label>Castrado?</Label>
+                    {/* Campo puramente visual (não controlável por aqui) */}
+                    <Input 
+                        readOnly 
+                        disabled 
+                        value={pet.isNeutered ? "Sim" : "Não"} 
+                        className="cursor-default! opacity-100!"
+                    />
+                    <span className="text-xs text-default-fg opacity-70 mt-1 block">
+                        Status de castração não modificável por aqui.
+                    </span>
+                </div>
+                <div className="flex-1">
+                    <Label htmlFor="allowEmergency">Permite Emergências?</Label>
+                    <Controller
+                        name="allowEmergency"
+                        control={control}
+                        render={({ field: { value, onChange, name, onBlur } }) => (
+                            <Select
+                                id="allowEmergency"
+                                name={name}
+                                value={value !== undefined ? String(value) : ""}
+                                onChange={(val) => {
+                                    if (val === "true") onChange(true);
+                                    else if (val === "false") onChange(false);
+                                    else onChange(undefined);
+                                }}
+                                onBlur={onBlur}
+                                options={[
+                                    { label: "Sim", value: "true" },
+                                    { label: "Não", value: "false" }
+                                ]}
+                                variant={errors.allowEmergency ? "danger" : "default"}
+                            />
+                        )}
+                    />
+                    {errors.allowEmergency && <span className="text-danger-fg text-sm">{errors.allowEmergency.message}</span>}
+                </div>
+            </div>
+
+            <div className="flex justify-end gap-4 mt-2">
                 <Button
                     type="button"
                     variant="outline"

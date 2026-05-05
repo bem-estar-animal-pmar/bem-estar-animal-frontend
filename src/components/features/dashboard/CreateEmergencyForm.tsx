@@ -38,7 +38,7 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
 
     /* set initial pet if passed via props */
     useEffect(() => {
-        if (defaultPetId && pets.some(p => p.id === defaultPetId)) {
+        if (defaultPetId && pets.some(p => p.id === defaultPetId && p.allowEmergency)) {
             setTargetSelection(defaultPetId);
         }
     }, [defaultPetId, pets]);
@@ -107,7 +107,7 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.warning(translateError(err.message), { message: translateError(err.details?.[0]?.message) });
+                toast.warning(translateError(err.message), { message: err.details?.[0]?.message ? translateError(err.details?.[0]?.message) : "" });
                 return;
             }
             toast.danger("Erro ao solicitar atendimento.");
@@ -119,7 +119,7 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
     /* combine STRAY option with the user's pets */
     const targetOptions = [
         { value: "STRAY", label: "Animal de Rua" },
-        ...pets.map(p => ({ value: p.id, label: `Meu Pet: ${p.name}` }))
+        ...pets.filter(p => p.allowEmergency).map(p => ({ value: p.id, label: `Meu Pet: ${p.name}` }))
     ];
 
     return (
@@ -137,6 +137,7 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
                     <Select
                         id="targetSelection"
                         value={targetSelection}
+                        disabled={targetOptions.length === 1}
                         onChange={(val) => setTargetSelection(val)}
                         options={targetOptions}
                         placeholder="Selecione o animal..."

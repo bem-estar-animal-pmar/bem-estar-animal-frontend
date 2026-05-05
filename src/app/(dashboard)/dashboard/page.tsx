@@ -211,22 +211,33 @@ export default function DashboardPage() {
                                             Identificação: {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}
                                         </p>
                                     </div>
-
                                     <div className="flex gap-2 items-center">
-                                            <ButtonLink
-                                                variant="outline"
-                                                size="sm"
-                                                href={`/rules/neutering-rules?petId=${pet.id}`}
-                                            >
-                                                Agendar castração
-                                            </ButtonLink>
-                                            <ButtonLink
-                                                variant="primary"
-                                                size="sm"
-                                                href={`/rules/emergency-rules?petId=${pet.id}`}
-                                            >
-                                                Agendar consulta
-                                            </ButtonLink>
+                                            {pet.isNeutered === true ? 
+                                                <Badge
+                                                    size="md"
+                                                >
+                                                    Pet castrado
+                                                </Badge>
+                                            : 
+                                                <ButtonLink
+                                                    variant="outline"
+                                                    size="sm"
+                                                    href={`/rules/neutering-rules?petId=${pet.id}`}
+                                                >
+                                                    Agendar castração
+                                                </ButtonLink>
+                                            }
+                                            {pet.allowEmergency === true ? 
+                                                <ButtonLink
+                                                    variant="primary"
+                                                    size="sm"
+                                                    href={`/rules/emergency-rules?petId=${pet.id}`}
+                                                >
+                                                    Agendar consulta
+                                                </ButtonLink>
+                                            : 
+                                                ""
+                                            }
                                     </div>
                                 </div>
                             </Card>
