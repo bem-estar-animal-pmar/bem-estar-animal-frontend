@@ -143,18 +143,20 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
             setChipWarningDialogOpen(true);
             return;
         } 
-        executeUpdate("COMPLETED", formData.scheduleDate, formData.period);
+        // Usamos initialDate/appointment.period aqui para garantir que estamos enviando os dados já salvos
+        executeUpdate("COMPLETED", initialDate, appointment.period);
     };
 
     const isFinalStatus = ["NO_SHOW", "COMPLETED", "CANCELLED"].includes(appointment.status);
     const isPendingOrAwaiting = appointment.status === "PENDING" || appointment.status === "AWAITING_EXAMS";
+    const hasDateAndPeriod = appointment.scheduleDate && appointment.period;
 
     if (!isEditing) {
         return (
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col">
-                        <Label className="mb-1">Status do Agendamento</Label>
+                        <Label className="mb-1">Status do agendamento</Label>
                         <Input 
                             readOnly 
                             disabled 
@@ -205,25 +207,48 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                         </span>
                     )}
 
+                    {appointment.status === "CONFIRMED" && (
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setNoShowWarningDialogOpen(true)}
+                            disabled={isLoading}
+                            className="self-end! w-fit! border-danger-border! text-danger-fg! hover:bg-danger-border/10"
+                        >
+                            {isLoading ? "Salvando..." : "Tutor ausente"}
+                        </Button>
+                    )}   
+
                     {!isFinalStatus && (
                         <Button 
-                            variant="danger" 
+                            variant="outline" 
                             onClick={() => setCancelWarningDialogOpen(true)}
                             disabled={isLoading}
-                            className="w-fit!"
+                            className="border-danger-border! text-danger-fg! hover:bg-danger-border/10"
                         >
                             Cancelar agendamento
                         </Button>
                     )}
 
                     {isPendingOrAwaiting && (
-                        <Button 
-                            variant="primary" 
-                            onClick={() => setIsEditing(true)} 
-                            disabled={isLoading}
-                        >
-                            Definir data e confirmar
-                        </Button>
+                        <>
+                            <Button 
+                                variant={hasDateAndPeriod ? "outline" : "primary"}
+                                onClick={() => setIsEditing(true)} 
+                                disabled={isLoading}
+                            >
+                                {hasDateAndPeriod ? "Alterar data" : "Definir data"}
+                            </Button>
+
+                            {hasDateAndPeriod && (
+                                <Button 
+                                    variant="primary" 
+                                    onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period)} 
+                                    disabled={isLoading}
+                                >
+                                    Confirmar agendamento
+                                </Button>
+                            )}
+                        </>
                     )}
 
                     {appointment.status === "CONFIRMED" && (
@@ -239,21 +264,11 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                     )}
                 </div>
 
-                {appointment.status === "CONFIRMED" && (
-                    <Button 
-                        variant="outline" 
-                        onClick={() => setNoShowWarningDialogOpen(true)}
-                        disabled={isLoading}
-                        className="self-end! max-w-100! w-full! border-danger-border! text-danger-fg! hover:bg-transparent!"
-                    >
-                        {isLoading ? "Salvando..." : "Tutor não compareceu (bloquear)"}
-                    </Button>
-                )}     
- 
+
                 <Dialog
                     isOpen={cancelWarningDialogOpen} 
                     onClose={() => setCancelWarningDialogOpen(false)} 
-                    title="Aviso de chip"
+                    title="Aviso de cancelamento"
                     size="lg"
                 >
                     <p className="text-xs sm:text-sm text-default-fg py-4">
@@ -263,7 +278,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                         <Button 
                             variant="outline" 
                             onClick={() => setCancelWarningDialogOpen(false)}
-                            className="border-danger-border! text-danger-fg! hover:bg-transparent!"
+                            className="border-danger-border! text-danger-fg! hover:bg-danger-border/10!"
                         >
                             Não, voltar
                         </Button>
@@ -271,7 +286,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             variant="danger" 
                             onClick={() => {
                                 setCancelWarningDialogOpen(false);
-                                executeUpdate("CANCELLED", formData.scheduleDate, formData.period);
+                                executeUpdate("CANCELLED", initialDate, appointment.period);
                             }}
                         >
                             Sim, tenho certeza
@@ -299,7 +314,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             variant="primary" 
                             onClick={() => {
                                 setChipWarningDialogOpen(false);
-                                executeUpdate("COMPLETED", formData.scheduleDate, formData.period);
+                                executeUpdate("COMPLETED", initialDate, appointment.period);
                             }}
                         >
                             Concluir sem Chip
@@ -320,7 +335,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                         <Button 
                             variant="outline" 
                             onClick={() => setNoShowWarningDialogOpen(false)}
-                            className="border-danger-border! text-danger-fg! hover:bg-transparent!"
+                            className="border-danger-border! text-danger-fg! hover:bg-danger-border/10!"
                         >
                             Não, voltar
                         </Button>
@@ -328,7 +343,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             variant="danger" 
                             onClick={() => {
                                 setNoShowWarningDialogOpen(false);
-                                executeUpdate("NO_SHOW", formData.scheduleDate, formData.period);
+                                executeUpdate("NO_SHOW", initialDate, appointment.period);
                             }}
                         >
                             Sim, confirmar falta
@@ -344,8 +359,8 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
             <form 
                 onSubmit={(e) => {
                     e.preventDefault();
-                    const targetStatus = isPendingOrAwaiting ? "CONFIRMED" : appointment.status;
-                    executeUpdate(targetStatus, formData.scheduleDate, formData.period);
+                    // Como isEditing só serve pra definir data, enviamos o status atual para mantê-lo
+                    executeUpdate(appointment.status, formData.scheduleDate, formData.period);
                 }} 
                 className="flex flex-col gap-6"
             >
@@ -384,10 +399,10 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                         disabled={isLoading}
                         onClick={handleCancelEdit}
                     >
-                        Cancelar Edição
+                        Cancelar edição
                     </Button>
                     <Button type="submit" variant="primary" disabled={isLoading || (!formData.scheduleDate || !formData.period)}>
-                        {isLoading ? "Salvando..." : (isPendingOrAwaiting ? "Confirmar Agendamento" : "Salvar Alterações")}
+                        {isLoading ? "Salvando..." : "Salvar data"}
                     </Button>
                 </div>
             </form>
