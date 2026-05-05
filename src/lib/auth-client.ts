@@ -35,6 +35,36 @@ export const authClient = createAuthClient({
                     required: true,
                     input: true,
                     returned: false
+                },
+                street: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                    returned: false
+                },
+                neighborhood: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                    returned: false
+                },
+                city: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                    returned: false
+                },
+                state: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                    returned: false
+                },
+                number: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                    returned: false
                 }
             },
         }),
