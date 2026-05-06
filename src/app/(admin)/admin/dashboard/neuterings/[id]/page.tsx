@@ -5,16 +5,18 @@ import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
+import type { AdminNeuteringAppointmentById } from "@/src/constants/interfaces";
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { UpdateNeuteringForm } from "@/src/components/features/admin-dashboard/UpdateNeuteringForm";
 import { MedicalRecordSection } from "@/src/components/features/admin-dashboard/MedicalRecordSection";
 import { Card } from "@/src/components/ui";
 import { NeuteringCalendar } from "@/src/components/features/dashboard/NeuteringCalendar";
+import { DetailsField } from "@/src/components/ui/DetailsField";
 
 export default function AdminNeuteringDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: appointmentId } = use(params);
-    const [appointment, setAppointment] = useState<any | null>(null);
+    const [appointment, setAppointment] = useState<AdminNeuteringAppointmentById | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchAppointment = async () => {
@@ -33,7 +35,7 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
         } catch (err: unknown) {
             if (err instanceof ApiError) {
                 if (err.details) {
-                    const firstError = err.details[0]?.message
+                    const firstError = err.details[0]?.message || ""
                     toast.danger(translateError(err.message), { message: firstError })
                     return;
                 }
@@ -90,71 +92,126 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
                         Informações do agendamento de castração
                     </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
-                        Visualize as informações e gerencie o agendamento do pet {appointment.pet?.name}.
+                        Visualize as informações e gerencie o agendamento do pet {appointment.pet.name}.
                     </p>
                 </div>
             </div>
-            <div className="flex flex-col md:flex-row gap-4 w-full">
-                <div className="w-full flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row gap-4 w-full max-w-284">
+                <div className="flex flex-col gap-4 w-full">
                     <Card
                         size="lg"
-                        className="shadow-sm! max-w-208"
+                        className="shadow-sm!"
                     >
                         <h3 className="text-base lg:text-lg font-semibold pb-4">Gerenciar Agendamento</h3>
                         <UpdateNeuteringForm 
                             appointment={appointment} 
                             onSuccess={handleAppointmentUpdate}
                         />
-                    </Card>        
-                    <NeuteringCalendar />
-                </div>
-                <div className="w-full flex flex-col gap-4">
-                    <Card
-                        size="lg"
-                        className="shadow-sm flex flex-col gap-4 lg:flex-row max-w-208"
-                    >
-                        <div className="flex-1 flex-col">
-                            <h3 className="text-lg font-semibold pb-4">Detalhes do Pet</h3>
-                            <div className="flex gap-6 mb-4">
-                                <div className="flex flex-col flex-1">
-                                    <p className="text-sm font-medium text-default-fg">Nome do pet</p>
-                                    <span className="text-muted-fg text-xs sm:text-sm">{appointment.pet?.name}</span>
-                                </div>
-                                <div className="flex flex-col flex-1">
-                                    <p className="text-sm font-medium text-default-fg">Espécie</p>
-                                    <span className="text-muted-fg text-xs sm:text-sm">{translateTable(appointment.pet?.species)}</span>
-                                </div>
-                            </div>
-                            <div className="flex flex-col w-full">
-                                <p className="text-sm font-medium text-default-fg">ID do Tutor</p>
-                                <p className="text-muted-fg text-xs sm:text-sm break-all">{appointment.pet?.ownerId}</p>
-                            </div>
-                        </div>
-                        <div className="flex-1 flex-col">
-                            <h3 className="text-lg font-semibold pb-4">Contato do Solicitante</h3>
-                            <div className="flex gap-6 mb-4">
-                                <div className="flex flex-col flex-1">
-                                    <span className="text-sm font-medium text-default-fg">Nome</span>
-                                    <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.name}</span>
-                                </div>
-                                <div className="flex flex-col flex-1">
-                                    <span className="text-sm font-medium text-default-fg">Telefone / Celular</span>
-                                    <span className="text-muted-fg text-xs sm:text-sm">{appointment.user?.phone || "Não informado"}</span>
-                                </div>
-                            </div>
-                            <div className="flex flex-col w-full">
-                                <span className="text-sm font-medium text-default-fg">E-mail</span>
-                                <span className="text-muted-fg text-xs sm:text-sm break-all">{appointment.user?.email}</span>
-                            </div>
-                        </div>
-                    </Card>
-
+                    </Card>      
                     <MedicalRecordSection 
                         medicalRecord={appointment.medicalRecord} 
                         onUpdateSuccess={handleMedicalRecordUpdate} 
                     />
                 </div>
+                <div className="flex flex-col w-full gap-4 md:max-w-96">
+                    <NeuteringCalendar />
+                    <Card
+                        size="lg"
+                        className="shadow-sm!"
+                    >
+                        <h3 className="text-lg font-semibold pb-4">
+                            Detalhes do Pet
+                        </h3>
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-row gap-4">
+                                <DetailsField title="Nome">
+                                    {appointment.pet.name}
+                                </DetailsField>
+                                <DetailsField title="Nº do chip">
+                                    {translateTable(appointment.pet.chip === "NO_CHIP" ? "Sem chip" : appointment.pet.chip)}
+                                </DetailsField>
+                            </div>
+                            <div className="flex flex-row gap-4">
+                                <DetailsField className="w-1/2!" title="Espécie">
+                                    {translateTable(appointment.pet.species)}
+                                </DetailsField>
+                                <DetailsField className="w-1/2!" title="Gênero">
+                                    {translateTable(appointment.pet.gender)}
+                                </DetailsField>
+                            </div>
+                            <div className="flex flex-row gap-4">
+                                <DetailsField className="w-2/4!" title="Raça">
+                                    {translateTable(appointment.pet.breed)}
+                                </DetailsField>
+                            </div>
+                        </div>
+                    </Card>
+                    <Card
+                        size="lg"
+                        className="shadow-sm flex flex-col gap-4"
+                    >
+                        <h3 className="text-lg font-semibold">
+                            Contato do solicitante
+                        </h3>
+                        <div className="flex gap-4">
+                            <DetailsField title="Nome completo">
+                                {appointment.user.name} {appointment.user.lastName}
+                            </DetailsField>
+                            <DetailsField title="Telefone / celular">
+                                {appointment.user.phone}
+                            </DetailsField>
+                        </div>
+                        <DetailsField title="E-mail">
+                            {appointment.user.email}
+                        </DetailsField>
+                        <div className="flex flex-col w-full gap-4">
+                            <h3 className="text-base font-semibold">
+                                Informações de endereço
+                            </h3>
+                            <div className="flex gap-2">
+                                <div className="pb-2 w-1/3"> 
+                                    <DetailsField title="CEP">
+                                        {appointment.user.cep}
+                                    </DetailsField>
+                                </div>
+                                <div className="pb-2 w-2/3">
+                                    <DetailsField title="Cidade">
+                                        {appointment.user.city}
+                                    </DetailsField>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <div className="pb-2 w-3/4">
+                                    <DetailsField title="Rua">
+                                        {appointment.user.street}
+                                    </DetailsField>
+                                </div>
+
+                                <div className="pb-2 w-1/4">
+                                    <DetailsField title="Número">
+                                        {appointment.user.number}
+                                    </DetailsField>
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <div className="flex gap-2">
+                                    <div className="pb-2 w-2/3">
+                                        <DetailsField title="Bairro">
+                                            {appointment.user.neighborhood}
+                                        </DetailsField>
+                                    </div>
+                                    <div className="pb-2 w-1/3">
+                                        <DetailsField title="Estado">
+                                            {appointment.user.state}
+                                        </DetailsField>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
             </div>
+
         </div>
     );
 }

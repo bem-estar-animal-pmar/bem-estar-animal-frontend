@@ -9,6 +9,7 @@ import { neuteringStatusMap } from "@/src/constants/constants";
 
 import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, Tabs, ButtonTab } from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
+import type { AdminNeuteringAppointment } from "@/src/constants/interfaces";
 
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
 import { SearchPetIdForm } from "@/src/components/features/admin-dashboard/SearchPetIdForm";
@@ -17,7 +18,7 @@ type TabType = "PENDING" | "CONFIRMED" | "FINISHED";
 
 export default function AdminNeuteringsPage() {
     const [isLoading, setIsLoading] = useState(true);
-    const [appointments, setAppointments] = useState<any[]>([]);
+    const [appointments, setAppointments] = useState<AdminNeuteringAppointment[]>([]);
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [isPetModalOpen, setIsPetModalOpen] = useState(false);
@@ -89,7 +90,7 @@ export default function AdminNeuteringsPage() {
         }
     };
 
-    const handleSearch = (e: React.FormEvent) => {
+    const handleSearch = (e: React.SubmitEvent) => {
         e.preventDefault();
         const newFilters = { ...filters, page: 1 };
         setFilters(newFilters);

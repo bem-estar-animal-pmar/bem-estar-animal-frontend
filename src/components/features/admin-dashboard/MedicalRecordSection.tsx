@@ -80,7 +80,7 @@ export function MedicalRecordSection({ medicalRecord, onUpdateSuccess }: Medical
             
             <div className="flex flex-col pb-4">
                 <span className="text-sm font-medium text-default-fg pb-2">Histórico</span>
-                <div className="rounded-md p-3 text-xs sm:text-sm text-muted-fg h-44 overflow-y-auto border border-default-border space-y-3">
+                <div className="rounded-md p-3 text-xs sm:text-sm text-muted-fg h-44 overflow-y-auto border border-default-border space-y-3 bg-default">
                     {historyLogs.length > 0 ? (
                         historyLogs.map((log, index) => (
                             <div 
@@ -102,7 +102,7 @@ export function MedicalRecordSection({ medicalRecord, onUpdateSuccess }: Medical
                 </label>
                 <Textarea
                     id="medical-notes"
-                    className="min-h-104! mb-4"
+                    className="min-h-104! mb-4 bg-default!"
                     resize="y"
                     placeholder="Adicione observações cirúrgicas, medicações ou notas gerais..."
                     value={notes}
@@ -111,7 +111,7 @@ export function MedicalRecordSection({ medicalRecord, onUpdateSuccess }: Medical
                 <Button
                     onClick={handleSaveNotes}
                     disabled={isSaving || notes === medicalRecord.notes}
-                    variant="outline"
+                    variant="primary"
                     className="self-end"
                 >
                     {isSaving && <SpinnerIcon/>}

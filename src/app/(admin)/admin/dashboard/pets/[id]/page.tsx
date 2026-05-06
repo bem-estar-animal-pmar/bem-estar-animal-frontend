@@ -9,7 +9,7 @@ import { translateError } from "@/src/lib/error-map";
 
 import type { Pet } from "@/src/constants/interfaces";
 
-import { Card } from "@/src/components/ui";
+import { Card, DetailsField} from "@/src/components/ui";
 import { UpdatePetForm } from "@/src/components/features/admin-dashboard/UpdatePetForm";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
@@ -103,25 +103,22 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                 {pet.owner && (
                     <Card   
                         size="lg"
-                        className="shadow-sm! h-fit!"
+                        className="shadow-sm! h-fit! flex flex-col gap-4"
                     >
-                        <h3 className="text-base lg:text-lg font-semibold pb-4">
+                        <h3 className="text-base lg:text-lg font-semibold">
                             Informações do tutor
                         </h3>
-                        <div className="flex flex-col w-full pb-4">
-                            <p className="text-sm font-medium text-default-fg">Nome completo</p>
-                            <span className="text-muted-fg text-xs sm:text-sm">{pet.owner.name} {pet.owner.lastName}</span>
+                        <div className="flex gap-4">
+                            <DetailsField title="Nome completo">
+                                {pet.owner.name} {pet.owner.lastName}
+                            </DetailsField>
+                            <DetailsField title="Telefone / celular">
+                                {pet.owner.phone}
+                            </DetailsField>
                         </div>
-                        <div className="flex gap-6">
-                            <div className="flex flex-col flex-1">
-                                <p className="text-sm font-medium text-default-fg">E-mail</p>
-                                <span className="text-muted-fg text-xs sm:text-sm">{pet.owner.email}</span>
-                            </div>
-                            <div className="flex flex-col flex-1">
-                                <p className="text-sm font-medium text-default-fg">Telefone</p>
-                                <span className="text-muted-fg text-xs sm:text-sm">{pet.owner.phone}</span>
-                            </div>
-                        </div>
+                        <DetailsField title="E-mail">
+                            {pet.owner.email}
+                        </DetailsField>
                     </Card>
                 )}
             </div>
