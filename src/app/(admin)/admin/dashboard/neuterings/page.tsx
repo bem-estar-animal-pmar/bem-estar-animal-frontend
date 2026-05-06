@@ -81,6 +81,7 @@ export default function AdminNeuteringsPage() {
             setPagination(data.meta);
         } catch (err: unknown) { 
             if (err instanceof ApiError) {
+                const firstError = err.details[0]?.message || ""
                 toast.warning(translateError(err.message), { message: err.details?.[0]?.message });
                 return;
             }

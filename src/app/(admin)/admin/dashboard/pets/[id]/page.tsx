@@ -35,7 +35,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
                 if (err.details) {
-                    const firstError = err.details[0]?.message
+                    const firstError = err.details[0]?.message || ""
                     toast.danger(translateError(err.message), { message: firstError })
                     return;
                 }

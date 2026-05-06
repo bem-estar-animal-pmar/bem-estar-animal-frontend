@@ -82,7 +82,8 @@ export default function AdminEmergenciesPage() {
             setPagination(data.meta);
         } catch (err: unknown) { 
             if (err instanceof ApiError) {
-                toast.warning(translateError(err.message), { message: err.details?.[0]?.message });
+                const firstError = err.details[0]?.message || ""
+                toast.warning(translateError(err.message), { message: firstError });
                 return;
             }
             toast.danger("Erro desconhecido ao carregar agendamentos de emergência.");
