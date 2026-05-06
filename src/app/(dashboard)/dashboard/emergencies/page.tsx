@@ -128,12 +128,15 @@ const EmergencyContent = () => {
                                                 <Badge variant="primary" size="sm" pill="true">
                                                     {translateTable(appt.species)}
                                                 </Badge>
+                                                <Badge variant="primary" size="sm" pill="true">
+                                                    {translateTable(appt.gender ? appt.gender : "")}
+                                                </Badge>
                                                 <span className="text-xs text-muted-fg">
                                                     Porte {translateTable(appt.size)}
                                                 </span>
                                             </div>
                                             <p className="text-sm font-medium text-default-fg mt-1">
-                                                {appt.pet ? `Pet: ${appt.pet.name}` : "Animal de rua"}
+                                                {appt.pet ? `Pet: ${appt.pet.name}` : `Animal de rua: ${appt.name}`}
                                             </p>
                                             <p className="text-xs text-muted-fg line-clamp-1 max-w-md">
                                                 Motivo: {appt.description}
@@ -189,12 +192,15 @@ const EmergencyContent = () => {
                                             <Badge variant="primary" size="sm" pill="true">
                                                 {translateTable(appt.species)}
                                             </Badge>
+                                            <Badge variant="primary" size="sm" pill="true">
+                                                {translateTable(appt.gender ? appt.gender : "")}
+                                            </Badge>
                                             <span className="text-xs text-muted-fg">
                                                 Porte {translateTable(appt.size)}
                                             </span>
                                         </div>
                                         <p className="text-sm font-medium text-default-fg mt-1">
-                                            {appt.pet ? `Pet: ${appt.pet.name}` : "Animal de rua"}
+                                            {appt.pet ? `Pet: ${appt.pet.name}` : `Animal de rua: ${appt.name}`}
                                         </p>
                                         <p className="text-xs text-muted-fg line-clamp-1 max-w-md">
                                             Motivo: {appt.description}

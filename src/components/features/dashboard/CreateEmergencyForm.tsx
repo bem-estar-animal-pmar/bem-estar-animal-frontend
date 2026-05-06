@@ -7,6 +7,7 @@ import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
 
 import { Label } from "@/src/components/ui/Label";
+import { Input } from "@/src/components/ui/Input"; // <-- Make sure this path matches your project structure
 import { Select } from "@/src/components/ui/Select";
 import { Button } from "@/src/components/ui/Button";
 import { Card } from "@/src/components/ui/Card";
@@ -15,6 +16,12 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 import { petSizeOptions, petSpeciesOptions } from "@/src/constants/constants";
 import { Pet } from "@/src/constants/interfaces";
+
+// Fallback options for gender if not already in your constants file
+const petGenderOptions = [
+    { value: "MALE", label: "Macho" },
+    { value: "FEMALE", label: "Fêmea" }
+];
 
 export interface RequestEmergencyFormProps {
     pets: Pet[];
@@ -26,7 +33,9 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
     const [targetSelection, setTargetSelection] = useState("STRAY");
     
     /* form states */
+    const [name, setName] = useState("");
     const [species, setSpecies] = useState("");
+    const [gender, setGender] = useState("");
     const [size, setSize] = useState("");
     const [description, setDescription] = useState("");
     
@@ -43,26 +52,32 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
         }
     }, [defaultPetId, pets]);
 
-    /* auto-fill species and reset size when selection changes */
+    /* auto-fill fields and reset when selection changes */
     useEffect(() => {
-        setSize("");
+        setName("");
         setSpecies("");
+        setGender("");
+        setSize("");
+        
         if (targetSelection !== "STRAY") {
             const selectedPet = pets.find((pet) => {
                 return pet.id === targetSelection;
             });
             if (selectedPet) {
-                setSpecies(selectedPet.species);
-                setSize(selectedPet.size);
+                setName(selectedPet.name || "");
+                setSpecies(selectedPet.species || "");
+                setGender(selectedPet.gender || ""); // Assuming 'gender' exists on your Pet interface
+                setSize(selectedPet.size || "");
             }
             return;
         }
     }, [targetSelection, pets]);
 
-    const handleSubmit = async (e: React.SubmitEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => { // Changed to React.FormEvent for standard typing
         e.preventDefault();
 
-        if (!species || !size || !description || description.length < 10) {
+        // Added 'name' to required validation since Zod schema requires it (min 1)
+        if (!name || !species || !size || !description || description.length < 10) {
             toast.warning("Preencha todos os campos corretamente.");
             return;
         }
@@ -71,7 +86,9 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
             setIsSubmitting(true);
 
             const payload = {
+                name,
                 species,
+                ...(gender && { gender }), // Only attach gender if it has a value (optional)
                 size,
                 description,
                 temporaryHomeAccepted,
@@ -97,11 +114,17 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
             toast.success("Solicitação de atendimento enviada! A clínica entrará em contato em breve.");
             
             setDescription("");
-            setSize("");
             setTemporaryHomeAccepted(false);
             setAnimalChipAccepted(false);
             setTermsAccepted(false);
-            if (targetSelection === "STRAY") setSpecies("");
+            
+            if (targetSelection === "STRAY") {
+                setName("");
+                setSpecies("");
+                setGender("");
+                setSize("");
+            }
+            
             /* notify parent to update history */
             onSuccess();
 
@@ -130,8 +153,6 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                
-                {/* Unified Target Selection */}
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="targetSelection">Quem precisa de atendimento?</Label>
                     <Select
@@ -143,8 +164,19 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
                         placeholder="Selecione o animal..."
                     />
                 </div>
-                <div className="flex justify-between">
-                    <div className="flex flex-col gap-2 w-7/20">
+                <div className="flex flex-col gap-2">
+                    <Label htmlFor="name">Nome (ou apelido do animal)</Label>
+                    <Input
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Ex: Caramelo, Rex..."
+                        disabled={targetSelection !== "STRAY"} /* disables if a specific pet is selected */
+                        maxLength={28}
+                    />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="flex flex-col gap-2">
                         <Label htmlFor="species">Espécie</Label>
                         <Select
                             id="species"
@@ -152,23 +184,34 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
                             onChange={(val) => setSpecies(val as "DOG" | "CAT")}
                             options={petSpeciesOptions}
                             placeholder="Selecione..."
-                            disabled={targetSelection !== "STRAY"} /* disables if a specific pet is selected */
+                            disabled={targetSelection !== "STRAY"}
                         />
                     </div>
-                    <div className="flex flex-col gap-2 w-6/10">
+
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="gender">Sexo (Opcional)</Label>
+                        <Select
+                            id="gender"
+                            value={gender}
+                            onChange={(val) => setGender(val as "MALE" | "FEMALE" | "")}
+                            options={petGenderOptions}
+                            placeholder="Selecione..."
+                            disabled={targetSelection !== "STRAY"}
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
                         <Label htmlFor="size">Porte do Animal</Label>
                         <Select
                             id="size"
                             value={size}
                             onChange={(val) => setSize(val as "SMALL" | "MEDIUM" | "LARGE")}
                             options={petSizeOptions}
-                            placeholder="Selecione o porte..."
-                            disabled={targetSelection !== "STRAY"} /* disables if a specific pet is selected */
+                            placeholder="Selecione..."
+                            disabled={targetSelection !== "STRAY"}
                         />
                     </div>
                 </div>
-
-
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="description">Descrição da Emergência</Label>
                     <Textarea 
@@ -183,7 +226,6 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
                         {description.length}/500 caracteres
                     </span>
                 </div>
-
                 <div className="flex flex-col gap-3 mt-2">
                     <label className="flex items-start gap-2 text-sm text-default-fg cursor-pointer">
                         <input 

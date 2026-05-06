@@ -161,6 +161,8 @@ export interface EmergencyAppointment {
     userId: string;
     petId?: string;
     status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+    name: string;
+    gender: "MALE" | "FEMALE";
     species: "DOG" | "CAT";
     size: "SMALL" | "MEDIUM" | "LARGE";
     description: string;
