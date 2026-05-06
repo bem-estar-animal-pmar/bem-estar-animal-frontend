@@ -156,7 +156,7 @@ export interface AdminNeuteringAppointmentById { /* get by id (admin) */
 }
 
 /* emergencies */
-export interface EmergencyAppointment {
+export interface EmergencyAppointment { /* list by user */
     id: string;
     userId: string;
     petId?: string;
@@ -174,6 +174,32 @@ export interface EmergencyAppointment {
         name: string;
         allowEmergency: string;
     };
+}
+
+export interface AdminEmergencyAppointment { /* list by admin */
+    id: string;
+    userId: string;
+    petId?: string;
+    status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+    name: string;
+    gender: "MALE" | "FEMALE";
+    species: "DOG" | "CAT";
+    size: "SMALL" | "MEDIUM" | "LARGE";
+    description: string;
+    scheduleDate?: string;
+    period?: "MORNING" | "AFTERNOON";
+    createdAt: string;
+    pet?: { 
+        id: string;
+        name: string;
+        allowEmergency: string;
+    };
+    user: { 
+        name: string; 
+        lastName: string; 
+        phone: string; 
+        email: string;
+    }
 }
 
 /* give up */
