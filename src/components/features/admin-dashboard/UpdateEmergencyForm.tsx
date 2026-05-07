@@ -1,0 +1,374 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { ApiError } from "@/src/lib/api-error";
+import { toast } from "@/src/lib/toast-store";
+import { translateError } from "@/src/lib/error-map";
+import { translateTable } from "@/src/lib/table-map";
+import type { AdminEmergencyAppointmentById } from "@/src/constants/interfaces";
+import { Button, Select, Label, DatePicker, Input, Dialog } from "@/src/components/ui";
+import { AdminCreatePetForm } from "./AdminCreatePetForm"; 
+
+interface AdminUpdateEmergencyFormProps {
+    appointment: AdminEmergencyAppointmentById;
+    onSuccess: (updatedFields: any) => void;
+}
+
+export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmergencyFormProps) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const [cancelWarningDialogOpen, setCancelWarningDialogOpen] = useState(false);
+    const [noShowWarningDialogOpen, setNoShowWarningDialogOpen] = useState(false);
+    const [createPetDialogOpen, setCreatePetDialogOpen] = useState(false);
+    
+    const initialDate = appointment.scheduleDate 
+        ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`)
+        : undefined;
+
+    const [formData, setFormData] = useState({
+        scheduleDate: initialDate as Date | undefined,
+        period: appointment.period || "" 
+    });
+
+    const hasPet = !!appointment.pet || !!appointment.petId;
+
+    useEffect(() => {
+        setFormData({
+            scheduleDate: appointment.scheduleDate ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`) : undefined,
+            period: appointment.period || ""
+        });
+    }, [appointment]);
+
+    const handleCancelEdit = () => {
+        setFormData({
+            scheduleDate: initialDate as Date | undefined,
+            period: appointment.period || ""
+        });
+        setIsEditing(false);
+    };
+
+    const executeUpdate = async (newStatus: string, newDate: Date | undefined, newPeriod: string | undefined, newPetId?: string) => {
+        setIsLoading(true);
+        try {
+            const formattedDate = newDate
+                ? new Date(Date.UTC(
+                    newDate.getFullYear(),
+                    newDate.getMonth(),
+                    newDate.getDate()
+                )).toISOString()
+                : undefined;
+
+            const payload: any = {
+                status: newStatus,
+                period: newPeriod !== "" ? newPeriod !== undefined ? newPeriod : undefined : undefined,
+                scheduleDate: formattedDate,
+            };
+
+            if (newPetId) {
+                payload.petId = newPetId;
+            }
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/emergencies/${appointment.id}/status`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+                credentials: "include",
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new ApiError(data.message, data.code, data.details);
+            }
+
+            toast.success(newStatus === "CANCELLED" ? "Agendamento cancelado com sucesso!" : "Agendamento atualizado com sucesso!");
+            setIsEditing(false);
+            
+            /* callback to send update fields to main page update */
+            onSuccess({
+                status: newStatus,
+                period: newPeriod !== "" ? newPeriod : undefined,
+                scheduleDate: formattedDate,
+                pet: newPetId ? { id: newPetId } : appointment.pet
+            });
+        } catch (err: unknown) {
+            if (err instanceof ApiError) {
+                if (err.details) {
+                    const firstError = err.details[0]?.message;
+                    toast.warning(translateError(err.message), { message: firstError });
+                    return;
+                }
+                toast.warning(translateError(err.message));
+                return;
+            }
+            toast.danger("Erro desconhecido ao atualizar agendamento.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    /* new function in case emergency didn't have a pet attached, after creating one, this will be called to finish the
+    appointmnet */
+    const handlePetCreated = async (newCreatedPetId: string) => {
+        await executeUpdate("COMPLETED", initialDate, appointment.period, newCreatedPetId);
+        setCreatePetDialogOpen(false);
+    };
+
+    /* simple function to complete the appointment, if pet exists just execute update, if not, open pet create modal */
+    const handleCompleteAction = () => {
+        if (hasPet) {
+            executeUpdate("COMPLETED", initialDate, appointment.period);
+            return;
+        } 
+        setCreatePetDialogOpen(true); // opens pet creation modal 
+    };
+
+    const isFinalStatus = ["NO_SHOW", "COMPLETED", "CANCELLED"].includes(appointment.status);
+    const isPendingOrAwaiting = appointment.status === "PENDING";
+    const hasDateAndPeriod = appointment.scheduleDate && appointment.period;
+
+    if (!isEditing) {
+        return (
+            <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col">
+                        <Label className="mb-1">Status da emergência</Label>
+                        <Input 
+                            readOnly 
+                            disabled 
+                            value={translateTable(appointment.status)} 
+                            className="cursor-default! opacity-100!"
+                        />
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-4 w-full">
+                        <div className="flex flex-col w-full sm:w-1/2">
+                            <Label className="mb-1">Data</Label>
+                            <Input 
+                                readOnly 
+                                disabled 
+                                value={appointment.scheduleDate ? appointment.scheduleDate.split('T')[0].split('-').reverse().join('/') : "Aguardando definição"} 
+                                className="cursor-default! opacity-100!"
+                            />
+                        </div>
+                        <div className="flex flex-col w-full sm:w-1/2">
+                            <Label className="mb-1">Período</Label>
+                            <Input 
+                                readOnly 
+                                disabled 
+                                value={translateTable(appointment.period || "Aguardando definição")} 
+                                className="cursor-default! opacity-100!"
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="flex justify-end gap-4 pt-4 border-t border-default-border items-center">
+                    {isFinalStatus && (
+                        <span className="text-sm text-default-500 font-medium w-full! text-center text-red-500">
+                            Nenhuma ação disponível para este agendamento.
+                        </span>
+                    )}
+
+                    {appointment.status === "CONFIRMED" && (
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setNoShowWarningDialogOpen(true)}
+                            disabled={isLoading}
+                            className="self-end! w-fit! border-danger-border! text-danger-fg! hover:bg-danger-border/10"
+                        >
+                            {isLoading ? "Processando..." : "Tutor ausente"}
+                        </Button>
+                    )}   
+
+                    {!isFinalStatus && (
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setCancelWarningDialogOpen(true)}
+                            disabled={isLoading}
+                            className="border-danger-border! text-danger-fg! hover:bg-danger-border/10"
+                        >
+                            Cancelar emergência
+                        </Button>
+                    )}
+
+                    {isPendingOrAwaiting && (
+                        <>
+                            <Button 
+                                variant={hasDateAndPeriod ? "outline" : "primary"}
+                                onClick={() => setIsEditing(true)} 
+                                disabled={isLoading}
+                            >
+                                {hasDateAndPeriod ? "Alterar data" : "Definir data"}
+                            </Button>
+
+                            {hasDateAndPeriod && (
+                                <Button 
+                                    variant="primary" 
+                                    onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period)} 
+                                    disabled={isLoading}
+                                >
+                                    Confirmar emergência
+                                </Button>
+                            )}
+                        </>
+                    )}
+
+                    {appointment.status === "CONFIRMED" && (
+                        <Button 
+                            variant="primary" 
+                            onClick={handleCompleteAction} 
+                            disabled={isLoading}
+                        >
+                            {isLoading ? "Processando..." : "Marcar como concluído"}
+                        </Button>
+                    )}
+                </div>
+
+                <Dialog
+                    isOpen={createPetDialogOpen} 
+                    onClose={() => setCreatePetDialogOpen(false)} 
+                    title="Vincular Pet (Animal de rua)"
+                    size="xl"
+                >
+                    <div className="py-2">
+                        <p className="text-sm text-default-fg mb-4">
+                            Como este agendamento foi feito sem um pet pré-cadastrado, preencha os dados abaixo para registrar o animal na conta do tutor.
+                        </p>
+                        
+                        <AdminCreatePetForm 
+                            defaultValues={{
+                                ownerId: appointment.userId,
+                                name: appointment.name,
+                                species: appointment.species,
+                                gender: appointment.gender || undefined,
+                                size: appointment.size,
+                                adoptionStatus: "TEMPORARY_HOME",
+                                allowEmergency: true,
+                                isNeutered: false
+                            }}
+                            onSuccess={handlePetCreated}
+                            onCancel={() => setCreatePetDialogOpen(false)}
+                        />
+                    </div>
+                </Dialog>
+
+                <Dialog 
+                    isOpen={cancelWarningDialogOpen} 
+                    onClose={() => setCancelWarningDialogOpen(false)} 
+                    title="Aviso de cancelamento" 
+                    size="lg"
+                >
+                    <p className="text-xs sm:text-sm text-default-fg py-4">
+                        Tem certeza que deseja cancelar esta emergência? Esta ação é irreversível.
+                    </p>
+                    <div className="flex justify-end gap-2">
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setCancelWarningDialogOpen(false)} 
+                            className="border-danger-border! text-danger-fg! hover:bg-danger-border/10!"
+                        >
+                            Não, voltar
+                        
+                        </Button>
+                        <Button 
+                            variant="danger" 
+                            onClick={() => { 
+                                setCancelWarningDialogOpen(false); 
+                                executeUpdate("CANCELLED", initialDate, appointment.period); 
+                            }}
+                        >
+                            Sim, tenho certeza
+                        </Button>
+                    </div>
+                </Dialog>
+
+                <Dialog 
+                    isOpen={noShowWarningDialogOpen} 
+                    onClose={() => setNoShowWarningDialogOpen(false)} 
+                    title="Confirmar não comparecimento" 
+                    size="lg"
+                >
+                    <p className="text-xs sm:text-sm text-default-fg py-4">
+                        Tem certeza que deseja registrar que o tutor não compareceu? Esta ação aplicará um bloqueio à conta do usuário por 30 dias e é irreversível.
+                    </p>
+                    <div className="flex justify-end gap-2">
+                        <Button 
+                        variant="outline" 
+                        onClick={() => setNoShowWarningDialogOpen(false)} 
+                        className="border-danger-border! text-danger-fg! hover:bg-danger-border/10!"
+                        >
+                            Não, voltar
+                        </Button>
+                        <Button 
+                            variant="danger" 
+                            onClick={() => { 
+                                setNoShowWarningDialogOpen(false); 
+                                executeUpdate("NO_SHOW", initialDate, appointment.period); 
+                                }}
+                        >
+                            Sim, confirmar falta
+                        </Button>
+                    </div>
+                </Dialog>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col gap-4 py-2 pt-4">
+            <form 
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    executeUpdate(appointment.status, formData.scheduleDate, formData.period);
+                }} 
+                className="flex flex-col gap-6"
+            >
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col w-full sm:w-1/2">
+                            <Label htmlFor="scheduleDate" className="mb-1">Nova Data</Label>
+                            <DatePicker
+                                id="scheduleDate"
+                                className="w-full"
+                                value={formData.scheduleDate}
+                                placeholder="Selecione no calendário"
+                                onChange={(date: Date | undefined) => setFormData({ ...formData, scheduleDate: date })}
+                            />
+                        </div>
+                        <div className="flex flex-col w-full sm:w-1/2">
+                            <Label htmlFor="period" className="mb-1">Novo Período</Label>
+                            <Select
+                                id="period"
+                                options={[
+                                    { label: "Selecione...", value: "" },
+                                    { label: "Manhã", value: "MORNING" },
+                                    { label: "Tarde", value: "AFTERNOON" }
+                                ]}
+                                value={formData.period}
+                                onChange={(val) => setFormData({ ...formData, period: val })}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4 border-t border-default-border">
+                    <Button 
+                        type="button" 
+                        variant="outline" 
+                        disabled={isLoading}
+                        onClick={handleCancelEdit}
+                    >
+                        Cancelar edição
+                    </Button>
+                    <Button 
+                        type="submit" 
+                        variant="primary" 
+                        disabled={isLoading || (!formData.scheduleDate || !formData.period)}
+                    >
+                        {isLoading ? "Salvando..." : "Salvar data"}
+                    </Button>
+                </div>
+            </form>
+        </div>
+    );
+};
