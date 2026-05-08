@@ -55,7 +55,7 @@ export interface AdminPet { /* list by admin */
     deletedAt: Date | null;
 }
 
-export interface PetById { /* list by user */
+export interface PetById { /* get by user */
     id: string;
     ownerId: string;
     owner: { 
@@ -100,6 +100,7 @@ export interface PetForAdoption { /* list pets with status "FOR_ADOPTION" (publi
 /* neuterings */
 export interface NeuteringAppointment { /* default neutering model, list by user uses it */
     id: string;
+    requestNumber: number;
     scheduleDate?: string;
     period?: "MORNING" | "AFTERNOON";
     status: "PENDING" | "AWAITING_EXAMS" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
@@ -118,6 +119,7 @@ export interface NeuteringAppointment { /* default neutering model, list by user
 
 export interface AdminNeuteringAppointment { /* list by admin */
     id: string;
+    requestNumber: number;
     userId: string;
     petId: string;
     scheduleDate?: string;
@@ -140,6 +142,7 @@ export interface AdminNeuteringAppointment { /* list by admin */
 
 export interface AdminNeuteringAppointmentById { /* get by id (admin has medical record, user do not) */
     id: string;
+    requestNumber: number;
     userId: string;
     petId: string;
     scheduleDate?: string;
@@ -178,6 +181,7 @@ export interface AdminNeuteringAppointmentById { /* get by id (admin has medical
 /* emergencies */
 export interface EmergencyAppointment { /* default, list by user */
     id: string;
+    requestNumber: number;
     userId: string;
     petId?: string;
     status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
@@ -202,6 +206,7 @@ export interface EmergencyAppointment { /* default, list by user */
 
 export interface AdminEmergencyAppointment { /* list by admin */
     id: string;
+    requestNumber: number;
     userId: string;
     petId?: string;
     status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
@@ -233,6 +238,7 @@ export interface AdminEmergencyAppointment { /* list by admin */
 
 export interface AdminEmergencyAppointmentById { /* get by id  (admin has medical record, user do not) */
     id: string;
+    requestNumber: number;
     userId: string;
     petId?: string;
     status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
