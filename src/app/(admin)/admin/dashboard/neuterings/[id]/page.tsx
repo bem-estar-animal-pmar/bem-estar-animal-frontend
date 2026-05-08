@@ -105,10 +105,11 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
                 </div>
                 <div className="flex flex-col gap-4 items-center">
                     <ButtonLink 
-                        href="/"
+                        href={`/neutering-template?id=${appointment.id}`}
+                        target="_blank"
                         variant="outline" 
                     >
-                        Imprimir formuláiro de castração
+                        Imprimir formulário de castração
                     </ButtonLink>
                 </div>
             </section>
