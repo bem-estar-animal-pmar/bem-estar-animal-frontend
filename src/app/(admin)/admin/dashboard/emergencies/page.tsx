@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ApiError } from "@/src/lib/api-error";
 import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
+import { formatRequestNumber } from "@/src/lib/request-formatter";
 import { toast } from "@/src/lib/toast-store";
 import { emergencyStatusMap } from "@/src/constants/constants"; // Assumindo que você tenha ou criará esse map
 
@@ -124,7 +125,7 @@ export default function AdminEmergenciesPage() {
 
     return (
         <div className="w-full flex flex-col gap-4">
-            <div className="flex flex-wrap gap-4 justify-between items-center">
+            <section className="flex flex-wrap gap-4 justify-between items-center">
                 <div className="flex flex-col">
                     <h1 className="font-semibold text-base sm:text-xl lg:text-2xl text-default-fg">
                         Gestão de pedidos de emergência
@@ -141,7 +142,7 @@ export default function AdminEmergenciesPage() {
                         Buscar Pet
                     </Button>
                 </div>
-            </div>
+            </section>
 
             <Tabs>
                 <ButtonTab
@@ -164,7 +165,7 @@ export default function AdminEmergenciesPage() {
                 </ButtonTab>
             </Tabs>
 
-            <div className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border bg-card">
+            <section className="flex flex-col w-full border-default-border border rounded-lg divide-y divide-default-border bg-card">
                 <h2 className="text-default-fg font-semibold text-base lg:text-lg px-4 py-4">
                     Filtrar pedidos de emergência
                 </h2>
@@ -220,15 +221,16 @@ export default function AdminEmergenciesPage() {
                         </Button>
                     </div>
                 </form>
-            </div>
+            </section>
 
             <div className="flex flex-col w-full border border-default-border rounded-xl bg-card divide-y divide-default-border">
                 <div className="flex w-full gap-4 px-6 py-4 text-xs sm:text-sm font-medium text-muted-fg">
-                    <div className="w-2/12">AÇÃO</div>
-                    <div className="w-2/12">DATA E PERÍODO</div>
-                    <div className="w-3/12">PET / ESPÉCIE</div>
-                    <div className="w-2/12">STATUS</div>
-                    <div className="w-3/12">CRIADO POR</div> {/* Alterado de TUTOR para CRIADO POR */}
+                    <div className="w-2/14">AÇÃO</div>
+                    <div className="w-2/14">Nº DO PEDIDO</div>
+                    <div className="w-2/14">DATA E PERÍODO</div>
+                    <div className="w-3/14">PET / ESPÉCIE</div>
+                    <div className="w-2/14">STATUS</div>
+                    <div className="w-3/14">CRIADO POR</div>
                 </div>
                 
                 <div className="flex flex-col divide-y divide-default-border max-h-108 overflow-y-auto">
@@ -248,7 +250,7 @@ export default function AdminEmergenciesPage() {
 
                             return (
                             <div key={app.id} className="flex w-full gap-4 px-6 py-4 items-center text-sm">
-                                <div className="w-2/12">
+                                <div className="w-2/14">
                                     <ButtonLink 
                                         size="sm" 
                                         variant="outline" 
@@ -258,23 +260,25 @@ export default function AdminEmergenciesPage() {
                                         Atualizar
                                     </ButtonLink>
                                 </div>  
-                                <div className="flex flex-col w-2/12">
+                                <div className="w-2/14">
+                                    {formatRequestNumber("EMERGENCY", app.requestNumber)}
+                                </div>
+                                <div className="flex flex-col w-2/14">
                                     <p className="text-default-fg font-medium">{displayDate}</p>
                                     {app.period && (
                                         <p className="text-muted-fg text-xs">Período: {period}</p>
                                     )}
                                 </div>
-                                <div className="flex flex-col w-3/12">
-                                    {/* Lendo app.name e app.species pois a emergência pode não ter o Pet vinculado inicialmente */}
-                                    <span className="text-default-fg font-medium truncate">{app.pet ? `${app.pet.name} (Permite emergências)` : `${app.name} (Animal de rua)`}</span>
+                                <div className="flex flex-col w-3/14">
+                                    <span className="text-default-fg font-medium truncate">{app.pet ? `${app.pet.name} (Pet)` : `${app.name} (Animal de rua)`}</span>
                                     <span className="text-xs text-muted-fg">{translateTable(app.species)}</span>
                                 </div>
-                                <div className="w-2/12">
+                                <div className="w-2/14">
                                     <Badge className={` ${statusInfo.classes}`}>
                                         {statusInfo.label}
                                     </Badge>
                                 </div>
-                                <div className="w-3/12 text-xs text-muted-fg truncate" title={app.user?.email}>
+                                <div className="w-3/14 text-xs text-muted-fg truncate" title={app.user?.email}>
                                     <span className="text-default-fg">{app.user.name} {app.user.lastName}</span>
                                     <div>{app.userId}</div>
                                 </div>

@@ -5,12 +5,13 @@ import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
+import { formatRequestNumber } from "@/src/lib/request-formatter";
 
 import type { AdminEmergencyAppointmentById } from "@/src/constants/interfaces";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { UpdateEmergencyForm } from "@/src/components/features/admin-dashboard/UpdateEmergencyForm";
 import { MedicalRecordSection } from "@/src/components/features/admin-dashboard/MedicalRecordSection";
-import { Card } from "@/src/components/ui";
+import { ButtonLink, Card, TextLink } from "@/src/components/ui";
 import { DetailsField } from "@/src/components/ui/DetailsField";
 
 export default function AdminEmergencyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -90,19 +91,36 @@ export default function AdminEmergencyDetailsPage({ params }: { params: Promise<
     const petSize = appointment.pet?.size || appointment.size;
     const petBreed = appointment.pet?.breed || "Não informado";
     const petChip = appointment.pet?.chip && appointment.pet.chip !== "NO_CHIP" ? appointment.pet.chip : "Sem chip";
+    const isNeutered = appointment.pet?.isNeutered || ""
 
     return (
         <div className="w-full flex flex-col items-center">
-            <div className="flex w-full flex-wrap justify-between items-center border-b border-default-border mb-4 pb-2">
+            <section className="flex w-full flex-wrap justify-between items-center border-b border-default-border mb-4 pb-2">
                 <div className="flex flex-col pb-4">
                     <h1 className="font-semibold text-xl sm:text-xl lg:text-2xl text-default-fg">
-                        Informações do pedido de emergência
+                        <TextLink
+                            href="/admin/dashboard/emergencies"
+                            variant="primary"
+                            className="font-semibold! text-xl! sm:text-xl! lg:text-2xl!"
+                        >
+                            Emergências
+                        </TextLink>
+                        {" "} - Agendamento Nº: {formatRequestNumber("EMERGENCY", appointment.requestNumber)}
                     </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
                         Visualize e gerencie a emergência médica solicitada para {petName}.
                     </p>
                 </div>
-            </div>
+                <div className="flex flex-col gap-4 items-center">
+                    <ButtonLink 
+                        href={`/emergency-template?id=${appointment.id}`}
+                        variant="outline" 
+                        target="_blank"
+                    >
+                        Imprimir formulário de emergência
+                    </ButtonLink>
+                </div>
+            </section>
             
             <div className="flex flex-col md:flex-row gap-4 w-full max-w-284">
                 <div className="flex flex-col gap-4 w-full">
@@ -122,47 +140,53 @@ export default function AdminEmergencyDetailsPage({ params }: { params: Promise<
                 <div className="flex flex-col w-full gap-4 md:max-w-104">
                     <Card size="lg" className="shadow-sm! flex flex-col gap-4">
                         <h3 className="text-lg font-semibold border-b border-default-border pb-2">
-                            Detalhes do Pedido
+                            Detalhes da Emergência
                         </h3>
                         <DetailsField title="Descrição do quadro">
                             {appointment.description || "Nenhuma descrição fornecida."}
                         </DetailsField>
-                        {appointment.petId === null && (
-                            <div className="mt-2 text-xs bg-warning-bg text-warning-fg p-2 rounded-md">
-                                Este é um animal de rua. O pet será registrado na conta do usuário no momento da conclusão do atendimento.
+                        <DetailsField title="Está castrado?">
+                            {isNeutered === "" ? "Sem informações" : isNeutered === true ? "Sim" : "Não" }
+                        </DetailsField>
+                            <div className="mt-2 text-xs">
+                                {appointment.petId === null ?
+                                    "Este é um animal de rua. O pet será registrado na conta do usuário no momento da conclusão do atendimento."
+                                    :
+                                    "Este atendimento possui um pet cadastrado, portanto o tutor tem permissão para agendar emergencias para esse pet"
+                                }
                             </div>
-                        )}
                     </Card>
 
-                    <Card size="lg" className="shadow-sm!">
-                        <h3 className="text-lg font-semibold pb-4 border-b border-default-border mb-4">
-                            Dados do Animal
+                    <Card 
+                        size="lg" 
+                        className="shadow-sm! flex flex-col gap-4"
+                    >
+                        <h3 className="text-lg font-semibold pb-2 border-b border-default-border">
+                            Dados do animal
                         </h3>
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-row gap-4">
-                                <DetailsField className="w-1/2!" title="Nome">
-                                    {petName}
-                                </DetailsField>
-                                <DetailsField className="w-1/2!" title="Nº do chip">
-                                    {translateTable(petChip)}
-                                </DetailsField>
-                            </div>
-                            <div className="flex flex-row gap-4">
-                                <DetailsField className="w-1/2!" title="Espécie">
-                                    {translateTable(petSpecies)}
-                                </DetailsField>
-                                <DetailsField className="w-1/2!" title="Gênero">
-                                    {translateTable(petGender || "Não informado")}
-                                </DetailsField>
-                            </div>
-                            <div className="flex flex-row gap-4">
-                                <DetailsField className="w-1/2!" title="Porte">
-                                    {translateTable(petSize)}
-                                </DetailsField>
-                                <DetailsField className="w-1/2!" title="Raça">
-                                    {translateTable(petBreed)}
-                                </DetailsField>
-                            </div>
+                        <div className="flex flex-row gap-4">
+                            <DetailsField className="w-1/2!" title="Nome">
+                                {petName}
+                            </DetailsField>
+                            <DetailsField className="w-1/2!" title="Nº do chip">
+                                {translateTable(petChip)}
+                            </DetailsField>
+                        </div>
+                        <div className="flex flex-row gap-4">
+                            <DetailsField className="w-1/2!" title="Espécie">
+                                {translateTable(petSpecies)}
+                            </DetailsField>
+                            <DetailsField className="w-1/2!" title="Gênero">
+                                {translateTable(petGender || "Não informado")}
+                            </DetailsField>
+                        </div>
+                        <div className="flex flex-row gap-4">
+                            <DetailsField className="w-1/2!" title="Porte">
+                                {translateTable(petSize)}
+                            </DetailsField>
+                            <DetailsField className="w-1/2!" title="Raça">
+                                {translateTable(petBreed)}
+                            </DetailsField>
                         </div>
                     </Card>
                     
