@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { ApiError } from "@/src/lib/api-error"
 import { translateError } from "@/src/lib/error-map"
 import { translateTable } from "@/src/lib/table-map"
+import { formatRequestNumber } from "@/src/lib/request-formatter"
 import { toast } from "@/src/lib/toast-store"
 import type { Pet, NeuteringAppointment } from "@/src/constants/interfaces"
 import { neuteringStatusMap, BRACHYCEPHALIC_BREEDS} from "@/src/constants/constants"
@@ -14,7 +15,7 @@ import Image from "next/image"
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
 
-import { Badge, TextLink, Accordion, Label, Select, Button, Card, Dialog } from "@/src/components/ui"
+import { Badge, TextLink, Accordion, Label, Select, Button, Card, Dialog, ButtonLink } from "@/src/components/ui"
 import { CreateNeuteringForm } from "@/src/components/features/dashboard/CreateNeuteringForm"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { NeuteringCalendar } from "@/src/components/features/dashboard/NeuteringCalendar"
@@ -251,7 +252,7 @@ const NeuteringContent = () => {
                                                         Nascimento: {new Date(activePet.birthDate).toLocaleDateString()}
                                                     </p>
                                                     <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                        Identificação: {activePet.chip === "NO_CHIP" || !activePet.chip ? "Sem chip." : activePet.chip}
+                                                        Identificação: {activePet.chip === "NO_CHIP" || !activePet.chip ? "Sem chip" : activePet.chip}
                                                     </p>
                                                 </div>
                                             </>
@@ -291,8 +292,8 @@ const NeuteringContent = () => {
                                         size="sm"
                                         className="flex flex-row flex-wrap p-4 gap-4 items-start sm:items-center justify-between shadow-sm!"
                                     >
-                                        <div className="flex items-center flex-wrap gap-y-1 gap-x-4 w-full justify-between">
-                                            <div className="flex">
+                                        <div className="flex items-center flex-wrap gap-y-2 gap-x-4 w-full justify-between">
+                                            <div className="flex w-full max-w-48">
                                                 <Image 
                                                     src={pet_avatar_placeholder} 
                                                     className="w-12 h-12 rounded-full object-cover" 
@@ -303,33 +304,51 @@ const NeuteringContent = () => {
                                                     <p className="text-xs text-muted-fg">
                                                        {translateTable(appt.pet.species)} • {translateTable(appt.pet.gender)}
                                                     </p>
+                                                    <p className="text-xs text-muted-fg">
+                                                        Pedido nº: <span className="font-semibold">{formatRequestNumber("NEUTERING", appt.requestNumber)}</span>
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col gap-1 text-xs w-full max-w-30">
+
+                                            <div className="flex flex-col gap-1 text-xs h-fit!">
                                                  <p className="text-default-fg font-medium">{displayDate}</p>
                                                 {appt.period && (
                                                     <p className="text-muted-fg">Período: {period}</p>
                                                 )}
                                             </div>
-
-                                            <Badge
-                                                className={` ${statusInfo.classes}`}
-                                            >
-                                                {statusInfo.label}
-                                            </Badge>
-                                            <div className="flex">
-                                            {canCancel ? (
-                                                <Button 
-                                                    variant="danger" 
-                                                    size="sm" 
-                                                    onClick={() => handleCancelAppointment(appt.id)}
-                                                    disabled={isCanceling === appt.id}
+                                            
+                                            <div className="flex h-fit!">
+                                                <Badge
+                                                    className={` ${statusInfo.classes}`}
                                                 >
-                                                    {isCanceling === appt.id ? <SpinnerIcon /> : "Cancelar Castração"}
-                                                </Button>
-                                            ) : (
-                                                <span className="text-xs text-muted-fg italic">Sem ações disponíveis</span>
-                                            )}
+                                                    {statusInfo.label}
+                                                </Badge>
+                                            </div>
+
+
+                                            <div className="flex w-full max-w-76 sm:justify-end h-fit!">
+                                                {canCancel ? (
+                                                    <div className="flex gap-4">
+                                                    <Button 
+                                                        variant="danger" 
+                                                        size="sm" 
+                                                        onClick={() => handleCancelAppointment(appt.id)}
+                                                        disabled={isCanceling === appt.id}
+                                                    >
+                                                        {isCanceling === appt.id ? <SpinnerIcon /> : "Cancelar Castração"}
+                                                    </Button>
+                                                    <ButtonLink 
+                                                        variant="outline" 
+                                                        size="sm" 
+                                                        target="_blank"
+                                                        href={`/neutering-template?id=${appt.id}`}
+                                                    >
+                                                        {isCanceling === appt.id ? <SpinnerIcon /> : "Imprimir formulário"}
+                                                    </ButtonLink>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-xs text-muted-fg italic">Sem ações disponíveis</span>
+                                                )}
                                             </div>
                                         </div>
                                     </Card>

@@ -168,7 +168,6 @@ const NeuteringRulesContent = () => {
                                     </span>
                                     <span className="text-sm text-muted-fg mt-0.5">Atendimento para felinos</span>
                                 </div>
-                                <Badge size="md">12 vagas</Badge>
                             </div>
 
                             <div className="flex justify-between items-center bg-muted/30 p-3 rounded-lg border border-default-border">
@@ -179,7 +178,6 @@ const NeuteringRulesContent = () => {
                                     </span>
                                     <span className="text-sm text-muted-fg mt-0.5">Atendimento para caninos</span>
                                 </div>
-                                <Badge size="md">6 vagas</Badge>
                             </div>
                         </div>
                     </Card>
@@ -199,7 +197,6 @@ const NeuteringRulesContent = () => {
                                     </span>
                                     <span className="text-sm text-muted-fg mt-0.5">Apenas felinos machos</span>
                                 </div>
-                                <Badge size="md">20 vagas</Badge>
                             </div>
 
                             <div className="flex justify-between items-center bg-muted/30 p-3 rounded-lg border border-default-border">
@@ -210,7 +207,6 @@ const NeuteringRulesContent = () => {
                                     </span>
                                     <span className="text-sm text-muted-fg mt-0.5">Apenas caninos machos</span>
                                 </div>
-                                <Badge size="md">7 vagas</Badge>
                             </div>
                         </div>
                     </Card>
@@ -223,10 +219,13 @@ const NeuteringRulesContent = () => {
 
                 <div className="gap-y-2 flex flex-col pb-4">
                     <TextLink target="_blank" variant="primary" className="underline! w-fit" href="https://portal.angra.rj.gov.br/downloads/IMAAR/Solicitacao-Hemograma-Castracao.pdf">
-                        - Documento de solicitação de Hemograma
+                        - Documento de solicitação de hemograma
                     </TextLink>
                     <TextLink target="_blank" variant="primary" className="underline! w-fit" href="https://portal.angra.rj.gov.br/downloads/IMAAR/Regulamento-Programa-Castracao-2025.pdf">
                         - Regulamento do programa de castração
+                    </TextLink>
+                    <TextLink target="_blank" variant="primary" className="underline! w-fit" href="/neutering-template">
+                        - Formulário de inscrição e termo de compromisso do animal
                     </TextLink>
                 </div>
 
