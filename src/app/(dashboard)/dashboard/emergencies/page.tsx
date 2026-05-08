@@ -61,14 +61,6 @@ const EmergencyContent = () => {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="w-full flex justify-center items-center h-64">
-                <SpinnerIcon />
-            </div>
-        );
-    }
-
     return (
         <div className="w-full flex flex-col">
             <section className="w-full flex flex-col pb-4">
@@ -111,7 +103,13 @@ const EmergencyContent = () => {
                             Histórico de agendamentos
                         </h2>
                         
-                        {appointments.length === 0 ? 
+                        {isLoading ? (
+                            <div className="w-full flex justify-center items-center h-64">
+                                <SpinnerIcon />
+                            </div>
+                        )   
+                            :
+                        appointments.length === 0 ? 
                             <div className="bg-muted-bg p-6 rounded-lg text-center border border-dashed border-primary-border">
                                 <p className="text-muted-fg text-sm">Você ainda não possui solicitações emergenciais.</p>
                             </div>
@@ -186,7 +184,13 @@ const EmergencyContent = () => {
                     <h2 className="text-default-fg font-bold text-lg sm:text-xl pb-6">
                         Histórico de agendamentos
                     </h2>
-                    {appointments.length === 0 ? 
+                    {isLoading ? (
+                        <div className="w-full flex justify-center items-center h-64">
+                            <SpinnerIcon />
+                        </div>
+                    )   
+                        :
+                    appointments.length === 0 ? 
                         <div className="bg-muted-bg p-6 rounded-lg text-center border border-dashed border-primary-border">
                             <p className="text-muted-fg text-sm">Você ainda não possui solicitações emergenciais.</p>
                         </div>
