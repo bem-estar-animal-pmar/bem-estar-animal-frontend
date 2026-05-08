@@ -1,45 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
-import { Button, Card } from "@/src/components/ui";
+import { Card } from "@/src/components/ui";
 
 type CalendarData = Record<string, { MORNING: number; AFTERNOON: number }>;
-
-const ChevronLeftIcon = ({ size = 20 }: { size?: number }) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-    >
-        <polyline points="15 18 9 12 15 6"></polyline>
-    </svg>
-);
-
-const ChevronRightIcon = ({ size = 20 }: { size?: number }) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-    >
-        <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
-);
 
 export const NeuteringCalendar = () => {
     const [currentDate, setCurrentDate] = useState(() => {
@@ -100,138 +70,141 @@ export const NeuteringCalendar = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
     };
 
-    const getDaysInMonth = () => {
+const getDaysInMonth = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const firstDayOfMonth = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const prevMonthDays = new Date(year, month, 0).getDate();
 
         const days = [];
         
-        for (let i = 0; i < firstDayOfMonth; i++) {
-            days.push(null);
+        for (let i = firstDayOfMonth - 1; i >= 0; i--) {
+            days.push(new Date(year, month - 1, prevMonthDays - i));
         }
 
         for (let i = 1; i <= daysInMonth; i++) {
             days.push(new Date(year, month, i));
         }
 
+        const totalDaysSoFar = days.length;
+        const remainingDays = totalDaysSoFar % 7 === 0 ? 0 : 7 - (totalDaysSoFar % 7);
+        
+        for (let i = 1; i <= remainingDays; i++) {
+            days.push(new Date(year, month + 1, i));
+        }
+
         return days;
     };
 
-    const monthNames = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-    ];
     const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
     const gridDays = getDaysInMonth();
 
     return (
-        <Card className="w-full max-w-178 items-center shadow-sm flex flex-col p-4 divide-primary-accent-border divide-y">
-            <div className="flex w-full justify-between items-center mb-2 pb-2 gap-4">
-                <h2 className="text-base font-semibold text-default-fg">
-                    Vagas disponíveis: {monthNames[currentDate.getMonth()]} de {currentDate.getFullYear()}
-                </h2>
-                <div className="flex gap-2">
-                    <Button 
-                        variant="primary" 
-                        pill="true"
-                        className="text-base! font-bold! opacity-80"
-                        size="sm" 
-                        onClick={handlePrevMonth} 
-                        disabled={isLoading} 
+        <Card 
+            className="w-full max-w-112 shadow-sm! flex flex-col gap-2 items-center mx-auto"
+            size="md"
+        >
+            <div className="flex w-full items-center justify-between">
+                <h3 className="text-base font-semibold capitalize text-default-fg">
+                    Vagas disponíveis: {format(currentDate, "MMMM yyyy", { locale: ptBR })}
+                </h3>
+                <div className="flex items-center gap-2">
+                    <button 
+                        type="button"
+                        onClick={handlePrevMonth}
+                        disabled={isLoading}
+                        className="p-1 rounded-md text-muted-fg hover:bg-muted hover:text-default-fg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                       <ChevronLeftIcon/>
-                    </Button>
-                    <Button 
-                        variant="primary" 
-                        pill="true"
-                        className="text-base! font-bold! opacity-80"
-                        size="sm" 
-                        onClick={handleNextMonth} 
-                        disabled={isLoading} 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={handleNextMonth}
+                        disabled={isLoading}
+                        className="p-1 rounded-md text-muted-fg hover:bg-muted hover:text-default-fg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <ChevronRightIcon/>
-                    </Button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
                 </div>
             </div>
 
-            <div className="relative w-full max-w-76">
+            <div className="relative w-fit">
                 {isLoading && (
-                    <div className="absolute inset-0 bg-neutral/60 z-10 flex items-center justify-center backdrop-blur-xs rounded-md">
+                    <div className="absolute inset-0 bg-card/60 z-10 flex items-center justify-center backdrop-blur-[2px] rounded-md">
                         <SpinnerIcon />
                     </div>
                 )}
 
-                <div className="grid grid-cols-7 gap-2 mb-2 px-2">
+                {/* weekdays */}
+                <div className="grid grid-cols-7 gap-1 mb-2">
                     {weekDays.map((day) => (
-                        <div key={day} className="text-center font-medium text-primary-fg text-xs py-1 bg-primary rounded-md">
+                        <div key={day} className="text-center font-medium text-muted-fg text-[13px] py-1">
                             {day}
                         </div>
                     ))}
                 </div>
 
-                <div className="grid grid-cols-7 gap-2 bg-primary rounded-md py-2 px-2">
-                    {gridDays.map((date, index) => {
-                        if (!date) {
-                            return (
-                                <div key={`empty-${index}`} className="flex justify-center items-center">
-                                    <div className="aspect-square w-full max-w-8"/>
-                                </div>
-                            );
-                        }
-
+                {/* days grid */}
+                <div className="grid grid-cols-7 gap-1">
+                    {gridDays.map((date) => {
                         const dateStr = formatDateString(date);
                         const isPast = date < today;
                         const isToday = date.getTime() === today.getTime();
                         const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                        
+                        const isCurrentMonth = date.getMonth() === currentDate.getMonth();
                         
                         const dayData = calendarData[dateStr];
                         const morningSlots = dayData?.MORNING || 0;
                         const afternoonSlots = dayData?.AFTERNOON || 0;
                         const totalSlots = morningSlots + afternoonSlots;
 
-                        const isDisabled = isPast || isWeekend;
+                        const isDisabled = isPast || isWeekend || !isCurrentMonth;
 
                         let boxStyleClasses = "";
-                        if (isDisabled || !totalSlots) {
-                            boxStyleClasses = "border-default-border text-muted-fg/50 cursor-not-allowed bg-default";
+                        
+                        if (!isCurrentMonth || isPast) {
+                            boxStyleClasses = "text-muted-fg/30 cursor-default bg-transparent";
+                        } else if (isDisabled || !totalSlots) {
+                            boxStyleClasses = "bg-gray-200 dark:bg-default/50 text-muted-fg cursor-not-allowed";
                         } else if (totalSlots === 0) {
-                            boxStyleClasses = "border-danger-border bg-danger-fg/20 text-danger-fg hover:opacity-80 cursor-pointer";
+                            boxStyleClasses = "bg-danger-fg/20 text-danger-fg hover:opacity-80 cursor-pointer";
                         } else if (morningSlots <= 5 || afternoonSlots <= 5) {
-                            boxStyleClasses = "border-alert-border bg-alert-fg/20 text-alert-fg hover:opacity-80 cursor-pointer";
+                            boxStyleClasses = "bg-alert-fg/20 text-alert-fg hover:opacity-80 cursor-pointer";
                         } else {
-                            boxStyleClasses = "border-default-border hover:shadow-sm cursor-pointer text-default-fg bg-card hover:border-muted-fg";
+                            boxStyleClasses = "text-default-fg hover:bg-default cursor-pointer";
                         }
 
+                        const todayClasses = isToday ? "text-default-fg font-bold border border-muted-fg" : "";
+
                         return (
-                            <div 
-                                key={dateStr}
-                                className="flex justify-center items-center">
+                            <div key={dateStr} className="flex justify-center items-center">
                                 <button 
+                                    disabled={isDisabled}
                                     className={`
-                                        group relative flex flex-col items-center justify-center aspect-square w-full max-w-8 rounded-md border transition-all text-sm
+                                        group relative flex flex-col items-center focus:font-semibold justify-center h-[36px] w-[36px] rounded-sm text-sm
                                         ${boxStyleClasses}
-                                        ${isToday && !isDisabled ? "border-2 border-muted-fg font-bold" : ""}
+                                        ${todayClasses}
                                     `}
                                 >
                                     <span>
                                         {date.getDate()}
                                     </span>
-                                     
-                                    {!isDisabled && (
-                                        <div className="absolute bottom-9 left-1/2 -translate-x-1/2 hidden group-focus:flex flex-col items-center z-20 w-32 bg-card">
-                                            <div className="text-default-fg text-xs rounded-md shadow-sm p-2.5 w-full border border-default-border">
+                                    
+                                    {!isDisabled && isCurrentMonth && (
+                                        <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-focus:flex flex-col items-center z-20 w-32 bg-card">
+                                            <div className="text-default-fg text-xs rounded-md shadow-md p-2.5 w-full border border-default-border">
                                                 <div className="flex justify-between items-center mb-1 text-default-fg">
                                                     <span>Manhã:</span>
                                                     <span className={`font-bold ${morningSlots > 5 ? "text-success-fg" : morningSlots > 0 ? "text-alert-fg" : "text-danger-fg"}`}>
-                                                        {morningSlots}
+                                                        {morningSlots > 5 ? "6+" : morningSlots}
                                                     </span>
                                                 </div>
                                                 <div className="flex justify-between items-center">
                                                     <span>Tarde:</span>
                                                     <span className={`font-bold ${afternoonSlots > 5 ? "text-success-fg" : afternoonSlots > 0 ? "text-alert-fg" : "text-danger-fg"}`}>
-                                                        {afternoonSlots}
+                                                        {afternoonSlots > 5 ? "6+" : afternoonSlots}
                                                     </span>
                                                 </div>
                                             </div>
