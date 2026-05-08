@@ -152,12 +152,15 @@ export interface AdminNeuteringAppointmentById { /* get by id (admin has medical
     animalChipAccepted: boolean;
     termsAccepted: boolean;
     pet: { 
-        ownerId: string;
-        name: string;
-        species: string;
-        gender: string;
-        breed: string;
-        chip: string;
+        name: string,
+        species: string,
+        gender: string,
+        breed: string,
+        size: string,
+        ownerId: string,
+        chip: string,
+        isNeutered: boolean,
+        allowEmergency: boolean,
     };
     user: { 
         name:  string, 
@@ -254,7 +257,7 @@ export interface AdminEmergencyAppointmentById { /* get by id  (admin has medica
     termsAccepted: boolean;
     createdAt: string;
     updatedAt: string;
-    pet?: { 
+    pet: { 
         name: string,
         species: string,
         gender: string,

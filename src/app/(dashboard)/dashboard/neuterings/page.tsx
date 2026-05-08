@@ -128,14 +128,6 @@ const NeuteringContent = () => {
         loadInitialData();
     };
     
-    if (isLoading) {
-        return (
-            <div className="w-full flex justify-center items-center h-64">
-                <SpinnerIcon />
-            </div>
-        );
-    }
-
     const activePet = pets.find(p => p.id === selectedPetId);
 
     return (
@@ -205,11 +197,11 @@ const NeuteringContent = () => {
                             >
                                 <div className="flex w-full">
                                     <Image 
-                                        className="max-w-24 self-start rounded-full object-cover"
+                                        className="max-w-18 sm:max-w-24 self-start rounded-full object-cover"
                                         src={pet_avatar_placeholder}
                                         alt="Foto de perfil do pet"
                                     />
-                                    <div className="flex flex-col w-full pl-4 justify-center"> 
+                                    <div className="flex flex-col w-full pl-2 sm:pl-4 justify-center"> 
                                         {activePet ? (
                                             <>
                                                 <div className="flex w-full items-center justify-between gap-2 pb-2">
@@ -276,7 +268,13 @@ const NeuteringContent = () => {
                         Histórico de agendamentos
                     </h2>
                     
-                    {appointments.length === 0 ? (
+                    { isLoading ? (
+                        <div className="w-full flex justify-center items-center h-64">
+                            <SpinnerIcon />
+                        </div>
+                    )
+                        :
+                    appointments.length === 0 ? (
                         <p className="text-muted-fg text-sm">Você ainda não possui solicitações de castração.</p>
                     ) : (
                         <div className="flex flex-col w-full gap-4">

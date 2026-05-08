@@ -5,12 +5,13 @@ import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
+import { formatRequestNumber } from "@/src/lib/request-formatter";
 import type { AdminNeuteringAppointmentById } from "@/src/constants/interfaces";
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { UpdateNeuteringForm } from "@/src/components/features/admin-dashboard/UpdateNeuteringForm";
 import { MedicalRecordSection } from "@/src/components/features/admin-dashboard/MedicalRecordSection";
-import { Card } from "@/src/components/ui";
+import { ButtonLink, Card, TextLink } from "@/src/components/ui";
 import { NeuteringCalendar } from "@/src/components/features/dashboard/NeuteringCalendar";
 import { DetailsField } from "@/src/components/ui/DetailsField";
 
@@ -86,23 +87,40 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
 
     return (
         <div className="w-full flex flex-col items-center">
-            <div className="flex w-full flex-wrap justify-between items-center border-b border-default-border mb-4 pb-2">
+            <section className="flex w-full flex-wrap justify-between items-center border-b border-default-border mb-4 pb-2">
                 <div className="flex flex-col pb-4">
                     <h1 className="font-semibold text-xl sm:text-xl lg:text-2xl text-default-fg">
-                        Informações do agendamento de castração
+                        <TextLink
+                            href="/admin/dashboard/neuterings"
+                            variant="primary"
+                            className="font-semibold! text-xl! sm:text-xl! lg:text-2xl!"
+                        >
+                            Castrações
+                        </TextLink>
+                        {" "} - Agendamento Nº: {formatRequestNumber("NEUTERING", appointment.requestNumber)}
                     </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
                         Visualize as informações e gerencie o agendamento do pet {appointment.pet.name}.
                     </p>
                 </div>
-            </div>
+                <div className="flex flex-col gap-4 items-center">
+                    <ButtonLink 
+                        href="/"
+                        variant="outline" 
+                    >
+                        Imprimir formuláiro de castração
+                    </ButtonLink>
+                </div>
+            </section>
             <div className="flex flex-col md:flex-row gap-4 w-full max-w-284">
                 <div className="flex flex-col gap-4 w-full">
                     <Card
                         size="lg"
                         className="shadow-sm!"
                     >
-                        <h3 className="text-base lg:text-lg font-semibold pb-4">Gerenciar Agendamento</h3>
+                        <h3 className="text-base lg:text-lg font-semibold pb-4">
+                            Gerenciar Agendamento
+                        </h3>
                         <UpdateNeuteringForm 
                             appointment={appointment} 
                             onSuccess={handleAppointmentUpdate}
@@ -113,45 +131,46 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
                         onUpdateSuccess={handleMedicalRecordUpdate} 
                     />
                 </div>
-                <div className="flex flex-col w-full gap-4 md:max-w-96">
+                <div className="flex flex-col w-full gap-4 md:max-w-104">
                     <NeuteringCalendar />
                     <Card
                         size="lg"
-                        className="shadow-sm!"
+                        className="shadow-sm! flex flex-col gap-4"
                     >
-                        <h3 className="text-lg font-semibold pb-4">
-                            Detalhes do Pet
+                        <h3 className="text-lg font-semibold pb-2 border-b border-default-border">
+                            Dados do Animal
                         </h3>
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-row gap-4">
-                                <DetailsField title="Nome">
-                                    {appointment.pet.name}
-                                </DetailsField>
-                                <DetailsField title="Nº do chip">
-                                    {translateTable(appointment.pet.chip === "NO_CHIP" ? "Sem chip" : appointment.pet.chip)}
-                                </DetailsField>
-                            </div>
-                            <div className="flex flex-row gap-4">
-                                <DetailsField className="w-1/2!" title="Espécie">
-                                    {translateTable(appointment.pet.species)}
-                                </DetailsField>
-                                <DetailsField className="w-1/2!" title="Gênero">
-                                    {translateTable(appointment.pet.gender)}
-                                </DetailsField>
-                            </div>
-                            <div className="flex flex-row gap-4">
-                                <DetailsField className="w-2/4!" title="Raça">
-                                    {translateTable(appointment.pet.breed)}
-                                </DetailsField>
-                            </div>
+                        <div className="flex flex-row gap-4">
+                            <DetailsField title="Nome">
+                                {appointment.pet.name}
+                            </DetailsField>
+                            <DetailsField title="Nº do chip">
+                                {translateTable(appointment.pet.chip === "NO_CHIP" ? "Sem chip" : appointment.pet.chip)}
+                            </DetailsField>
+                        </div>
+                        <div className="flex flex-row gap-4">
+                            <DetailsField className="w-1/2!" title="Espécie">
+                                {translateTable(appointment.pet.species)}
+                            </DetailsField>
+                            <DetailsField className="w-1/2!" title="Gênero">
+                                {translateTable(appointment.pet.gender)}
+                            </DetailsField>
+                        </div>
+                        <div className="flex flex-row gap-4">
+                            <DetailsField className="w-2/4!" title="Porte">
+                                {translateTable(appointment.pet.size)}
+                            </DetailsField>
+                            <DetailsField className="w-2/4!" title="Raça">
+                                {translateTable(appointment.pet.breed)}
+                            </DetailsField>
                         </div>
                     </Card>
                     <Card
                         size="lg"
                         className="shadow-sm flex flex-col gap-4"
                     >
-                        <h3 className="text-lg font-semibold">
-                            Contato do solicitante
+                        <h3 className="text-lg font-semibold border-b border-default-border pb-2">
+                            Contato do Solicitante
                         </h3>
                         <div className="flex gap-4">
                             <DetailsField title="Nome completo">
@@ -211,7 +230,6 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
                     </Card>
                 </div>
             </div>
-
         </div>
     );
 }
