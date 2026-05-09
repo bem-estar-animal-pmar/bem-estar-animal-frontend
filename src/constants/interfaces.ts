@@ -298,3 +298,11 @@ export interface GiveUpRequest {
     pet: { id: string; name: string; species: string };
     createdAt: string;
 }
+
+/* medical record */
+
+export interface MedicalRecord {
+    id: string;
+    notes: string;
+    history: string;
+}
