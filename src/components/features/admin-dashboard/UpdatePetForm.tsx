@@ -13,7 +13,7 @@ import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp";
 
 import { updatePetSchema, UpdatePetFormData } from "@/src/constants/schemas"; 
-import type { Pet } from "@/src/constants/interfaces";
+import type { PetById } from "@/src/constants/interfaces";
 import { 
     catBreedOptions, 
     dogBreedOptions, 
@@ -23,7 +23,7 @@ import {
 import { Select, DatePicker, Input, Button, Label, Dialog } from "@/src/components/ui";
 
 interface AdminUpdatePetFormProps {
-    pet: Pet;
+    pet: PetById;
     onUpdateSuccess: (updatedFields: any) => void;
 }
 

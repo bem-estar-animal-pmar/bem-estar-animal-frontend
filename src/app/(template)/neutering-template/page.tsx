@@ -145,7 +145,7 @@ export default function NeuteringTemplatePage() {
                     <h2 className="font-bold uppercase text-[10px]">Dados do Responsável Pelo Animal</h2>
                     <div className="flex gap-2">
                     <p className="w-2/3">Nome do responsável: <strong>{ownerFullName || "______________________________________________________________________________"}</strong></p>
-                    <p className="w-1/3">Tipo de responsável: {pet?.adoptionStatus ? pet?.adoptionStatus === "HAS_OWNER" ? "[X] Tutor [ ] Lar temporário" : "[ ] Tutor [X] Lar temporário" : "[ ] Tutor [ ] Lar temporário"}</p>
+                    <p className="w-1/3">Tipo de responsável: {pet?.homeStatus ? pet?.homeStatus === "HAS_OWNER" ? "[X] Tutor [ ] Lar temporário" : "[ ] Tutor [X] Lar temporário" : "[ ] Tutor [ ] Lar temporário"}</p>
                     </div>
                     <div className="flex gap-2">
                     <p className="w-1/3">CPF: _____________________________________________</p>

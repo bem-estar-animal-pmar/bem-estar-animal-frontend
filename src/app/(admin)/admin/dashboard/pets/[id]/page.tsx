@@ -7,16 +7,17 @@ import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
 
-import type { Pet } from "@/src/constants/interfaces";
+import type { PetById } from "@/src/constants/interfaces";
 
-import { Card, DetailsField} from "@/src/components/ui";
+import { Card, DetailsField, TextLink} from "@/src/components/ui";
 import { UpdatePetForm } from "@/src/components/features/admin-dashboard/UpdatePetForm";
+import { PetStatusCard } from "@/src/components/features/admin-dashboard/PetStatusCard";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
     const { id: petId } = use(params);
-    const [pet, setPet] = useState<Pet | null>(null);
+    const [pet, setPet] = useState<PetById | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchPet = async () => {
@@ -80,7 +81,14 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
             <div className="flex w-full flex-wrap justify-between items-center border-b border-default-border mb-4 pb-2">
                 <div className="flex flex-col pb-4">
                     <h1 className="font-semibold text-xl sm:text-xl lg:text-2xl text-default-fg">
-                        Informações do pet
+                        <TextLink
+                            href="/admin/dashboard/pets"
+                            variant="primary"
+                            className="font-semibold! text-xl! sm:text-xl! lg:text-2xl!"
+                        >
+                            Pets
+                        </TextLink>
+                        {" "} - Informações
                     </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
                         Visualize e modifique as informações de {pet.name} abaixo. 
@@ -89,38 +97,42 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
             </div>
 
             <div className="flex flex-col md:flex-row gap-4 w-full">
-                <Card
-                    size="lg"
-                    className="shadow-sm!"
-                >
-                    <h3 className="text-base lg:text-lg font-semibold pb-4">Gerenciar pet</h3>
-                    <UpdatePetForm
-                        pet={pet}
-                        onUpdateSuccess={handleUpdatePet}
-                    />
-                </Card>
-
-                {pet.owner && (
-                    <Card   
-                        size="lg"
-                        className="shadow-sm! h-fit! flex flex-col gap-4"
-                    >
-                        <h3 className="text-base lg:text-lg font-semibold">
-                            Informações do tutor
-                        </h3>
-                        <div className="flex gap-4">
-                            <DetailsField title="Nome completo">
-                                {pet.owner.name} {pet.owner.lastName}
-                            </DetailsField>
-                            <DetailsField title="Telefone / celular">
-                                {pet.owner.phone}
-                            </DetailsField>
-                        </div>
-                        <DetailsField title="E-mail">
-                            {pet.owner.email}
-                        </DetailsField>
+                <section className="w-full md:w-7/12 lg:w-2/3">
+                    <Card size="lg" className="shadow-sm!">
+                        <h3 className="text-base lg:text-lg font-semibold">Gerenciar pet</h3>
+                        <UpdatePetForm
+                            pet={pet}
+                            onUpdateSuccess={handleUpdatePet}
+                        />
                     </Card>
-                )}
+                </section>
+
+                <div className="w-full md:w-5/12 lg:w-1/3 flex flex-col gap-4">
+                    <PetStatusCard 
+                        pet={pet} 
+                        onUpdateSuccess={handleUpdatePet} 
+                    />
+
+                    {pet.owner && (
+                        <Card size="lg" className="shadow-sm! flex flex-col gap-4">
+                            <h3 className="text-base lg:text-lg font-semibold">
+                                Informações do tutor
+                            </h3>
+                            <p className="text-xs sm:text-sm text-muted-fg italic">O pet atual foi adotado, as informações abaixo são referente ao tutor original.</p>
+                            <div className="flex flex-col gap-4">
+                                <DetailsField title="Nome completo">
+                                    {pet.owner.name} {pet.owner.lastName}
+                                </DetailsField>
+                                <DetailsField title="Telefone / celular">
+                                    {pet.owner.phone}
+                                </DetailsField>
+                                <DetailsField title="E-mail">
+                                    {pet.owner.email}
+                                </DetailsField>
+                            </div>
+                        </Card>
+                    )}
+                </div>
             </div>
         </div>
     );

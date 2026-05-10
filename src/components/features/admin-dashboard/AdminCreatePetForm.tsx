@@ -7,8 +7,7 @@ import { format } from "date-fns";
 import { translateError } from "@/src/lib/error-map";
 
 import { AdminCreatePetFormData, adminCreatePetSchema } from "@/src/constants/schemas";
-import { adoptionStatusOptions } from "@/src/constants/constants";
-import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions } from "@/src/constants/constants";
+import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions, homeStatusOptions } from "@/src/constants/constants";
 
 import { Select, DatePicker, Input, Button, Label } from "@/src/components/ui";
 import { toast } from "@/src/lib/toast-store";
@@ -33,7 +32,7 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
             birthDate: undefined, 
             ownerId: defaultValues?.ownerId,
             chip: "",
-            adoptionStatus: defaultValues?.adoptionStatus,
+            homeStatus: defaultValues?.homeStatus,
             isNeutered: defaultValues?.isNeutered,
             allowEmergency: defaultValues?.allowEmergency,
         },
@@ -268,24 +267,24 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                 </div>
 
                 <div className="flex flex-col">
-                    <Label htmlFor="adoptionStatus">Status do Animal</Label>
+                    <Label htmlFor="homeStatus">Status de moradia</Label>
                     <Controller
-                        name="adoptionStatus"
+                        name="homeStatus"
                         control={control}
                         render={({ field: { value, onChange, name, onBlur } }) => (
                             <Select
-                                id="adoptionStatus"
+                                id="homeStatus"
                                 name={name}
                                 placeholder="Selecione..."
                                 value={value}
                                 onChange={onChange}
                                 onBlur={onBlur}
-                                options={adoptionStatusOptions}
-                                variant={errors.adoptionStatus ? "danger" : "default"}
+                                options={homeStatusOptions}
+                                variant={errors.homeStatus ? "danger" : "default"}
                             />
                         )}
                     />
-                    {errors.adoptionStatus && <span className="text-danger-fg text-sm">{errors.adoptionStatus.message}</span>}
+                    {errors.homeStatus && <span className="text-danger-fg text-sm">{errors.homeStatus.message}</span>}
                 </div>
             </div>
 

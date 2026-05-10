@@ -243,13 +243,13 @@ export default function AdminPetsPage() {
                                                 >
                                                     {translateTable(pet.homeStatus)}
                                                 </Badge>
-                                                <Badge 
-                                                    className= "w-fit! bg-yellow-100! text-yellow-800! border-yellow-200!"
-                                                >
-                                                    {pet.adoptionStatus === "NONE" && (
-                                                            translateTable(pet.adoptionStatus)
-                                                    )}
-                                                </Badge>
+                                                {pet.adoptionStatus !== "NONE" && (
+                                                    <Badge 
+                                                        className= "w-fit! bg-yellow-100! text-yellow-800! border-yellow-200!"
+                                                    >
+                                                        {translateTable(pet.adoptionStatus)}
+                                                    </Badge>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="w-2/16 text-xs sm:text-sm text-muted-fg truncate">

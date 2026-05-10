@@ -242,7 +242,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                                 species: appointment.species,
                                 gender: appointment.gender || undefined,
                                 size: appointment.size,
-                                adoptionStatus: "TEMPORARY_HOME",
+                                homeStatus: "TEMPORARY_HOME",
                                 allowEmergency: true,
                                 isNeutered: false
                             }}
