@@ -2,7 +2,8 @@ export type Role = "USER" | "ADMIN";
 export type PetSpecies = "DOG" | "CAT";
 export type PetGender = "MALE" | "FEMALE";
 export type PetSize = "SMALL" | "MEDIUM" | "LARGE";
-export type PetAdoptionStatus = | "FOR_ADOPTION" | "ADOPTED" | "HAS_OWNER" | "TEMPORARY_HOME" | "STRAY_ANIMAL";
+export type PetAdoptionStatus = "NONE" | "FOR_ADOPTION" | "ADOPTED";
+export type PetHomeStatus = "HAS_OWNER" | "TEMPORARY_HOME" | "STRAY_ANIMAL";
 export type PetBreed = "AKITA" | "AMERICAN_STAFFORDSHIRE_TERRIER" | "AMERICAN_BULLY" | "BASSET_HOUND" | "BEAGLE" | "AUSTRALIAN_CATTLE_DOG" | "BERNESE_MOUNTAIN_DOG" | "BORDER_COLLIE" | "BORDER_TERRIER" | "BOSTON_TERRIER" | "BOXER" | "FRENCH_BULLDOG" | "ENGLISH_BULLDOG" | "BULL_TERRIER" | "CANE_CORSO" | "CAVALIER_KING_CHARLES_SPANIEL" | "CHIHUAHUA" | "CHOW_CHOW" | "AMERICAN_COCKER_SPANIEL" | "ENGLISH_COCKER_SPANIEL" | "COLLIE" | "DACHSHUND" | "DALMATIAN" | "DOBERMAN" | "DOGO_ARGENTINO" | "GREAT_DANE" | "FILA_BRASILEIRO" | "FOX_TERRIER" | "GOLDEN_RETRIEVER" | "SIBERIAN_HUSKY" | "JACK_RUSSELL_TERRIER" | "LABRADOODLE" | "LABRADOR_RETRIEVER" | "LHASA_APSO" | "POMERANIAN" | "MALTESE" | "GERMAN_SHEPHERD" | "AUSTRALIAN_SHEPHERD" | "MINIATURE_PINSCHER" | "PIT_BULL" | "POODLE" | "PUG" | "ROTTWEILER" | "SHIH_TZU" | "STAFFORDSHIRE_BULL_TERRIER" | "NEWFOUNDLAND" | "SCOTTISH_TERRIER" | "WEIMARANER" | "WELSH_CORGI" | "YORKSHIRE_TERRIER" | "ABYSSINIAN" | "ANGORA" | "BENGAL" | "BIRMAN" | "CHARTREUX" | "RUSSIAN_BLUE" | "HIMALAYAN" | "MAINE_COON" | "MUNCHKIN" | "SPHYNX" | "SIAMESE" | "RAGDOLL" | "SCOTTISH_FOLD" | "AMERICAN_BURMESE" | "PERSIAN" | "EXOTIC_SHORTHAIR" | "MIXED_BREED";
 export type NeuteringStatus = "PENDING" | "AWAITING_EXAMS" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
 export type EmergencyStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
@@ -23,6 +24,7 @@ export interface Pet { /* default pet model, listByUser uses it */
     isNeutered: boolean;
     allowEmergency: boolean;
     chip?: string;
+    homeStatus: PetHomeStatus;
     adoptionStatus: PetAdoptionStatus;
     createdAt: Date;
     updatedAt: Date;
@@ -49,6 +51,7 @@ export interface AdminPet { /* list by admin */
     isNeutered: boolean;
     allowEmergency: boolean;
     chip?: string;
+    homeStatus: PetHomeStatus;
     adoptionStatus: PetAdoptionStatus;
     createdAt: Date;
     updatedAt: Date;
@@ -81,7 +84,8 @@ export interface PetById { /* get by user */
     isNeutered: boolean;
     allowEmergency: boolean;
     chip?: string;
-    adoptionStatus: string;
+    homeStatus: PetHomeStatus;
+    adoptionStatus: PetAdoptionStatus;
 }
 
 export interface PetForAdoption { /* list pets with status "FOR_ADOPTION" (public adoptions page) */ 
@@ -292,15 +296,17 @@ export interface AdminEmergencyAppointmentById { /* get by id  (admin has medica
 export interface GiveUpRequest {
     id: string;
     userId: string;
-    status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED_BY_USER";
+    status: "PENDING" | "APPROVED" | "REJECTED";
     reason?: string;
     petId: string;
     pet: { id: string; name: string; species: string };
+    approvedAt: string;
+    temporaryHomeAccepted: boolean;
+    termsAccepted: boolean;
     createdAt: string;
 }
 
 /* medical record */
-
 export interface MedicalRecord {
     id: string;
     notes: string;

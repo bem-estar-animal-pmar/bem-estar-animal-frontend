@@ -8,11 +8,7 @@ import { translateTable } from "@/src/lib/table-map";
 import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
-import { Button } from "@/src/components/ui/Button";
-import { ButtonLink } from "@/src/components/ui/ButtonLink";
-import { Badge } from "@/src/components/ui/Badge";
-import { Dialog } from "@/src/components/ui/Dialog";
-import { Card } from "@/src/components/ui/Card";
+import { Button, ButtonLink, Badge, Dialog, Card, InfoPopUp } from "@/src/components/ui";
 
 import { CreatePetForm } from "@/src/components/features/dashboard/CreatePetForm";
 
@@ -178,9 +174,27 @@ export default function DashboardPage() {
                                                     {translateTable(pet.species)}
                                                 </Badge>
                                             </div>
-                                            <p className="text-xs sm:text-sm text-muted-fg flex truncate">
-                                                {translateTable(pet.adoptionStatus)}
-                                            </p>
+                                            <div className="flex gap-2">
+                                                <p className="text-xs sm:text-sm text-muted-fg flex truncate">
+                                                    {translateTable(pet.homeStatus)}
+                                                </p>
+                                                {pet.adoptionStatus !== "NONE" && (
+                                                    <>
+                                                        <p className="text-xs sm:text-sm text-muted-fg flex truncate">
+                                                            {translateTable(pet.adoptionStatus)}
+                                                        </p>
+                                                        <InfoPopUp>
+                                                            {pet.adoptionStatus === "FOR_ADOPTION" ? 
+                                                                "Esse pet foi colocado para adoção à pedido do tutor. Caso queira desistir entre em contato com a clínica para remover o pet da vitrine."
+                                                                :
+                                                                "Esse pet foi adotado, o registro dele é mantido no perfil do tutor original. Entre em contato com a clínica para saber detalhes sobre a adoção."
+                                                            }
+                                                        </InfoPopUp>
+                                                    </>
+                                                )}
+
+                                            </div>
+
                                         </div>      
                                         <div className="flex w-full flex-wrap justify-between max-w-104 gap-2 pb-2">
                                             <div className="flex flex-col max-w-48">   

@@ -15,7 +15,7 @@ import Image from "next/image"
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
 
-import { Badge, TextLink, Accordion, Label, Select, Button, Card, Dialog, ButtonLink } from "@/src/components/ui"
+import { Badge, TextLink, Accordion, Label, Select, Button, Card, Dialog, ButtonLink, InfoPopUp } from "@/src/components/ui"
 import { CreateNeuteringForm } from "@/src/components/features/dashboard/CreateNeuteringForm"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { NeuteringCalendar } from "@/src/components/features/dashboard/NeuteringCalendar"
@@ -217,9 +217,26 @@ const NeuteringContent = () => {
                                                             {translateTable(activePet.species)}
                                                         </Badge>
                                                     </div>
-                                                    <p className="text-xs sm:text-sm text-muted-fg flex">
-                                                        {translateTable(activePet.adoptionStatus)}
-                                                    </p>
+                                                    <div className="flex gap-2 flex-wrap">
+                                                        <p className="text-xs sm:text-sm text-muted-fg flex">
+                                                            {translateTable(activePet.homeStatus)}
+                                                        </p>
+                                                        {activePet.adoptionStatus !== "NONE" && (
+                                                            <div className="flex gap-1">
+                                                                <p className="text-xs sm:text-sm text-muted-fg flex truncate">
+                                                                    {translateTable(activePet.adoptionStatus)}
+                                                                </p>
+                                                                <InfoPopUp>
+                                                                    {activePet.adoptionStatus === "FOR_ADOPTION" ? 
+                                                                        "Esse pet foi colocado para adoção à pedido do tutor. Caso queira desistir entre em contato com a clínica para remover o pet da vitrine."
+                                                                        :
+                                                                        "Esse pet foi adotado, o registro dele é mantido no perfil do tutor original. Entre em contato com a clínica para saber detalhes sobre a adoção."
+                                                                    }
+                                                                </InfoPopUp>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
                                                 </div>      
                                                 <div className="flex flex-wrap w-full justify-between gap-2 pb-2">
                                                     <div className="flex flex-col max-w-48">   
@@ -377,7 +394,6 @@ const NeuteringContent = () => {
                     onClose={() => setIsDialogOpen(false)}
                     title="Concluir solicitação"
                 >
-                    {/* REMOVIDO: scheduleDate={selectedDate} */}
                     <CreateNeuteringForm
                         onCancel={() => setIsDialogOpen(false)}
                         onSuccess={handleNeuteringCreated}

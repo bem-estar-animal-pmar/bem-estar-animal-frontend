@@ -16,12 +16,16 @@ export const petSizeOptions = [
     { value: "LARGE", label: "Grande" },
 ];
 
-export const adoptionStatusOptions = [
+export const homeStatusOptions = [
     { label: "Possui Tutor", value: "HAS_OWNER" },
-    { label: "Para Adoção", value: "FOR_ADOPTION" },
-    { label: "Adotado", value: "ADOPTED" },
     { label: "Lar Temporário", value: "TEMPORARY_HOME" },
     { label: "Animal de Rua", value: "STRAY_ANIMAL" }
+];
+
+export const adoptionStatusOptions = [
+    { label: "Nenhum", value: "NONE" },
+    { label: "Para Adoção", value: "FOR_ADOPTION" },
+    { label: "Adotado", value: "ADOPTED" },
 ];
 
 export const catBreedOptions = [
@@ -146,8 +150,7 @@ export const emergencyStatusMap: Record<string, { label: string; classes: string
 /* give up requests */
 
 export const giveUpStatusMap: Record<string, { label: string, classes: string }> = {
-    PENDING: { label: "Pendente", classes: "bg-yellow-100! text-yellow-800! border-yellow-200!" },
+    PENDING: { label: "Em Análise", classes: "bg-yellow-100! text-yellow-800! border-yellow-200!" },
     APPROVED: { label: "Aprovado", classes: "bg-green-100! text-green-800! border-green-200!" },
     REJECTED: { label: "Rejeitado", classes: "bg-red-100! text-red-800! border-red-200!" },
-    CANCELLED_BY_USER: { label: "Cancelado", classes: "bg-gray-100! text-gray-800! border-gray-200!" },
 };

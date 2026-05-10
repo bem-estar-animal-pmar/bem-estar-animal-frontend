@@ -15,6 +15,7 @@ const tableTranslations: Record<string, string> = {
     HAS_OWNER: "Possui Tutor",
     TEMPORARY_HOME: "Lar Temporário",
     STRAY_ANIMAL: "Animal de Rua",
+    NONE: "Nenhum",
 
     ABYSSINIAN: "Abissínio",
     ANGORA: "Angorá",
@@ -97,7 +98,8 @@ const tableTranslations: Record<string, string> = {
     /* give ups & adoption */
     APPROVED: "Aprovado",
     REJECTED: "Rejeitado",
-    CANCELLED_BY_USER: "Cancelado" 
+    RETURNED: "Devolvido",
+
 };
 
 export const translateTable = (text: string): string => {

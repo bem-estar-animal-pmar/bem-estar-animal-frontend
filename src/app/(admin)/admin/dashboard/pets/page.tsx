@@ -7,14 +7,14 @@ import { translateError } from "@/src/lib/error-map";
 import { toast } from "@/src/lib/toast-store";
 
 import { petSpeciesOptions } from "@/src/constants/constants";
-import type { Pet } from "@/src/constants/interfaces";
+import type { PetById} from "@/src/constants/interfaces";
 
-import { Button, Label, Input, Select, Dialog, Badge, ButtonLink }  from "@/src/components/ui";
+import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, InfoPopUp }  from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
 
 export default function AdminPetsPage() {
-    const [pets, setPets] = useState<Pet[]>([]);
+    const [pets, setPets] = useState<PetById[]>([]);
     const [isLoadingPets, setIsLoadingPets] = useState(true);
     const [searchUserDialogOpen, setSearchUserDialogOpen] = useState(false);
     
@@ -237,9 +237,20 @@ export default function AdminPetsPage() {
                                             </span>
                                         </div>
                                         <div className="w-2/16">
-                                            <Badge>
-                                                {translateTable(pet.adoptionStatus)}
-                                            </Badge>
+                                            <div className="flex flex-col w-fit">
+                                                <Badge
+                                                    className="w-fit!"
+                                                >
+                                                    {translateTable(pet.homeStatus)}
+                                                </Badge>
+                                                <Badge 
+                                                    className= "w-fit! bg-yellow-100! text-yellow-800! border-yellow-200!"
+                                                >
+                                                    {pet.adoptionStatus === "NONE" && (
+                                                            translateTable(pet.adoptionStatus)
+                                                    )}
+                                                </Badge>
+                                            </div>
                                         </div>
                                         <div className="w-2/16 text-xs sm:text-sm text-muted-fg truncate">
                                             {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}
