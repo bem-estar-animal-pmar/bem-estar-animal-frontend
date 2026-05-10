@@ -142,7 +142,7 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
     /* combine STRAY option with the user's pets */
     const targetOptions = [
         { value: "STRAY", label: "Animal de Rua" },
-        ...pets.filter(p => p.allowEmergency).map(p => ({ value: p.id, label: `Meu Pet: ${p.name}` }))
+        ...pets.filter(p => p.allowEmergency && p.adoptionStatus !== "ADOPTED").map(p => ({ value: p.id, label: `Meu Pet: ${p.name}` }))
     ];
 
     return (

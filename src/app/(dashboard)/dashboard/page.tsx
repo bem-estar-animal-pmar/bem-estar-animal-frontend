@@ -174,15 +174,15 @@ export default function DashboardPage() {
                                                     {translateTable(pet.species)}
                                                 </Badge>
                                             </div>
-                                            <div className="flex gap-2">
+                                            <div className="flex items-center gap-2">
                                                 <p className="text-xs sm:text-sm text-muted-fg flex truncate">
                                                     {translateTable(pet.homeStatus)}
                                                 </p>
                                                 {pet.adoptionStatus !== "NONE" && (
                                                     <>
-                                                        <p className="text-xs sm:text-sm text-muted-fg flex truncate">
+                                                        <Badge>
                                                             {translateTable(pet.adoptionStatus)}
-                                                        </p>
+                                                        </Badge>
                                                         <InfoPopUp>
                                                             {pet.adoptionStatus === "FOR_ADOPTION" ? 
                                                                 "Esse pet foi colocado para adoção à pedido do tutor. Caso queira desistir entre em contato com a clínica para remover o pet da vitrine."
@@ -225,7 +225,11 @@ export default function DashboardPage() {
                                             Identificação: {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}
                                         </p>
                                     </div>
-                                    <div className="flex gap-2 items-center">
+                                    <div className="flex gap-2 items-center text-xs text-default-fg italic">
+                                            {pet.adoptionStatus === "ADOPTED" ?
+                                                "Nenhuma ação disponível."
+                                            :
+                                                ""}
                                             {pet.isNeutered === true ? 
                                                 <Badge
                                                     size="md"
@@ -233,6 +237,7 @@ export default function DashboardPage() {
                                                     Pet castrado
                                                 </Badge>
                                             : 
+                                            pet.adoptionStatus !== "ADOPTED" ?
                                                 <ButtonLink
                                                     variant="outline"
                                                     size="sm"
@@ -240,8 +245,10 @@ export default function DashboardPage() {
                                                 >
                                                     Agendar castração
                                                 </ButtonLink>
+                                                :
+                                                ""
                                             }
-                                            {pet.allowEmergency === true ? 
+                                            {pet.allowEmergency === true && pet.adoptionStatus !== "ADOPTED" ? 
                                                 <ButtonLink
                                                     variant="primary"
                                                     size="sm"

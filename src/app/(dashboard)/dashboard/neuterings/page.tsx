@@ -129,6 +129,9 @@ const NeuteringContent = () => {
     };
     
     const activePet = pets.find(p => p.id === selectedPetId);
+    const availablePets = pets.filter(
+        pet => pet.adoptionStatus !== "ADOPTED"
+    );
 
     return (
         <>
@@ -170,7 +173,7 @@ const NeuteringContent = () => {
                                             setIsDialogOpen(false);
                                         }}
                                         options={
-                                            pets.map(p => ({ value: p.id, label: p.name }))  
+                                            availablePets.map(p => ({ value: p.id, label: p.name }))  
                                         }
                                     />
                                     <Button 
