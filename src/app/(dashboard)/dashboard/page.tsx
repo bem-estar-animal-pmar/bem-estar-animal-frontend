@@ -225,9 +225,9 @@ export default function DashboardPage() {
                                             Identificação: {pet.chip === "NO_CHIP" ? "Sem chip" : pet.chip}
                                         </p>
                                     </div>
-                                    <div className="flex gap-2 items-center text-xs text-default-fg italic">
+                                    <div className="flex gap-2 items-center">
                                             {pet.adoptionStatus === "ADOPTED" ?
-                                                "Nenhuma ação disponível."
+                                                <span className="text-xs text-default-fg italic">Nenhuma ação disponível.</span>
                                             :
                                                 ""}
                                             {pet.isNeutered === true ? 
