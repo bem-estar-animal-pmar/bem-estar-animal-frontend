@@ -78,8 +78,13 @@ export const UpdateGiveUpStatusForm = ({ request, onSuccess }: { request: AdminG
                 disabled={!isPending || status === request.status || isUpdating}
                 className="w-full"
             >
-                {isUpdating && <SpinnerIcon />}
-                Atualizar Status
+                {isUpdating ?
+                    <span className="flex gap-2 items-center">
+                        <SpinnerIcon/> Salvando... 
+                    </span>
+                    :
+                    "Atualizar Status"
+                }
             </Button>
 
             <Dialog

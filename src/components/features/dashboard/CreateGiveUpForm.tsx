@@ -9,6 +9,7 @@ import { toast } from "@/src/lib/toast-store";
 
 import { giveUpFormSchema, GiveUpFormData } from "@/src/constants/schemas";
 import { translateError } from "@/src/lib/error-map";
+import { SpinnerIcon } from "../../icons/SpinnerIcon";
 
 interface CreateGiveUpFormProps {
     pets: Pet[];
@@ -153,7 +154,14 @@ export const CreateGiveUpForm = ({ pets, onSuccess}: CreateGiveUpFormProps) => {
                     variant="primary"
                     disabled={isSubmitting || availablePets.length === 0}
                 >
-                    {isSubmitting ? "Enviando..." : "Solicitar Doação"}
+                    {isSubmitting ? 
+                        <span className="flex gap-2 items-center">
+                            <SpinnerIcon/> Enviando...
+                        </span>
+                    :  
+                        "Solicitar doação"
+                    }
+
                 </Button>
             </div>
         </form>

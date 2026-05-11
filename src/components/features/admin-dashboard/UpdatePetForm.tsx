@@ -21,6 +21,7 @@ import {
     petSizeOptions 
 } from "@/src/constants/constants";
 import { Select, DatePicker, Input, Button, Label, Dialog } from "@/src/components/ui";
+import { SpinnerIcon } from "../../icons/SpinnerIcon";
 
 interface AdminUpdatePetFormProps {
     pet: PetById;
@@ -221,7 +222,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                         />
                     </div>
                     <div className="flex-1">
-                        <Label>Permite Emergências?</Label>
+                        <Label>Permite emergências?</Label>
                         <Input 
                             readOnly 
                             disabled 
@@ -504,7 +505,13 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                     variant="primary"
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? "Salvando..." : "Salvar Alterações"}
+                    {isSubmitting ? 
+                        <span className="flex gap-2 items-center">
+                            <SpinnerIcon/> Salvando...
+                        </span>
+                        : 
+                        "Salvar alterações"
+                    }
                 </Button>
             </div>
         </form>

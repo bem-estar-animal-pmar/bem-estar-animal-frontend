@@ -9,6 +9,7 @@ import { toast } from "@/src/lib/toast-store";
 import { homeStatusOptions } from "@/src/constants/constants";
 import type { PetById } from "@/src/constants/interfaces";
 import { Card, Button, Label, Select, Dialog, DetailsField } from "@/src/components/ui";
+import { SpinnerIcon } from "../../icons/SpinnerIcon";
 
 interface PetStatusCardProps {
     pet: PetById;
@@ -125,7 +126,7 @@ export const PetStatusCard = ({ pet, onUpdateSuccess }: PetStatusCardProps) => {
                             onClick={() => setIsEditingHome(true)}
                             className="w-fit"
                         >
-                            Atualizar Moradia
+                            Atualizar moradia
                         </Button>
                     </div>
                 ) : (
@@ -154,7 +155,13 @@ export const PetStatusCard = ({ pet, onUpdateSuccess }: PetStatusCardProps) => {
                                 onClick={handleUpdateHomeStatus}
                                 disabled={isUpdatingHome}
                             >
-                                {isUpdatingHome ? "Salvando..." : "Atualizar"}
+                                {isUpdatingHome ? 
+                                    <span className="flex gap-2 items-center">
+                                        <SpinnerIcon/> Salvando...
+                                    </span>
+                                    : 
+                                    "Atualizar"
+                                }
                             </Button>
                         </div>
                     </div>

@@ -16,6 +16,8 @@ import { Input } from "@/src/components/ui/Input";
 import { Button } from "@/src/components/ui/Button";
 import { Label } from "@/src/components/ui/Label";
 import { toast } from "@/src/lib/toast-store";
+import { SpinnerIcon } from "../../icons/SpinnerIcon";
+import { PetCreateIcon } from "../../icons/outline";
 
 /* birthDate is now a Date object because of our custom DatePicker, that means it will convert the date to our timezone,
 in this case, we will need to strip the timezone before sending it to the backend. 
@@ -272,7 +274,7 @@ return (
             </div>
 
             <div className="flex justify-end gap-3 pt-4">
-                <Button type="button" variant="outline-default" onClick={onCancel}>
+                <Button type="button" variant="outline" onClick={onCancel}>
                     Cancelar
                 </Button>
                 <Button
@@ -280,7 +282,16 @@ return (
                     variant="primary"
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? "Salvando..." : "Salvar Pet"}
+                    {isSubmitting ? (
+                        <span className="flex gap-2 items-center">
+                            <SpinnerIcon/> Salvando... 
+                        </span>
+                    )
+                    : 
+                        <span className="flex gap-2 items-center">
+                            <PetCreateIcon/> Salvar pet 
+                        </span>
+                    }
                 </Button>
             </div>
         </form>

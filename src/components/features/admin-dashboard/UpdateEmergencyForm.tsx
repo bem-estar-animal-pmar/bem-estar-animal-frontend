@@ -8,14 +8,20 @@ import { translateTable } from "@/src/lib/table-map";
 import type { AdminEmergencyAppointmentById } from "@/src/constants/interfaces";
 import { Button, Select, Label, DatePicker, Input, Dialog } from "@/src/components/ui";
 import { AdminCreatePetForm } from "./AdminCreatePetForm"; 
+import { CalendarIcon } from "../../icons/outline";
+import { SpinnerIcon } from "../../icons/SpinnerIcon";
 
 interface AdminUpdateEmergencyFormProps {
     appointment: AdminEmergencyAppointmentById;
     onSuccess: (updatedFields: any) => void;
 }
 
+type LoadingAction = "NO_SHOW" | "CANCEL" | "CONFIRM" | "COMPLETE" | "SAVE_DATE" | null;
+
 export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmergencyFormProps) => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [loadingAction, setLoadingAction] = useState<LoadingAction>(null);
+    const isLoading = loadingAction !== null;
+
     const [isEditing, setIsEditing] = useState(false);
 
     const [cancelWarningDialogOpen, setCancelWarningDialogOpen] = useState(false);
@@ -48,8 +54,8 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
         setIsEditing(false);
     };
 
-    const executeUpdate = async (newStatus: string, newDate: Date | undefined, newPeriod: string | undefined, newPetId?: string) => {
-        setIsLoading(true);
+    const executeUpdate = async (newStatus: string, newDate: Date | undefined, newPeriod: string | undefined, actionName: LoadingAction, newPetId?: string) => {
+        setLoadingAction(actionName);
         try {
             const formattedDate = newDate
                 ? new Date(Date.UTC(
@@ -103,21 +109,21 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
             }
             toast.danger("Erro desconhecido ao atualizar agendamento.");
         } finally {
-            setIsLoading(false);
+            setLoadingAction(null);
         }
     };
 
     /* new function in case emergency didn't have a pet attached, after creating one, this will be called to finish the
     appointmnet */
     const handlePetCreated = async (newCreatedPetId: string) => {
-        await executeUpdate("COMPLETED", initialDate, appointment.period, newCreatedPetId);
+        await executeUpdate("COMPLETED", initialDate, appointment.period, "COMPLETE", newCreatedPetId);
         setCreatePetDialogOpen(false);
     };
 
     /* simple function to complete the appointment, if pet exists just execute update, if not, open pet create modal */
     const handleCompleteAction = () => {
         if (hasPet) {
-            executeUpdate("COMPLETED", initialDate, appointment.period);
+            executeUpdate("COMPLETED", initialDate, appointment.period, "COMPLETE");
             return;
         } 
         setCreatePetDialogOpen(true); // opens pet creation modal 
@@ -176,7 +182,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                             disabled={isLoading}
                             className="self-end! w-fit! border-danger-border! text-danger-fg! hover:bg-danger-border/10"
                         >
-                            {isLoading ? "Processando..." : "Tutor ausente"}
+                            {loadingAction === "NO_SHOW" ? <span className="flex gap-2 items-center"><SpinnerIcon /> Processando...</span> : "Tutor ausente"}
                         </Button>
                     )}   
 
@@ -187,7 +193,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                             disabled={isLoading}
                             className="border-danger-border! text-danger-fg! hover:bg-danger-border/10"
                         >
-                            Cancelar emergência
+                            {loadingAction === "CANCEL" ? <span className="flex gap-2 items-center"><SpinnerIcon /> Cancelando...</span> : "Cancelar emergência"}
                         </Button>
                     )}
 
@@ -198,16 +204,28 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                                 onClick={() => setIsEditing(true)} 
                                 disabled={isLoading}
                             >
-                                {hasDateAndPeriod ? "Alterar data" : "Definir data"}
+                                {hasDateAndPeriod ? 
+                                    <span className="flex gap-2 items-center">
+                                        <CalendarIcon /> Alterar data
+                                    </span> 
+                                    : 
+                                    <span className="flex gap-2 items-center">
+                                        <CalendarIcon /> Definir data
+                                    </span>
+                                }
                             </Button>
 
                             {hasDateAndPeriod && (
                                 <Button 
                                     variant="primary" 
-                                    onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period)} 
+                                    onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period, "CONFIRM")} 
                                     disabled={isLoading}
                                 >
-                                    Confirmar emergência
+                                    {loadingAction === "CONFIRM" ? 
+                                        <span className="flex gap-2 items-center"><SpinnerIcon /> Confirmando...</span> 
+                                        : 
+                                        "Confirmar emergência"
+                                    }
                                 </Button>
                             )}
                         </>
@@ -219,7 +237,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                             onClick={handleCompleteAction} 
                             disabled={isLoading}
                         >
-                            {isLoading ? "Processando..." : "Marcar como concluído"}
+                            {loadingAction === "COMPLETE" ? <span className="flex gap-2 items-center"><SpinnerIcon /> Processando...</span> : "Marcar como concluído"}
                         </Button>
                     )}
                 </div>
@@ -274,7 +292,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                             variant="danger" 
                             onClick={() => { 
                                 setCancelWarningDialogOpen(false); 
-                                executeUpdate("CANCELLED", initialDate, appointment.period); 
+                                executeUpdate("CANCELLED", initialDate, appointment.period, "CANCEL"); 
                             }}
                         >
                             Sim, tenho certeza
@@ -303,7 +321,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                             variant="danger" 
                             onClick={() => { 
                                 setNoShowWarningDialogOpen(false); 
-                                executeUpdate("NO_SHOW", initialDate, appointment.period); 
+                                executeUpdate("NO_SHOW", initialDate, appointment.period, "NO_SHOW"); 
                                 }}
                         >
                             Sim, confirmar falta
@@ -319,7 +337,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
             <form 
                 onSubmit={(e) => {
                     e.preventDefault();
-                    executeUpdate(appointment.status, formData.scheduleDate, formData.period);
+                    executeUpdate(appointment.status, formData.scheduleDate, formData.period, "SAVE_DATE");
                 }} 
                 className="flex flex-col gap-6"
             >
@@ -365,7 +383,13 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                         variant="primary" 
                         disabled={isLoading || (!formData.scheduleDate || !formData.period)}
                     >
-                        {isLoading ? "Salvando..." : "Salvar data"}
+                        {loadingAction === "SAVE_DATE" ? 
+                            <span className="flex gap-2 items-center">
+                                <SpinnerIcon /> Salvando...
+                            </span> 
+                            : 
+                            "Salvar data"
+                        }
                     </Button>
                 </div>
             </form>

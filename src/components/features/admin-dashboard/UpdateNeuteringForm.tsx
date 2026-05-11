@@ -7,14 +7,20 @@ import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
 
 import { Button, Select, Label, DatePicker, Input, Dialog } from "@/src/components/ui";
+import { CalendarCheckIcon, CalendarIcon } from "../../icons/outline";
+import { SpinnerIcon } from "../../icons/SpinnerIcon";
 
 interface AdminUpdateNeuteringFormProps {
     appointment: any;
     onSuccess: (updatedFields: any) => void;
 }
 
+type LoadingAction = "NO_SHOW" | "CANCEL" | "CONFIRM" | "COMPLETE" | "SAVE_DATE" | null;
+
 export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeuteringFormProps) => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [loadingAction, setLoadingAction] = useState<LoadingAction>(null);
+    const isLoading = loadingAction !== null;
+    
     const [isEditing, setIsEditing] = useState(false);
 
     const [chipWarningDialogOpen, setChipWarningDialogOpen] = useState(false);
@@ -77,15 +83,15 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
         }
     };
 
-    const executeUpdate = async (newStatus: string, newDate: Date | undefined, newPeriod: string) => {
-        setIsLoading(true);
+    const executeUpdate = async (newStatus: string, newDate: Date | undefined, newPeriod: string, actionName: LoadingAction) => {
+        setLoadingAction(actionName);
 
         try {
             /* if it is being set as completed update chip first */
             if (newStatus === "COMPLETED") {
                 const isPetUpdated = await updatePetChip();
                 if (!isPetUpdated) {
-                    setIsLoading(false);
+                    setLoadingAction(null);
                     return;
                 }
             }
@@ -134,7 +140,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
             }
             toast.danger("Erro desconhecido ao atualizar agendamento.");
         } finally {
-            setIsLoading(false);
+            setLoadingAction(null);
         }
     };
 
@@ -143,8 +149,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
             setChipWarningDialogOpen(true);
             return;
         } 
-        // Usamos initialDate/appointment.period aqui para garantir que estamos enviando os dados já salvos
-        executeUpdate("COMPLETED", initialDate, appointment.period);
+        executeUpdate("COMPLETED", initialDate, appointment.period, "COMPLETE");
     };
 
     const isFinalStatus = ["NO_SHOW", "COMPLETED", "CANCELLED"].includes(appointment.status);
@@ -214,7 +219,13 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             disabled={isLoading}
                             className="self-end! w-fit! border-danger-border! text-danger-fg! hover:bg-danger-border/10"
                         >
-                            {isLoading ? "Salvando..." : "Tutor ausente"}
+                            {loadingAction === "NO_SHOW" ? 
+                                <span className="flex gap-2 items-center">
+                                    <SpinnerIcon /> Salvando...
+                                </span> 
+                                : 
+                                "Tutor ausente"
+                            }
                         </Button>
                     )}   
 
@@ -225,7 +236,13 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             disabled={isLoading}
                             className="border-danger-border! text-danger-fg! hover:bg-danger-border/10"
                         >
-                            Cancelar agendamento
+                            {loadingAction === "CANCEL" ? 
+                                <span className="flex gap-2 items-center">
+                                    <SpinnerIcon /> Cancelando...
+                                </span> 
+                                : 
+                                "Cancelar agendamento"
+                            }
                         </Button>
                     )}
 
@@ -236,16 +253,30 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                                 onClick={() => setIsEditing(true)} 
                                 disabled={isLoading}
                             >
-                                {hasDateAndPeriod ? "Alterar data" : "Definir data"}
+                                {hasDateAndPeriod ? 
+                                    <span className="flex gap-2 items-center">
+                                        <CalendarIcon /> Alterar data
+                                    </span>
+                                    : 
+                                    "Definir data"
+                                }
                             </Button>
 
                             {hasDateAndPeriod && (
                                 <Button 
                                     variant="primary" 
-                                    onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period)} 
+                                    onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period, "CONFIRM")} 
                                     disabled={isLoading}
                                 >
-                                    Confirmar agendamento
+                                    {loadingAction !== "CONFIRM" ? 
+                                        <span className="flex gap-2 items-center">
+                                            <CalendarCheckIcon /> Confirmar agendamento
+                                        </span>
+                                        : 
+                                        <span className="flex gap-2 items-center">
+                                            <SpinnerIcon/> Confirmando...
+                                        </span>
+                                    }
                                 </Button>
                             )}
                         </>
@@ -258,7 +289,13 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                                 onClick={handleCompleteRequest} 
                                 disabled={isLoading}
                             >
-                                {isLoading ? "Salvando..." : "Marcar como concluído"}
+                                {loadingAction === "COMPLETE" ? 
+                                    <span className="flex gap-2 items-center">
+                                        <SpinnerIcon /> Salvando...
+                                    </span> 
+                                    : 
+                                    "Marcar como concluído"
+                                }
                             </Button>
                         </>
                     )}
@@ -286,7 +323,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             variant="danger" 
                             onClick={() => {
                                 setCancelWarningDialogOpen(false);
-                                executeUpdate("CANCELLED", initialDate, appointment.period);
+                                executeUpdate("CANCELLED", initialDate, appointment.period, "CANCEL");
                             }}
                         >
                             Sim, tenho certeza
@@ -314,7 +351,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             variant="primary" 
                             onClick={() => {
                                 setChipWarningDialogOpen(false);
-                                executeUpdate("COMPLETED", initialDate, appointment.period);
+                                executeUpdate("COMPLETED", initialDate, appointment.period, "COMPLETE");
                             }}
                         >
                             Concluir sem Chip
@@ -343,7 +380,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                             variant="danger" 
                             onClick={() => {
                                 setNoShowWarningDialogOpen(false);
-                                executeUpdate("NO_SHOW", initialDate, appointment.period);
+                                executeUpdate("NO_SHOW", initialDate, appointment.period, "NO_SHOW");
                             }}
                         >
                             Sim, confirmar falta
@@ -359,8 +396,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
             <form 
                 onSubmit={(e) => {
                     e.preventDefault();
-                    // Como isEditing só serve pra definir data, enviamos o status atual para mantê-lo
-                    executeUpdate(appointment.status, formData.scheduleDate, formData.period);
+                    executeUpdate(appointment.status, formData.scheduleDate, formData.period, "SAVE_DATE");
                 }} 
                 className="flex flex-col gap-6"
             >
@@ -402,7 +438,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                         Cancelar edição
                     </Button>
                     <Button type="submit" variant="primary" disabled={isLoading || (!formData.scheduleDate || !formData.period)}>
-                        {isLoading ? "Salvando..." : "Salvar data"}
+                        {loadingAction === "SAVE_DATE" ? <span className="flex gap-2 items-center"><SpinnerIcon /> Salvando...</span> : "Salvar data"}
                     </Button>
                 </div>
             </form>

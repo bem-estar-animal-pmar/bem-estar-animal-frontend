@@ -6,6 +6,7 @@ import { translateError } from "@/src/lib/error-map";
 
 import { Button, Input, Label, Select } from "@/src/components/ui";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
+import { SearchIcon } from "../../icons/outline";
 
 export const SearchUserIdForm = () => {
 
@@ -139,7 +140,9 @@ export const SearchUserIdForm = () => {
                         variant="primary"
                         className="mb-1 w-full max-w-28"
                     >
-                        Buscar
+                        <span className="flex gap-2 items-center">
+                            <SearchIcon size={18}/> Buscar
+                        </span>
                     </Button>
                 </div>
 

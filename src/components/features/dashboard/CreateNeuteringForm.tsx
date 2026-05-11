@@ -9,6 +9,7 @@ import { getTodayInBrasilia } from "@/src/lib/scheduling"
 
 import { DatePicker, Label, Select, Button } from "@/src/components/ui"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
+import { AppointmentScheduleIcon } from "../../icons/outline"
 
 interface NeuteringFormProps {
     onCancel: () => void;
@@ -168,7 +169,15 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, isBrachycephal
                         variant="primary" 
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? <SpinnerIcon /> : "Confirmar Agendamento"}
+                        {isSubmitting ? 
+                            <span className="flex gap-2 items-center">
+                                <SpinnerIcon/> Salvando... 
+                            </span>
+                        : 
+                            <span className="flex gap-2 items-center">
+                                Confirmar agendamento
+                            </span>
+                        }
                     </Button>
                 </div>
             </form>

@@ -16,8 +16,8 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 import { petSizeOptions, petSpeciesOptions } from "@/src/constants/constants";
 import { Pet } from "@/src/constants/interfaces";
+import { AppointmentScheduleIcon } from "../../icons/outline";
 
-// Fallback options for gender if not already in your constants file
 const petGenderOptions = [
     { value: "MALE", label: "Macho" },
     { value: "FEMALE", label: "Fêmea" }
@@ -273,7 +273,15 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
                     className="w-full py-6 text-base mt-2"
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? <SpinnerIcon /> : "Solicitar Atendimento"}
+                    {isSubmitting ? 
+                        <span className="flex gap-2 items-center">
+                            <SpinnerIcon/> Salvando... 
+                        </span>
+                    : 
+                        <span className="flex gap-2 items-center">
+                            <AppointmentScheduleIcon/> Solicitar atendimento
+                        </span>
+                    }
                 </Button>
             </form>
         </Card>

@@ -10,6 +10,7 @@ import { translateTable } from "@/src/lib/table-map";
 import { Button, Input, Label, Select } from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { petSpeciesOptions } from "@/src/constants/constants";
+import { SearchIcon } from "../../icons/outline";
 
 export const SearchPetIdForm = () => {
     const [pets, setPets] = useState<any[]>([]);
@@ -125,7 +126,9 @@ export const SearchPetIdForm = () => {
                         variant="primary"
                         className="mb-1 w-full max-w-28"
                     >
-                        Buscar
+                        <span className="flex gap-2 items-center">
+                            <SearchIcon size={18}/> Buscar
+                        </span>
                     </Button>
                 </div>
             </form>

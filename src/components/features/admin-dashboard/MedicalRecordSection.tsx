@@ -139,8 +139,14 @@ export const MedicalRecordSection = ({ medicalRecord, onUpdateSuccess }: Medical
                     variant="primary"
                     className="self-end"
                 >
-                    {isSaving && <SpinnerIcon/>}
-                    Salvar Notas
+                    {isSaving ? 
+                        <span className="flex gap-2 items-center">
+                            <SpinnerIcon /> Salvando...
+                        </span> 
+                        :
+                        "Salvar notas"
+                    }
+                    
                 </Button>
             </section>
         </Card>
