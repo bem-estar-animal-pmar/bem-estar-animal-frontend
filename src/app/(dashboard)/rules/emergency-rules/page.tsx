@@ -115,7 +115,7 @@ const EmergencyRulesContent = () => {
                     <ButtonLink 
                         variant="primary" 
                         size="lg" 
-                        href={`/dashboard/emergencies/new${ petIdParam ? `?petId=${petIdParam}` : ""}`}
+                        href={`/dashboard/emergencies${ petIdParam ? `?petId=${petIdParam}` : ""}`}
                     >
                         Li e concordo com as regras
                     </ButtonLink>
