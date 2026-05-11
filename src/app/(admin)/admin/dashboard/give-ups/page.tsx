@@ -116,7 +116,7 @@ export default function AdminGiveUpsPage() {
             <section className="flex flex-wrap gap-4 justify-between items-center">
                 <div className="flex flex-col">
                     <h1 className="font-semibold text-base sm:text-xl lg:text-2xl text-default-fg">
-                        Pedidos de doação
+                        Gestão de pedidos de doação
                     </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
                         Gerencie tutores que desejam disponibilizar seus pets para adoção.

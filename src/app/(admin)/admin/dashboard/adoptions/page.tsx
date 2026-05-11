@@ -113,7 +113,7 @@ export default function AdminAdoptionsPage() {
             <section className="flex flex-wrap gap-4 justify-between items-center">
                 <div className="flex flex-col">
                     <h1 className="font-semibold text-base sm:text-xl lg:text-2xl text-default-fg">
-                        Pedidos de adoção
+                        Gestão de pedidos de adoção
                     </h1>
                     <p className="text-muted-fg text-sm sm:text-base">
                         Gerencie solicitações públicas de adoção para os pets disponíveis.

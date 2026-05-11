@@ -18,6 +18,7 @@ import type { AdminEmergencyAppointmentById } from "@/src/constants/interfaces";
 
 import { Loading } from "@/src/components/layout/Loading";
 import { Button } from "@/src/components/ui";
+import { PrintIcon } from "@/src/components/icons/outline";
 
 export default function EmergencyTemplatePage() {
     const searchParams = useSearchParams();
@@ -102,7 +103,9 @@ export default function EmergencyTemplatePage() {
                 size="xl"
                 pill="true"
             >   
-                Imprimir documento
+                <span className="flex gap-2 items-center">
+                   <PrintIcon/> Imprimir documento
+                </span>
             </Button>
 
             <main className="flex min-h-screen w-full">

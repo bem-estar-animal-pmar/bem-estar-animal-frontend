@@ -19,6 +19,7 @@ import type { PetById, AdminNeuteringAppointmentById } from "@/src/constants/int
 
 import { Loading } from "@/src/components/layout/Loading";
 import { Button } from "@/src/components/ui";
+import { PrintIcon } from "@/src/components/icons/outline";
     
 export default function NeuteringTemplatePage() {
     const searchParams = useSearchParams();
@@ -104,7 +105,9 @@ export default function NeuteringTemplatePage() {
                 size="xl"
                 pill="true"
             >   
-                Imprimir documento
+                <span className="flex gap-2 items-center">
+                   <PrintIcon/> Imprimir documento
+                </span>
             </Button>
 
             <main className="flex min-h-screen w-full">
