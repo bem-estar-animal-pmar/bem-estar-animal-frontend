@@ -13,6 +13,7 @@ import { UpdateEmergencyForm } from "@/src/components/features/admin-dashboard/U
 import { MedicalRecordSection } from "@/src/components/features/admin-dashboard/MedicalRecordSection";
 import { ButtonLink, Card, TextLink } from "@/src/components/ui";
 import { DetailsField } from "@/src/components/ui/DetailsField";
+import { PrintIcon } from "@/src/components/icons/outline";
 
 export default function AdminEmergencyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: appointmentId } = use(params);
@@ -117,7 +118,9 @@ export default function AdminEmergencyDetailsPage({ params }: { params: Promise<
                         variant="outline" 
                         target="_blank"
                     >
-                        Imprimir formulário de emergência
+                        <span className="flex gap-2 items-center">
+                            <PrintIcon /> Imprimir formulário de emergência
+                        </span>
                     </ButtonLink>
                 </div>
             </section>

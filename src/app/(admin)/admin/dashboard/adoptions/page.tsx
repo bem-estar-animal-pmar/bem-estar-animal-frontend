@@ -13,6 +13,7 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import type { AdoptionRequestList } from "@/src/constants/interfaces";
 
 import { SearchPetIdForm } from "@/src/components/features/admin-dashboard/SearchPetIdForm";
+import { PetSearchIcon, SquareArrowUpRightIcon, FunnelIcon } from "@/src/components/icons/outline";
 
 type TabType = "PENDING" | "RESOLVED";
 
@@ -120,7 +121,9 @@ export default function AdminAdoptionsPage() {
                 </div>
                 <div className="flex gap-2">
                     <Button variant="outline" onClick={() => setIsPetModalOpen(true)}>
-                        Buscar Pet
+                        <span className="flex gap-2 items-center">
+                            <PetSearchIcon /> Buscar pet
+                        </span>
                     </Button>
                     <ButtonLink
                         href="/admin/dashboard/give-ups"
@@ -128,7 +131,9 @@ export default function AdminAdoptionsPage() {
                         className="ml-4"
                         pill="true"
                     >
-                        Ir para doações
+                        <span className="flex gap-2 items-center">
+                            Ir para doações <SquareArrowUpRightIcon />
+                        </span>
                     </ButtonLink>
                 </div>
             </section>
@@ -162,7 +167,11 @@ export default function AdminAdoptionsPage() {
                         />
                     </div>
                     <div className="flex justify-center items-end gap-4">
-                        <Button type="submit" variant="primary" className="mb-1 w-full!">Filtrar</Button>
+                        <Button type="submit" variant="primary" className="mb-1 w-full!">
+                            <span className="flex gap-2 items-center">
+                                <FunnelIcon /> Filtrar
+                            </span>
+                        </Button>
                         <Button 
                             type="button" variant="outline" className="mb-1 w-full!"
                             onClick={() => {

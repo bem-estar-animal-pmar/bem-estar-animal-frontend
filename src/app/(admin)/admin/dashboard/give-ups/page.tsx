@@ -14,6 +14,8 @@ import type { AdminGiveUpRequest } from "@/src/constants/interfaces";
 
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
 import { SearchPetIdForm } from "@/src/components/features/admin-dashboard/SearchPetIdForm";
+import { FunnelIcon } from "@/src/components/icons/outline/FunnelIcon";
+import { PetSearchIcon, SquareArrowUpRightIcon, UserSearchIcon } from "@/src/components/icons/outline";
 
 type TabType = "PENDING" | "RESOLVED";
 
@@ -122,10 +124,14 @@ export default function AdminGiveUpsPage() {
                 </div>
                 <div className="flex gap-2">
                     <Button variant="outline" onClick={() => setIsUserModalOpen(true)}>
-                        Buscar Usuário
+                        <span className="flex gap-2 items-center">
+                            <UserSearchIcon /> Buscar usuário
+                        </span>
                     </Button>
                     <Button variant="outline" onClick={() => setIsPetModalOpen(true)}>
-                        Buscar Pet
+                        <span className="flex gap-2 items-center">
+                            <PetSearchIcon /> Buscar pet
+                        </span>
                     </Button>
                     <ButtonLink
                         href="/admin/dashboard/adoptions"
@@ -133,7 +139,9 @@ export default function AdminGiveUpsPage() {
                         className="ml-4"
                         pill="true"
                     >
-                        Ir para adoções 
+                        <span className="flex gap-2 items-center">
+                            Ir para adoções <SquareArrowUpRightIcon />
+                        </span>
                     </ButtonLink>
                 </div>
             </section>
@@ -174,7 +182,11 @@ export default function AdminGiveUpsPage() {
                         />
                     </div>
                     <div className="flex justify-center items-end gap-4">
-                        <Button type="submit" variant="primary" className="mb-1 w-full!">Filtrar</Button>
+                        <Button type="submit" variant="primary" className="mb-1 w-full!">
+                            <span className="flex gap-2 items-center">
+                                <FunnelIcon /> Filtrar
+                            </span>
+                        </Button>
                         <Button 
                             type="button" variant="outline" className="mb-1 w-full!"
                             onClick={() => {

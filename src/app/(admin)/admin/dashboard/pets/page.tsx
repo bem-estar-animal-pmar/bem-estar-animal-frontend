@@ -12,6 +12,7 @@ import type { PetById} from "@/src/constants/interfaces";
 import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, InfoPopUp }  from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
+import { UserSearchIcon, FunnelIcon } from "@/src/components/icons/outline";
 
 export default function AdminPetsPage() {
     const [pets, setPets] = useState<PetById[]>([]);
@@ -103,7 +104,9 @@ export default function AdminPetsPage() {
                     variant="outline"
                     onClick={() => setSearchUserDialogOpen(true)}
                 >
-                    Buscar Usuários
+                    <span className="flex gap-2 items-center">
+                        <UserSearchIcon /> Buscar usuário
+                    </span>
                 </Button>
             </section>
 
@@ -168,7 +171,9 @@ export default function AdminPetsPage() {
                             variant="primary"
                             className="mb-1 w-full!"
                         >
-                            Filtrar
+                            <span className="flex gap-2 items-center">
+                                <FunnelIcon /> Filtrar
+                            </span>
                         </Button>
 
                         <Button 

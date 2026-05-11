@@ -14,6 +14,7 @@ import { MedicalRecordSection } from "@/src/components/features/admin-dashboard/
 import { ButtonLink, Card, TextLink } from "@/src/components/ui";
 import { NeuteringCalendar } from "@/src/components/features/dashboard/NeuteringCalendar";
 import { DetailsField } from "@/src/components/ui/DetailsField";
+import { PrintIcon } from "@/src/components/icons/outline";
 
 export default function AdminNeuteringDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: appointmentId } = use(params);
@@ -109,7 +110,9 @@ export default function AdminNeuteringDetailsPage({ params }: { params: Promise<
                         target="_blank"
                         variant="outline" 
                     >
-                        Imprimir formulário de castração
+                        <span className="flex gap-2 items-center">
+                            <PrintIcon /> Imprimir formulário de castração
+                        </span>
                     </ButtonLink>
                 </div>
             </section>

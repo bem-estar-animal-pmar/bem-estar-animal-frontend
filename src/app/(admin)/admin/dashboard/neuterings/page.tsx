@@ -14,6 +14,7 @@ import type { AdminNeuteringAppointment } from "@/src/constants/interfaces";
 
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
 import { SearchPetIdForm } from "@/src/components/features/admin-dashboard/SearchPetIdForm";
+import { PetSearchIcon, UserSearchIcon, FunnelIcon } from "@/src/components/icons/outline";
 
 type TabType = "PENDING" | "CONFIRMED" | "FINISHED";
 
@@ -137,10 +138,14 @@ export default function AdminNeuteringsPage() {
                 </div>
                 <div className="flex gap-2">
                     <Button variant="outline" onClick={() => setIsUserModalOpen(true)}>
-                        Buscar Usuário
+                        <span className="flex gap-2 items-center">
+                            <UserSearchIcon /> Buscar usuário
+                        </span>
                     </Button>
                     <Button variant="outline" onClick={() => setIsPetModalOpen(true)}>
-                        Buscar Pet
+                        <span className="flex gap-2 items-center">
+                            <PetSearchIcon /> Buscar pet
+                        </span>
                     </Button>
                 </div>
             </section>
@@ -203,7 +208,9 @@ export default function AdminNeuteringsPage() {
                             variant="primary"
                             className="mb-1 w-full!"
                         >
-                            Filtrar
+                            <span className="flex gap-2 items-center">
+                                <FunnelIcon /> Filtrar
+                            </span>
                         </Button>
                         <Button 
                             type="button" 

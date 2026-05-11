@@ -17,11 +17,15 @@ import { adoptionStatusMap } from "@/src/constants/constants";
 import { Card, TextLink, Badge, Button, Dialog } from "@/src/components/ui"; 
 import { DetailsField } from "@/src/components/ui/DetailsField";
 
+type LoadingAction = "APPROVE" | "REJECT" | "RETURN" | null;
+
 export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: requestId } = use(params);
     const [request, setRequest] = useState<AdoptionRequestById | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    const [loadingAction, setLoadingAction] = useState<LoadingAction>(null);
+    const isSubmitting = loadingAction !== null;
 
     // Estados para os Dialogs de confirmação
     const [approveDialogOpen, setApproveDialogOpen] = useState(false);
@@ -59,8 +63,8 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
         }
     }, [requestId]);
 
-    const handleStatusChange = async (newStatus: "APPROVED" | "REJECTED") => {
-        setIsSubmitting(true);
+    const handleStatusChange = async (newStatus: "APPROVED" | "REJECTED", actionName: LoadingAction) => {
+        setLoadingAction(actionName);
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/adoptions/request/${requestId}/status`, {
                 method: "PATCH",
@@ -83,13 +87,13 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
             }
             toast.danger("Erro ao atualizar o status do pedido.");
         } finally {
-            setIsSubmitting(false);
+            setLoadingAction(null);
         }
     };
 
     const handleReturnPet = async () => {
         if (!request) return;
-        setIsSubmitting(true);
+        setLoadingAction("RETURN");
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/${request.petId}/adoption-return`, {
                 method: "PATCH",
@@ -110,7 +114,7 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
             }
             toast.danger("Erro ao registrar a devolução do pet.");
         } finally {
-            setIsSubmitting(false);
+            setLoadingAction(null);
         }
     };
 
@@ -129,6 +133,8 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
             </div>
         );
     }
+
+    console.log(request.status)
 
     const statusInfo = adoptionStatusMap[request.status] || { label: request.status, classes: "bg-neutral-100 text-neutral-800" };
     const displayDate = request.createdAt ? request.createdAt.split("T")[0].split("-").reverse().join("/") : "Sem data";
@@ -206,6 +212,99 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
                         </div>
                     </Card>
 
+                    <AdoptionHistorySection history={request.history} />
+                </div>
+
+                <div className="flex flex-col w-full gap-4 lg:w-2/5">
+                    
+                    <Card size="lg" className="shadow-sm!">
+                        <div className="flex justify-between items-center pb-4 border-b border-default-border mb-4">
+                            <h3 className="text-base lg:text-lg font-semibold">
+                                Detalhes do Pedido
+                            </h3>
+                            <Badge className={`${statusInfo.classes} border`}>
+                                {statusInfo.label}
+                            </Badge>
+                        </div>
+                        
+                        <div className="flex flex-col gap-4 mb-6">
+                            <DetailsField title="Data da solicitação">
+                                {displayDate}
+                            </DetailsField>
+
+                            <div className="flex flex-col gap-2 pt-2 border-t border-default-border text-sm">
+                                <div className="flex justify-between">
+                                    <span className="font-medium text-default-fg">Aceita ser Lar Temporário?</span>
+                                    <span>{request.temporaryHomeAccepted ? "Sim" : "Não"}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="font-medium text-default-fg">Aceitou os Termos?</span>
+                                    <span>{request.termsAccepted ? "Sim" : "Não"}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-3 pt-4 border-t border-default-border">
+                            <h4 className="text-sm font-semibold mb-1">Ações</h4>
+                            
+                            {request.status === "PENDING" && (
+                                <div className="flex flex-col gap-2">
+                                    <Button 
+                                        onClick={() => setApproveDialogOpen(true)} 
+                                        disabled={isSubmitting}
+                                        className="w-full"
+                                        variant="primary"
+                                    >
+                                        {loadingAction === "APPROVE" ?
+                                            <span className="flex gap-2 items-center">
+                                                <SpinnerIcon/> Registrando... 
+                                            </span>
+                                            :
+                                            "Aprovar adoção"
+                                        }
+                                    </Button>
+                                    <Button 
+                                        onClick={() => setRejectDialogOpen(true)} 
+                                        disabled={isSubmitting}
+                                        className="w-full border-danger-border! text-danger-fg! hover:bg-danger-border/10!"
+                                        variant="outline"
+                                    >
+                                        {loadingAction === "REJECT" ?
+                                            <span className="flex gap-2 items-center">
+                                                <SpinnerIcon/> Registrando... 
+                                            </span>
+                                            :
+                                            "Recusar adoção"
+                                        }
+                                    </Button>
+                                </div>
+                            )}
+
+                            {request.status === "APPROVED" && (
+                                <Button 
+                                    onClick={() => setReturnDialogOpen(true)} 
+                                    disabled={isSubmitting}
+                                    className="w-full border-danger-border! text-danger-fg! hover:bg-danger-border/10!"
+                                    variant="outline"
+                                >
+                                        {loadingAction === "RETURN" ?
+                                            <span className="flex gap-2 items-center">
+                                                <SpinnerIcon/> Registrando... 
+                                            </span>
+                                            :
+                                            "Registrar devolução"
+                                        }
+                                </Button>
+                            )}
+
+                            {request.status !== "PENDING" && request.status !== "APPROVED" && (
+                                <span className="text-sm text-muted-fg font-medium w-full! italic text-center">
+                                    Nenhuma ação disponível para este pedido.
+                                </span>
+                            )}
+                        </div>
+                    </Card>
+
                     <Card size="lg" className="shadow-sm flex flex-col gap-4">
                         <h3 className="text-lg font-semibold border-b border-default-border pb-2">
                             Dados do Adotante
@@ -254,82 +353,6 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
                             </div>
                         </div>
                     </Card>
-
-                    <AdoptionHistorySection history={request.history} />
-
-                </div>
-
-                <div className="flex flex-col w-full gap-4 lg:w-2/5">
-                    
-                    <Card size="lg" className="shadow-sm!">
-                        <div className="flex justify-between items-center pb-4 border-b border-default-border mb-4">
-                            <h3 className="text-base lg:text-lg font-semibold">
-                                Detalhes do Pedido
-                            </h3>
-                            <Badge className={`${statusInfo.classes} border`}>
-                                {statusInfo.label}
-                            </Badge>
-                        </div>
-                        
-                        <div className="flex flex-col gap-4 mb-6">
-                            <DetailsField title="Data da solicitação">
-                                {displayDate}
-                            </DetailsField>
-
-                            <div className="flex flex-col gap-2 pt-2 border-t border-default-border text-sm">
-                                <div className="flex justify-between">
-                                    <span className="font-medium text-default-fg">Aceita ser Lar Temporário?</span>
-                                    <span>{request.temporaryHomeAccepted ? "Sim" : "Não"}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="font-medium text-default-fg">Aceitou os Termos?</span>
-                                    <span>{request.termsAccepted ? "Sim" : "Não"}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col gap-3 pt-4 border-t border-default-border">
-                            <h4 className="text-sm font-semibold mb-1">Ações</h4>
-                            
-                            {request.status === "PENDING" && (
-                                <div className="flex flex-col gap-2">
-                                    <Button 
-                                        onClick={() => setApproveDialogOpen(true)} 
-                                        disabled={isSubmitting}
-                                        className="w-full"
-                                        variant="primary"
-                                    >
-                                        Aprovar Adoção
-                                    </Button>
-                                    <Button 
-                                        onClick={() => setRejectDialogOpen(true)} 
-                                        disabled={isSubmitting}
-                                        className="w-full border-danger-border! text-danger-fg! hover:bg-danger-border/10!"
-                                        variant="outline"
-                                    >
-                                        Recusar Adoção
-                                    </Button>
-                                </div>
-                            )}
-
-                            {request.status === "APPROVED" && (
-                                <Button 
-                                    onClick={() => setReturnDialogOpen(true)} 
-                                    disabled={isSubmitting}
-                                    className="w-full border-danger-border! text-danger-fg! hover:bg-danger-border/10!"
-                                    variant="outline"
-                                >
-                                    Registrar Devolução
-                                </Button>
-                            )}
-
-                            {request.status !== "PENDING" && request.status !== "APPROVED" && (
-                                <span className="text-sm text-muted-fg font-medium w-full! italic text-center">
-                                    Nenhuma ação disponível para este pedido.
-                                </span>
-                            )}
-                        </div>
-                    </Card>
                 </div>
             </div>
 
@@ -354,7 +377,7 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
                         variant="primary" 
                         onClick={() => {
                             setApproveDialogOpen(false);
-                            handleStatusChange("APPROVED");
+                            handleStatusChange("APPROVED", "APPROVE");
                         }}
                     >
                         Sim, aprovar
@@ -383,7 +406,7 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
                         variant="danger" 
                         onClick={() => {
                             setRejectDialogOpen(false);
-                            handleStatusChange("REJECTED");
+                            handleStatusChange("REJECTED", "REJECT");
                         }}
                     >
                         Sim, recusar adoção
