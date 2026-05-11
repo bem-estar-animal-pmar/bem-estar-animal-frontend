@@ -26,7 +26,7 @@ export const AdminNavbar = () => {
                     variant="primary"
                     pill="true"
                     className="px-2! sm:px-3!"
-                    active={pathname === "/admin/dashboard/pets"}
+                    active={pathname.includes("admin/dashboard/pets")}
                 >
                     Pets
                 </AdminNavLink>
@@ -35,7 +35,7 @@ export const AdminNavbar = () => {
                     variant="primary"
                     pill="true"
                     className="px-2! sm:px-3!"
-                    active={pathname === "/admin/dashboard/neuterings"}
+                    active={pathname.includes("admin/dashboard/neuterings")}
                 >
                     Castrações
                 </AdminNavLink>
@@ -47,7 +47,7 @@ export const AdminNavbar = () => {
                     variant="primary"
                     pill="true"
                     className="px-2! sm:px-3!"
-                    active={pathname === "/admin/dashboard/emergencies"}
+                    active={pathname.includes("admin/dashboard/emergencies")}
                 >
                     Atendimentos
                 </AdminNavLink>
@@ -56,7 +56,7 @@ export const AdminNavbar = () => {
                     variant="primary"
                     pill="true"
                     className="px-2! sm:px-3!"
-                    active={pathname === "/admin/dashboard/adoptions"}
+                    active={pathname.includes("admin/dashboard/adoptions") || pathname.includes("admin/dashboard/give-ups")}
                 >
                     Adoções
                 </AdminNavLink>
