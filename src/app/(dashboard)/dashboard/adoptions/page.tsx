@@ -199,7 +199,13 @@ export default function AdoptionsPage() {
                                                 onClick={() => handleCancelRequest(req.id)}
                                                 disabled={isCanceling === req.id}
                                             >
-                                                {isCanceling === req.id ? <SpinnerIcon /> : "Cancelar Solicitação"}
+                                                {isCanceling === req.id ? 
+                                                    <span className="flex gap-2 items-center">
+                                                        <SpinnerIcon/> Cancelando... 
+                                                    </span>
+                                                : 
+                                                    "Cancelar solicitação"
+                                                }
                                             </Button>
                                         ) : (
                                             <span className="text-xs text-muted-fg italic">Sem ações disponíveis</span>

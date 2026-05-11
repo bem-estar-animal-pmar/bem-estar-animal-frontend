@@ -19,6 +19,7 @@ import { Badge, TextLink, Accordion, Label, Select, Button, Card, Dialog, Button
 import { CreateNeuteringForm } from "@/src/components/features/dashboard/CreateNeuteringForm"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { NeuteringCalendar } from "@/src/components/features/dashboard/NeuteringCalendar"
+import { AppointmentScheduleIcon } from "@/src/components/icons/outline"
 
 /* main component */
 const NeuteringContent = () => {
@@ -181,10 +182,10 @@ const NeuteringContent = () => {
                                         disabled={!selectedPetId}
                                         variant="primary"
                                         pill="true"
-                                        className="w-full max-w-48"
+                                        className="w-full max-w-48 items-center gap-2"
                                         size="md"
                                     >
-                                        Solicitar Castração
+                                        <AppointmentScheduleIcon/> Solicitar Castração
                                     </Button>
                                 </div>
 
@@ -353,7 +354,13 @@ const NeuteringContent = () => {
                                                         onClick={() => handleCancelAppointment(appt.id)}
                                                         disabled={isCanceling === appt.id}
                                                     >
-                                                        {isCanceling === appt.id ? <SpinnerIcon /> : "Cancelar Castração"}
+                                                        {isCanceling === appt.id ? 
+                                                            <span className="flex gap-2 items-center">
+                                                                <SpinnerIcon/> Cancelando... 
+                                                            </span>
+                                                        : 
+                                                            "Cancelar Castração"
+                                                        }
                                                     </Button>
                                                     <ButtonLink 
                                                         variant="outline" 

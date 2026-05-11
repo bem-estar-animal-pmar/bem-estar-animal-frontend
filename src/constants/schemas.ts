@@ -139,10 +139,10 @@ export const giveUpFormSchema = z.object({
         .max(500, "O texto do motivo é muito longo")
         .optional(),
     temporaryHomeAccepted: z.boolean().refine(val => val === true, {
-        message: "You must confirm to be a temporary home during the pet treatment"
+        message: "Você precisa confirmar que está disposto à ser lar temporário do animal até que a adoção aconteça"
     }),
     termsAccepted: z.boolean().refine(val => val === true, {
-        message: "You must agree that you have read the neutering terms"
+        message: "Você precisa concordar com os termos e condições de adoção"
     }),
 });
 

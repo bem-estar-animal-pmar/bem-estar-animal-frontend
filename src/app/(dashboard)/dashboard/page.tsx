@@ -127,7 +127,7 @@ export default function DashboardPage() {
                             :
                             <>
                                 <div className="text-5xl">
-                                    🐶
+                                    <XIcon size={32}/>
                                 </div>
                                 <h2 className="text-default-fg font-medium">
                                     Nenhum pet cadastrado
