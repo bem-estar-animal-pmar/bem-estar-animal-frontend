@@ -112,7 +112,7 @@ export default function AdminEmergenciesPage() {
 
     const statusOptionsForTab = activeTab === "PENDING" 
         ? [ 
-            { label: "Pendente", value: "PENDING" } 
+            { label: "Em análise", value: "PENDING" } 
           ]
         : activeTab === "CONFIRMED"
         ? [ { label: "Confirmado", value: "CONFIRMED" } ]
@@ -149,7 +149,7 @@ export default function AdminEmergenciesPage() {
                     isActive={activeTab === "PENDING"}
                     onClick={() => handleTabChange("PENDING")}
                 >
-                    Pendentes
+                    Em análise
                 </ButtonTab>
                 <ButtonTab
                     isActive={activeTab === "CONFIRMED"}

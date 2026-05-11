@@ -382,7 +382,7 @@ const NeuteringContent = () => {
                     className="shadow-none!"
                 >
                     <p className="text-muted-fg text-xs sm:text-sm pb-2">
-                        Ao fazer a solicitação, o pedido ficará como pendente será avaliado pela clínica e entraremos em contato para confirmá-lo.  Após 
+                        Ao fazer a solicitação, o pedido ficará em análise será avaliado pela clínica e entraremos em contato para confirmá-lo.  Após 
                         o agendamento ser confirmado, o solicitante deve levar o animal à clínica no dia e período combinados. 
                     </p>
                     <p className="text-muted-fg text-xs sm:text-sm">

@@ -99,7 +99,7 @@ export default function AdminAdoptionsPage() {
     }, []);
 
     const statusOptions = activeTab === "PENDING"
-        ? [ { label: "Pendente", value: "PENDING" } ]
+        ? [ { label: "Em análise", value: "PENDING" } ]
         : [ 
             { label: "Todos (Resolvidos)", value: "APPROVED,REJECTED,RETURNED" }, 
             { label: "Aprovado", value: "APPROVED" }, 
@@ -135,7 +135,7 @@ export default function AdminAdoptionsPage() {
 
             <Tabs>
                 <ButtonTab isActive={activeTab === "PENDING"} onClick={() => handleTabChange("PENDING")}>
-                    Pendentes
+                    Em análise
                 </ButtonTab>
                 <ButtonTab isActive={activeTab === "RESOLVED"} onClick={() => handleTabChange("RESOLVED")}>
                     Resolvidos

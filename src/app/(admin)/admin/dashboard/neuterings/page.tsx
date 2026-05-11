@@ -112,7 +112,7 @@ export default function AdminNeuteringsPage() {
     const statusOptionsForTab = activeTab === "PENDING" 
         ? [ 
             { label: "Todos (Pendentes)", value: "PENDING,AWAITING_EXAMS" }, 
-            { label: "Pendente", value: "PENDING" }, 
+            { label: "Em análise", value: "PENDING" }, 
             { label: "Aguard. Exames", value: "AWAITING_EXAMS" } 
           ]
         : activeTab === "CONFIRMED"
@@ -150,7 +150,7 @@ export default function AdminNeuteringsPage() {
                     isActive={activeTab === "PENDING"}
                     onClick={() => handleTabChange("PENDING")}
                 >
-                    Pendentes
+                    Em análise
                 </ButtonTab>
                 <ButtonTab
                     isActive={activeTab === "CONFIRMED"}

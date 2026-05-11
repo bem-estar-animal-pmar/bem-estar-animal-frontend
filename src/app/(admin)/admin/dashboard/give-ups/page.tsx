@@ -102,7 +102,7 @@ export default function AdminGiveUpsPage() {
     }, []);
 
     const statusOptions = activeTab === "PENDING"
-        ? [ { label: "Pendente", value: "PENDING" } ]
+        ? [ { label: "Em análise", value: "PENDING" } ]
         : [ 
             { label: "Todos (Resolvidos)", value: "APPROVED,REJECTED" }, 
             { label: "Aprovado", value: "APPROVED" }, 
@@ -140,7 +140,7 @@ export default function AdminGiveUpsPage() {
 
             <Tabs>
                 <ButtonTab isActive={activeTab === "PENDING"} onClick={() => handleTabChange("PENDING")}>
-                    Pendentes
+                    Em análise
                 </ButtonTab>
                 <ButtonTab isActive={activeTab === "RESOLVED"} onClick={() => handleTabChange("RESOLVED")}>
                     Resolvidos

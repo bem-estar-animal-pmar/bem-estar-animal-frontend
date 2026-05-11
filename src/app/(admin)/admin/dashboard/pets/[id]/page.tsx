@@ -118,7 +118,9 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                             <h3 className="text-base lg:text-lg font-semibold">
                                 Informações do tutor
                             </h3>
-                            <p className="text-xs sm:text-sm text-muted-fg italic">O pet atual foi adotado, as informações abaixo são referente ao tutor original.</p>
+                            {pet.adoptionStatus === "ADOPTED" && (
+                                <p className="text-xs sm:text-sm text-muted-fg italic">O pet atual foi adotado, as informações abaixo são referente ao tutor original.</p>
+                            )}
                             <div className="flex flex-col gap-4">
                                 <DetailsField title="Nome completo">
                                     {pet.owner.name} {pet.owner.lastName}

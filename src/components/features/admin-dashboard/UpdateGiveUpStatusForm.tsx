@@ -46,7 +46,7 @@ export const UpdateGiveUpStatusForm = ({ request, onSuccess }: { request: AdminG
     const isPending = request.status === "PENDING";
 
     const statusOptions = [
-        { label: "Pendente", value: "PENDING" },
+        { label: "Em análise", value: "PENDING" },
         { label: "Aprovar (Vai para Adoção)", value: "APPROVED" },
         { label: "Rejeitar", value: "REJECTED" }
     ];
