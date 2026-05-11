@@ -9,7 +9,7 @@ import { translateError } from "@/src/lib/error-map"
 import Image from "next/image"
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
-import type { Pet, GiveUpRequest } from "@/src/constants/interfaces"
+import type { Pet, GiveUpRequest, GiveUpRequestListByUser } from "@/src/constants/interfaces"
 import { giveUpStatusMap } from "@/src/constants/constants"
 
 import { CreateGiveUpForm } from "@/src/components/features/dashboard/CreateGiveUpForm"
@@ -19,7 +19,7 @@ import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 
 export default function AdoptionsPage() {
     const [pets, setPets] = useState<Pet[]>([]);
-    const [requests, setRequests] = useState<GiveUpRequest[]>([]);
+    const [requests, setRequests] = useState<GiveUpRequestListByUser[]>([]);
 
     const [isLoading, setIsLoading] = useState(true);
     const [isCanceling, setIsCanceling] = useState<string | null>(null);
@@ -179,9 +179,17 @@ export default function AdoptionsPage() {
                                             </div>
                                         </div>
 
-                                        <Badge className={` ${statusInfo.classes}`}>
-                                            {statusInfo.label}
-                                        </Badge>
+                                        <div className="flex flex-col items-center gap-1">
+                                            <Badge className={` ${statusInfo.classes}`}>
+                                                {statusInfo.label}
+                                            </Badge>
+                                            {req.approvedAt ? (
+                                                <p className="text-xs text-muted-fg">
+                                                   Em {new Date(req.approvedAt).toLocaleDateString()}
+                                                </p>
+                                                ) : ""
+                                            }
+                                        </div>
 
                                         <div className="flex">
                                         {canCancel ? (

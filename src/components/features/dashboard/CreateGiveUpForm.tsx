@@ -21,6 +21,8 @@ export const CreateGiveUpForm = ({ pets, onSuccess}: CreateGiveUpFormProps) => {
         defaultValues: {
             petId: "",
             reason: "",
+            termsAccepted: false,
+            temporaryHomeAccepted: false
         },
     });
 
