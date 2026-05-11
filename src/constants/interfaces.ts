@@ -7,7 +7,8 @@ export type PetHomeStatus = "HAS_OWNER" | "TEMPORARY_HOME" | "STRAY_ANIMAL";
 export type PetBreed = "AKITA" | "AMERICAN_STAFFORDSHIRE_TERRIER" | "AMERICAN_BULLY" | "BASSET_HOUND" | "BEAGLE" | "AUSTRALIAN_CATTLE_DOG" | "BERNESE_MOUNTAIN_DOG" | "BORDER_COLLIE" | "BORDER_TERRIER" | "BOSTON_TERRIER" | "BOXER" | "FRENCH_BULLDOG" | "ENGLISH_BULLDOG" | "BULL_TERRIER" | "CANE_CORSO" | "CAVALIER_KING_CHARLES_SPANIEL" | "CHIHUAHUA" | "CHOW_CHOW" | "AMERICAN_COCKER_SPANIEL" | "ENGLISH_COCKER_SPANIEL" | "COLLIE" | "DACHSHUND" | "DALMATIAN" | "DOBERMAN" | "DOGO_ARGENTINO" | "GREAT_DANE" | "FILA_BRASILEIRO" | "FOX_TERRIER" | "GOLDEN_RETRIEVER" | "SIBERIAN_HUSKY" | "JACK_RUSSELL_TERRIER" | "LABRADOODLE" | "LABRADOR_RETRIEVER" | "LHASA_APSO" | "POMERANIAN" | "MALTESE" | "GERMAN_SHEPHERD" | "AUSTRALIAN_SHEPHERD" | "MINIATURE_PINSCHER" | "PIT_BULL" | "POODLE" | "PUG" | "ROTTWEILER" | "SHIH_TZU" | "STAFFORDSHIRE_BULL_TERRIER" | "NEWFOUNDLAND" | "SCOTTISH_TERRIER" | "WEIMARANER" | "WELSH_CORGI" | "YORKSHIRE_TERRIER" | "ABYSSINIAN" | "ANGORA" | "BENGAL" | "BIRMAN" | "CHARTREUX" | "RUSSIAN_BLUE" | "HIMALAYAN" | "MAINE_COON" | "MUNCHKIN" | "SPHYNX" | "SIAMESE" | "RAGDOLL" | "SCOTTISH_FOLD" | "AMERICAN_BURMESE" | "PERSIAN" | "EXOTIC_SHORTHAIR" | "MIXED_BREED";
 export type NeuteringStatus = "PENDING" | "AWAITING_EXAMS" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
 export type EmergencyStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
-export type RequestStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED_BY_USER";
+export type GiveUpRequestStatus = "PENDING" | "APPROVED" | "REJECTED";
+export type AdoptionRequestStatus = "PENDING" | "APPROVED" | "REJECTED" | "RETURNED";
 
 /* pets */
 export interface Pet { /* default pet model, listByUser uses it */
@@ -229,7 +230,6 @@ export interface AdminEmergencyAppointment { /* list by admin */
     termsAccepted: boolean;
     createdAt: string;
     updatedAt: string;
-    
     pet?: { 
         id: string;
         name: string;
@@ -292,23 +292,185 @@ export interface AdminEmergencyAppointmentById { /* get by id  (admin has medica
     }
 }
 
-/* give up */
-export interface GiveUpRequest {
-    id: string;
-    userId: string;
-    status: "PENDING" | "APPROVED" | "REJECTED";
-    reason?: string;
-    petId: string;
-    pet: { id: string; name: string; species: string };
-    approvedAt: string;
-    temporaryHomeAccepted: boolean;
-    termsAccepted: boolean;
-    createdAt: string;
-}
-
 /* medical record */
 export interface MedicalRecord {
     id: string;
     notes: string;
     history: string;
+}
+
+/* give up */
+export interface GiveUpRequest {
+    id: string;
+    requestNumber: number;
+    status: GiveUpRequestStatus;
+    reason?: string;
+    history: string;
+    petId: string;
+    userId: string;
+    approvedAt: Date;
+    temporaryHomeAccepted: boolean;
+    termsAccepted: boolean;
+    createdAt: string;
+}
+
+export interface GiveUpRequestListByUser {
+    id: string;
+    requestNumber: number;
+    status: GiveUpRequestStatus;
+    reason?: string;
+    history: string;
+    petId: string;
+    pet: { 
+        id: string,
+        name: string,
+        species: string,
+    };
+    user: { 
+        name: string; 
+        lastName: string; 
+        phone: string; 
+        email: string;
+    };
+    userId: string;
+    approvedAt: Date;
+    temporaryHomeAccepted: boolean;
+    termsAccepted: boolean;
+    createdAt: string;
+}
+
+export interface AdminGiveUpRequest {
+    id: string;
+    requestNumber: number;
+    status: GiveUpRequestStatus;
+    reason?: string;
+    history: string;
+    petId: string;
+    pet: { 
+        name: string,
+        species: string,
+    };
+    userId: string;
+    approvedAt: Date;
+    temporaryHomeAccepted: boolean;
+    termsAccepted: boolean;
+    createdAt: string;
+}
+
+export interface AdminGiveUpRequestById {
+    id: string;
+    requestNumber: number;
+    status: GiveUpRequestStatus;
+    reason?: string;
+    history: string;
+    petId: string;
+    pet: { 
+        name: string,
+        species: string,
+        gender: string,
+        breed: string,
+        size: string,
+        ownerId: string,
+        chip: string,
+        isNeutered: boolean,
+        allowEmergency: boolean,
+    };
+    user: { 
+        id: string,
+        name: string,
+        lastName: string,
+        email: string,
+        phone: string,
+        cep: string,
+        street: string,
+        neighborhood: string,
+        city: string,
+        state: string,
+        number: string
+    };
+    userId: string;
+    approvedAt: Date;
+    temporaryHomeAccepted: boolean;
+    termsAccepted: boolean;
+    createdAt: string;
+}
+
+
+/* adoption */
+export interface AdoptionRequest {
+    id: string;
+    requestNumber: number;
+    status: AdoptionRequestStatus;
+    history: string;
+    petId: string;
+    adopterName: string;
+    adopterEmail: string;
+    adopterPhone: string;
+    adopterCep: string;
+    adopterStreet: string;
+    adopterNeighborhood: string;
+    adopterCity: string;
+    adopterState: string;
+    adopterNumber: string;
+    adoptedAt: Date;
+    temporaryHomeAccepted: boolean;
+    termsAccepted: boolean;
+    createdAt: string;
+}
+
+export interface AdoptionRequestList {
+    id: string;
+    requestNumber: number;
+    status: AdoptionRequestStatus;
+    history: string;
+    petId: string;
+    pet: { 
+        name: string,
+        species: string,
+    };
+    adopterName: string;
+    adopterEmail: string;
+    adopterPhone: string;
+    adopterCep: string;
+    adopterStreet: string;
+    adopterNeighborhood: string;
+    adopterCity: string;
+    adopterState: string;
+    adopterNumber: string;
+    adoptedAt: Date;
+    temporaryHomeAccepted: boolean;
+    termsAccepted: boolean;
+    createdAt: string;
+}
+
+export interface AdoptionRequestById { /* admin only */
+    id: string;
+    requestNumber: number;
+    status: AdoptionRequestStatus;
+    history: string;
+    petId: string;
+    pet: { 
+        name: string,
+        species: string,
+        gender: string,
+        breed: string,
+        size: string,
+        ownerId: string,
+        chip: string,
+        isNeutered: boolean,
+        allowEmergency: boolean,
+    };
+    adopterName: string;
+    adopterEmail: string;
+    adopterPhone: string;
+    adopterCep: string;
+    adopterStreet: string;
+    adopterNeighborhood: string;
+    adopterCity: string;
+    adopterState: string;
+    adopterNumber: string;
+    adoptedAt: Date;
+    temporaryHomeAccepted: boolean;
+    termsAccepted: boolean;
+    createdAt: string;
 }
