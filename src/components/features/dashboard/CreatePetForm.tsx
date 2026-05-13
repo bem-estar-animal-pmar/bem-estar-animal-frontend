@@ -8,7 +8,7 @@ import { format } from "date-fns"
 import { translateError } from "@/src/lib/error-map";
 
 import { CreatePetFormData, createPetSchema } from "@/src/constants/schemas";
-import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions } from "@/src/constants/constants";
+import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions, homeStatusOptions, userHomeStatusOptions } from "@/src/constants/constants";
 
 import { Select } from "../../ui/Select";
 import { DatePicker } from "../../ui/DatePicker";
@@ -18,6 +18,7 @@ import { Label } from "@/src/components/ui/Label";
 import { toast } from "@/src/lib/toast-store";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
 import { PetCreateIcon } from "../../icons/outline";
+import { InfoPopUp } from "../../ui";
 
 /* birthDate is now a Date object because of our custom DatePicker, that means it will convert the date to our timezone,
 in this case, we will need to strip the timezone before sending it to the backend. 
@@ -45,6 +46,7 @@ export const CreatePetForm = ({ onSuccess, onCancel }: CreatePetFormProps) => {
             weight: 0,
             size: undefined,
             coatColor: "",
+            homeStatus: undefined,
             birthDate: undefined, 
         },
     });
@@ -271,6 +273,32 @@ return (
                     )}
                 />
                 {errors.birthDate && <span className="text-danger-fg text-sm">{errors.birthDate.message}</span>}
+            </div>
+
+            <div className="flex-1">
+                <Label className="flex gap-2 pb-1 items-end" htmlFor="homeStatus">
+                    Situação de moradia
+                    <InfoPopUp>
+                        Se você é o responsável legal pelo pet em questão selecione como tutor, caso seja um animal que você está cuidando temporariamente marque como lar temporário.
+                    </InfoPopUp>
+                </Label>
+                <Controller
+                    name="homeStatus"
+                    control={control}
+                    render={({ field: { value, onChange, name, onBlur } }) => (
+                        <Select
+                            id="homeStatus"
+                            name={name}
+                            placeholder="Selecione..."
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            options={userHomeStatusOptions}
+                            variant={errors.homeStatus ? "danger" : "default"}
+                        />
+                    )}
+                />
+                {errors.homeStatus && <span className="text-danger-fg text-sm">{errors.homeStatus.message}</span>}
             </div>
 
             <div className="flex justify-end gap-3 pt-4">

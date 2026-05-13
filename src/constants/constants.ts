@@ -22,6 +22,11 @@ export const homeStatusOptions = [
     { label: "Animal de Rua", value: "STRAY_ANIMAL" }
 ];
 
+export const userHomeStatusOptions = [
+    { label: "Possui Tutor", value: "HAS_OWNER" },
+    { label: "Lar Temporário", value: "TEMPORARY_HOME" }
+];
+
 export const adoptionStatusOptions = [
     { label: "Nenhum", value: "NONE" },
     { label: "Para Adoção", value: "FOR_ADOPTION" },
