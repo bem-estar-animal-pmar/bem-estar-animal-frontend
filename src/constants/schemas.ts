@@ -106,12 +106,10 @@ export const updatePetSchema = z.object({
         .max(50, "O chip deve ter menos de 50 caracteres")
         .optional(),
     adoptionStatus: z.enum([
-        "HAS_OWNER",
         "FOR_ADOPTION",
         "ADOPTED",
-        "TEMPORARY_HOME",
-        "STRAY_ANIMAL"
-    ]).optional(),
+        "NONE"
+    ]).optional()
 }).refine((data) => {
     if (data.species === "DOG" && data.breed) {
         return checkDogBreed(data.breed);

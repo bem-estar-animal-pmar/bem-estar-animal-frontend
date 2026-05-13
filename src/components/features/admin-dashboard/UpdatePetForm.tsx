@@ -48,8 +48,8 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                 }
             )() : undefined,
             chip: pet.chip !== "NO_CHIP" ? pet.chip : "",
-            adoptionStatus: pet.adoptionStatus as any,
-            allowEmergency: pet.allowEmergency, // Adicionado aqui
+            allowEmergency: pet.allowEmergency,
+            adoptionStatus: pet.adoptionStatus
         },
     });
 
@@ -76,6 +76,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                 coatColor: data.coatColor === "" ? undefined : data.coatColor,
             };  
 
+            console.log(payload)
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/${pet.id}`, {
                 method: "PATCH",
                 credentials: "include",
@@ -273,7 +274,10 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
     }
 
     return (
-        <form onSubmit={handleSubmit(handleUpdatePet)} className="flex flex-col gap-4">
+        <form 
+    onSubmit={handleSubmit(handleUpdatePet, (errors) => console.log("Erros de Validação:", errors))} 
+    className="flex flex-col gap-4"
+>
             <div className="flex w-full justify-between items-end gap-4">
                 <div className="flex flex-col gap-y-4 w-full max-w-96">
                     <div className="">
