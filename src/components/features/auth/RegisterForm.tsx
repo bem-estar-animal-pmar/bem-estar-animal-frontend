@@ -259,6 +259,8 @@ return (
                 </div>
             </div>
 
+            <p className="text-xs text-muted-fg italic">Certifique-se de que o nome e sobrenome inseridos aqui são os mesmos do número do CPF. Caso contrário, qualquer serviço pedido será cancelado e o usuário poderá perder o acesso à conta.</p>
+
             <div className="pb-2"> 
                 <Label htmlFor="cep">CEP</Label>
                 <Controller
