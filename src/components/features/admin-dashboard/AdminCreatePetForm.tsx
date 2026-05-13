@@ -55,7 +55,7 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                 chip: data.chip === "" ? undefined : data.chip,
             };  
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/admin`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/admin/create-after-emergency`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
@@ -84,8 +84,9 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
 
     return (
         <form onSubmit={handleSubmit(handleCreatePet)} className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex flex-col">
+
+            <div className="flex gap-2 w-full">
+                <div className="flex flex-col w-full">
                     <Label htmlFor="name">Nome do pet</Label>
                     <Controller
                         name="name"
@@ -102,7 +103,7 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     {errors.name && <span className="text-danger-fg text-sm">{errors.name.message}</span>}
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                     <Label htmlFor="chip">Número do Chip (Opcional)</Label>
                     <Controller
                         name="chip"
@@ -118,8 +119,11 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     />
                     {errors.chip && <span className="text-danger-fg text-sm">{errors.chip.message}</span>}
                 </div>
+            </div>
 
-                <div className="flex flex-col">
+
+            <div className="flex gap-2 w-full">
+                <div className="flex flex-col w-full">
                     <Label htmlFor="species">Espécie</Label>
                     <Controller
                         name="species"
@@ -143,7 +147,7 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     {errors.species && <span className="text-danger-fg text-sm">{errors.species.message}</span>}
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                     <Label htmlFor="gender">Gênero</Label>
                     <Controller
                         name="gender"
@@ -163,8 +167,10 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     />
                     {errors.gender && <span className="text-danger-fg text-sm">{errors.gender.message}</span>}
                 </div>
+            </div>
 
-                <div className="flex flex-col">
+            <div className="flex gap-2 w-full">
+                <div className="flex flex-col w-full">
                     <Label htmlFor="breed">Raça</Label>
                     <Controller
                         name="breed"
@@ -186,7 +192,7 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     {errors.breed && <span className="text-danger-fg text-sm">{errors.breed.message}</span>}
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                     <Label htmlFor="size">Porte</Label>
                     <Controller
                         name="size"
@@ -206,8 +212,10 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     />
                     {errors.size && <span className="text-danger-fg text-sm">{errors.size.message}</span>}
                 </div>
+            </div>
 
-                <div className="flex flex-col">
+            <div className="flex gap-2">
+                <div className="flex flex-col w-full">
                     <Label htmlFor="coatColor">Cor da pelagem</Label>
                     <Controller
                         name="coatColor"
@@ -224,7 +232,7 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     {errors.coatColor && <span className="text-danger-fg text-sm">{errors.coatColor.message}</span>}
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                     <Label htmlFor="weight">Peso (kg)</Label>
                     <Controller
                         name="weight"
@@ -247,46 +255,50 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     />
                     {errors.weight && <span className="text-danger-fg text-sm">{errors.weight.message}</span>}
                 </div>
-
-                <div className="flex flex-col">
-                    <Label htmlFor="birthDate">Data de Nascimento</Label>
-                    <Controller
-                        name="birthDate"
-                        control={control}
-                        render={({ field: { value, onChange } }) => (
-                            <DatePicker
-                                value={value}
-                                disabledBefore={new Date("2000-01-01")}
-                                onChange={onChange}
-                                placeholder="Selecione uma data..."
-                                variant={errors.birthDate ? "danger" : "default"}
-                            />
-                        )}
-                    />
-                    {errors.birthDate && <span className="text-danger-fg text-sm">{errors.birthDate.message}</span>}
-                </div>
-
-                <div className="flex flex-col">
-                    <Label htmlFor="homeStatus">Status de moradia</Label>
-                    <Controller
-                        name="homeStatus"
-                        control={control}
-                        render={({ field: { value, onChange, name, onBlur } }) => (
-                            <Select
-                                id="homeStatus"
-                                name={name}
-                                placeholder="Selecione..."
-                                value={value}
-                                onChange={onChange}
-                                onBlur={onBlur}
-                                options={homeStatusOptions}
-                                variant={errors.homeStatus ? "danger" : "default"}
-                            />
-                        )}
-                    />
-                    {errors.homeStatus && <span className="text-danger-fg text-sm">{errors.homeStatus.message}</span>}
-                </div>
             </div>
+
+            <div className="flex flex-col">
+                <Label htmlFor="birthDate">Data de Nascimento</Label>
+                <Controller
+                    name="birthDate"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                        <DatePicker
+                            value={value}
+                            disabledBefore={new Date("2000-01-01")}
+                            onChange={onChange}
+                            placeholder="Selecione uma data..."
+                            variant={errors.birthDate ? "danger" : "default"}
+                        />
+                    )}
+                />
+                {errors.birthDate && <span className="text-danger-fg text-sm">{errors.birthDate.message}</span>}
+            </div>
+
+            <div className="flex flex-col">
+                <Label htmlFor="homeStatus">Status de moradia</Label>
+                <Controller
+                    name="homeStatus"
+                    control={control}
+                    render={({ field: { value, onChange, name, onBlur } }) => (
+                        <Select
+                            id="homeStatus"
+                            name={name}
+                            placeholder="Selecione..."
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            options={homeStatusOptions}
+                            variant={errors.homeStatus ? "danger" : "default"}
+                        />
+                    )}
+                />
+                {errors.homeStatus && <span className="text-danger-fg text-sm">{errors.homeStatus.message}</span>}
+            </div>
+            
+            <p className="text-xs text-default-fg italic">
+                * Caso o solicitante do atendimento tenha interesse em adotar o animal após o tratamento, defina o status de moradia como "Possui tutor". Um pedido de adoção será criado e confirmado automaticamente e você poderá imprimir o formulário diretamente por lá.
+            </p>
 
             <div className="flex flex-col gap-2 mt-2">
                 <div className="flex items-center gap-2">
@@ -327,6 +339,8 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
                     </Label>
                 </div>
             </div>
+
+            
 
             <div className="flex justify-end gap-3 pt-4 border-t border-default-border mt-2">
                 <Button type="button" variant="outline-default" onClick={onCancel} disabled={isSubmitting}>

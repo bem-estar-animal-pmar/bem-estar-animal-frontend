@@ -234,10 +234,6 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
 
                             <div className="flex flex-col gap-2 pt-2 border-t border-default-border text-sm">
                                 <div className="flex justify-between">
-                                    <span className="font-medium text-default-fg">Aceita ser Lar Temporário?</span>
-                                    <span>{request.temporaryHomeAccepted ? "Sim" : "Não"}</span>
-                                </div>
-                                <div className="flex justify-between">
                                     <span className="font-medium text-default-fg">Aceitou os Termos?</span>
                                     <span>{request.termsAccepted ? "Sim" : "Não"}</span>
                                 </div>

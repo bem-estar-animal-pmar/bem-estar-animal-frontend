@@ -438,7 +438,6 @@ export interface AdoptionRequestList {
     adopterState: string;
     adopterNumber: string;
     adoptedAt: Date;
-    temporaryHomeAccepted: boolean;
     termsAccepted: boolean;
     createdAt: string;
 }
@@ -470,7 +469,6 @@ export interface AdoptionRequestById { /* admin only */
     adopterState: string;
     adopterNumber: string;
     adoptedAt: Date;
-    temporaryHomeAccepted: boolean;
     termsAccepted: boolean;
     createdAt: string;
 }
