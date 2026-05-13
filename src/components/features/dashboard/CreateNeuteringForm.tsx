@@ -9,16 +9,17 @@ import { getTodayInBrasilia } from "@/src/lib/scheduling"
 
 import { DatePicker, Label, Select, Button } from "@/src/components/ui"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
-import { AppointmentScheduleIcon } from "../../icons/outline"
 
 interface NeuteringFormProps {
     onCancel: () => void;
     onSuccess: () => void;
     petId: string;
+    petSpecies: string | undefined;
     isBrachycephalic: boolean;
 }
 
-export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, isBrachycephalic = false, }: NeuteringFormProps) => {
+
+export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, petSpecies, isBrachycephalic = false, }: NeuteringFormProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
     const [selectedPeriod, setSelectedPeriod] = useState<"MORNING" | "AFTERNOON" | "">("");
 
@@ -28,6 +29,8 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, isBrachycephal
     const [isSubmitting, setIsSubmitting] = useState(false);
     
     const datePickerTodayDate = getTodayInBrasilia();
+    
+    const periodOptions = petSpecies === "CAT" ? [{ value: "MORNING", label: "Manhã" }] : [{ value: "AFTERNOON", label: "Tarde" }]
 
     const handleCreateAppointment = async (e: React.SubmitEvent) => {
         e.preventDefault();
@@ -110,10 +113,7 @@ export const CreateNeuteringForm = ({ onCancel, onSuccess, petId, isBrachycephal
                         value={selectedPeriod}
                         onChange={(val: any) => setSelectedPeriod(val)} 
                         disabled={isBrachycephalic}
-                        options={[
-                            { value: "MORNING", label: "Manhã" },
-                            { value: "AFTERNOON", label: "Tarde" }
-                        ]}
+                        options={periodOptions}
                         placeholder="Selecione um período..."
                     />
                 </div>

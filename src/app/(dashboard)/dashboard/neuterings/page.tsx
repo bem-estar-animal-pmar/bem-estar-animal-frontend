@@ -408,6 +408,7 @@ const NeuteringContent = () => {
                         onCancel={() => setIsDialogOpen(false)}
                         onSuccess={handleNeuteringCreated}
                         petId={selectedPetId}
+                        petSpecies={activePet?.species}
                         isBrachycephalic={BRACHYCEPHALIC_BREEDS.includes(activePet?.breed || "")}
                     />
                 </Dialog>
