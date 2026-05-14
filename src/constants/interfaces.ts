@@ -9,6 +9,29 @@ export type NeuteringStatus = "PENDING" | "AWAITING_EXAMS" | "CONFIRMED" | "COMP
 export type EmergencyStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
 export type GiveUpRequestStatus = "PENDING" | "APPROVED" | "REJECTED";
 export type AdoptionRequestStatus = "PENDING" | "APPROVED" | "REJECTED" | "RETURNED";
+export type TriageAnswer = "YES" | "NO" | "DONT_KNOW";
+
+export interface TriageData {
+    isNeutered?: TriageAnswer;
+    isConscious?: TriageAnswer;
+    isHeadRaised?: TriageAnswer;
+    isBleeding?: TriageAnswer;
+    bleedingLocation?: string;
+    isStanding?: TriageAnswer;
+    hasStoodUp?: TriageAnswer;
+    supportsAllPaws?: TriageAnswer;
+    unsupportedPaw?: string;
+    hasWalked?: TriageAnswer;
+    hasExposedBone?: TriageAnswer;
+    exposedBone?: string;       // <-- NEW
+    breathingDifficulty?: TriageAnswer;
+    hasEaten?: TriageAnswer;
+    hasDrunk?: TriageAnswer;    // <-- NEW
+    hasVomited?: TriageAnswer;
+    hasDiarrhea?: TriageAnswer;
+    symptomsDuration?: string;
+    otherSymptoms?: string;
+}
 
 /* pets */
 export interface Pet { /* default pet model, listByUser uses it */
@@ -198,6 +221,7 @@ export interface EmergencyAppointment { /* default, list by user */
     species: "DOG" | "CAT";
     size: "SMALL" | "MEDIUM" | "LARGE";
     description: string;
+    triageData?: TriageData;
     scheduleDate?: string;
     period?: "MORNING" | "AFTERNOON";
     temporaryHomeAccepted: boolean;
@@ -223,6 +247,7 @@ export interface AdminEmergencyAppointment { /* list by admin */
     species: "DOG" | "CAT";
     size: "SMALL" | "MEDIUM" | "LARGE";
     description: string;
+    triageData?: TriageData;
     scheduleDate?: string;
     period?: "MORNING" | "AFTERNOON";
     temporaryHomeAccepted: boolean;
@@ -254,6 +279,7 @@ export interface AdminEmergencyAppointmentById { /* get by id  (admin has medica
     species: "DOG" | "CAT";
     size: "SMALL" | "MEDIUM" | "LARGE";
     description: string;
+    triageData?: TriageData;
     scheduleDate?: string;
     period?: "MORNING" | "AFTERNOON";
     temporaryHomeAccepted: boolean;
