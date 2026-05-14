@@ -7,7 +7,7 @@ import { translateError } from "@/src/lib/error-map";
 import { translateTable } from "@/src/lib/table-map";
 import { formatRequestNumber } from "@/src/lib/request-formatter";
 
-import type { AdminEmergencyAppointmentById } from "@/src/constants/interfaces";
+import type { AdminEmergencyAppointmentById, TriageAnswer } from "@/src/constants/interfaces";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { UpdateEmergencyForm } from "@/src/components/features/admin-dashboard/UpdateEmergencyForm";
 import { MedicalRecordSection } from "@/src/components/features/admin-dashboard/MedicalRecordSection";
@@ -92,7 +92,9 @@ export default function AdminEmergencyDetailsPage({ params }: { params: Promise<
     const petSize = appointment.pet?.size || appointment.size;
     const petBreed = appointment.pet?.breed || "Não informado";
     const petChip = appointment.pet?.chip && appointment.pet.chip !== "NO_CHIP" ? appointment.pet.chip : "Sem chip";
-    const isNeutered = appointment.pet?.isNeutered || ""
+    const isNeutered = appointment.pet?.isNeutered || "";
+    
+    const triage = appointment.triageData;
 
     return (
         <div className="w-full flex flex-col items-center">
@@ -134,6 +136,57 @@ export default function AdminEmergencyDetailsPage({ params }: { params: Promise<
                             onSuccess={handleAppointmentUpdate}
                         />
                     </Card>      
+                
+                    {triage && (
+                        <Card size="lg" className="shadow-sm! flex flex-col gap-4">
+                            <h3 className="text-lg font-semibold border-b border-default-border pb-2">
+                                Ficha de Triagem Rápida
+                            </h3>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-80 overflow-y-auto">
+                                <DetailsField title="Castrado?">{translateTable(triage.isNeutered || "Não informado")}</DetailsField>
+                                <DetailsField title="Consciente?">{translateTable(triage.isConscious || "Não informado")}</DetailsField>
+                                <DetailsField title="Cabeça levantada?">{translateTable(triage.isHeadRaised || "Não informado")}</DetailsField>
+                                
+                                <DetailsField title="Sangrando?">
+                                    {translateTable(triage.isBleeding || "Não informado")} 
+                                    {triage.isBleeding === "YES" && triage.bleedingLocation ? ` (${triage.bleedingLocation})` : ""}
+                                </DetailsField>
+
+                                <DetailsField title="Em pé?">{translateTable(triage.isStanding || "Não informado")}</DetailsField>
+                                <DetailsField title="Ficou em pé?">{translateTable(triage.hasStoodUp || "Não informado")}</DetailsField>
+                                
+                                <DetailsField title="Apoia as patas?">
+                                    {translateTable(triage.supportsAllPaws || "Não informado")}
+                                    {triage.supportsAllPaws === "NO" && triage.unsupportedPaw ? ` (${triage.unsupportedPaw})` : ""}
+                                </DetailsField>
+
+                                <DetailsField title="Já andou?">{translateTable(triage.hasWalked || "Não informado")}</DetailsField>
+                                
+                                <DetailsField title="Osso exposto?">
+                                    {translateTable(triage.hasExposedBone || "Não informado")}
+                                    {triage.hasExposedBone === "YES" && triage.exposedBone ? ` (${triage.exposedBone})` : ""}
+                                </DetailsField>
+
+                                <DetailsField title="Dificuldade de respirar?">{translateTable(triage.breathingDifficulty || "")}</DetailsField>
+                                <DetailsField title="Já comeu?">{translateTable(triage.hasEaten || "Não informado")}</DetailsField>
+                                <DetailsField title="Bebeu água?">{translateTable(triage.hasDrunk || "Não informado")}</DetailsField>
+                                <DetailsField title="Vomitou?">{translateTable(triage.hasVomited || "Não informado")}</DetailsField>
+                                <DetailsField title="Teve diarreia?">{translateTable(triage.hasDiarrhea || "Não informado")}</DetailsField>
+  
+                                <div className="flex flex-col gap-2">
+                                    <DetailsField title="Dias de sintomas?">{triage.symptomsDuration || "Não informado"}</DetailsField>
+
+                                    {triage.otherSymptoms && (
+                                        <DetailsField title="Outros sintomas">
+                                            {triage.otherSymptoms}
+                                        </DetailsField>
+                                    )}
+                                </div>
+                            </div>
+                        </Card>
+                    )}
+
                     <MedicalRecordSection 
                         medicalRecord={appointment.medicalRecord} 
                         onUpdateSuccess={handleMedicalRecordUpdate} 

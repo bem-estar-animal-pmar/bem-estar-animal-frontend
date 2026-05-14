@@ -100,6 +100,10 @@ const tableTranslations: Record<string, string> = {
     REJECTED: "Rejeitado",
     RETURNED: "Devolvido",
 
+    /*triage*/
+    YES: "Sim",
+    NO: "Não",
+    DONT_KNOW: "Não sei"
 };
 
 export const translateTable = (text: string): string => {
