@@ -205,49 +205,15 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                     )}
                 </div>
                 
-                <div className="flex justify-end gap-4 pt-4 border-t border-default-border items-center">
+                <div className="flex justify-between w-full gap-4 pt-4 border-t border-default-border items-center">
                     {isFinalStatus && (
                         <span className="text-sm text-default-500 font-medium w-full! text-center text-red-500">
                             Nenhuma ação disponível para este agendamento.
                         </span>
                     )}
 
-                    {appointment.status === "CONFIRMED" && (
-                        <Button 
-                            variant="outline" 
-                            onClick={() => setNoShowWarningDialogOpen(true)}
-                            disabled={isLoading}
-                            className="self-end! w-fit! border-danger-border! text-danger-fg! hover:bg-danger-border/10"
-                        >
-                            {loadingAction === "NO_SHOW" ? 
-                                <span className="flex gap-2 items-center">
-                                    <SpinnerIcon /> Salvando...
-                                </span> 
-                                : 
-                                "Tutor ausente"
-                            }
-                        </Button>
-                    )}   
-
                     {!isFinalStatus && (
-                        <Button 
-                            variant="outline" 
-                            onClick={() => setCancelWarningDialogOpen(true)}
-                            disabled={isLoading}
-                            className="border-danger-border! text-danger-fg! hover:bg-danger-border/10"
-                        >
-                            {loadingAction === "CANCEL" ? 
-                                <span className="flex gap-2 items-center">
-                                    <SpinnerIcon /> Cancelando...
-                                </span> 
-                                : 
-                                "Cancelar agendamento"
-                            }
-                        </Button>
-                    )}
-
-                    {isPendingOrAwaiting && (
-                        <>
+                        <div className="flex flex-col gap-1">
                             <Button 
                                 variant={hasDateAndPeriod ? "outline" : "primary"}
                                 onClick={() => setIsEditing(true)} 
@@ -261,44 +227,82 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                                     "Definir data"
                                 }
                             </Button>
-
-                            {hasDateAndPeriod && (
-                                <Button 
-                                    variant="primary" 
-                                    onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period, "CONFIRM")} 
-                                    disabled={isLoading}
-                                >
-                                    {loadingAction !== "CONFIRM" ? 
-                                        <span className="flex gap-2 items-center">
-                                            <CalendarCheckIcon /> Confirmar agendamento
-                                        </span>
-                                        : 
-                                        <span className="flex gap-2 items-center">
-                                            <SpinnerIcon/> Confirmando...
-                                        </span>
-                                    }
-                                </Button>
-                            )}
-                        </>
+                            <Button 
+                                variant="outline" 
+                                onClick={() => setCancelWarningDialogOpen(true)}
+                                disabled={isLoading}
+                                className="border-danger-border! text-danger-fg! hover:bg-danger-border/10"
+                            >
+                                {loadingAction === "CANCEL" ? 
+                                    <span className="flex gap-2 items-center">
+                                        <SpinnerIcon /> Cancelando...
+                                    </span> 
+                                    : 
+                                    "Cancelar agendamento"
+                                }
+                            </Button>
+                        </div>
                     )}
 
-                    {appointment.status === "CONFIRMED" && (
-                        <>
+                    <div className="flex gap-4">
+                        {appointment.status === "CONFIRMED" && (
                             <Button 
-                                variant="primary" 
-                                onClick={handleCompleteRequest} 
+                                variant="outline" 
+                                onClick={() => setNoShowWarningDialogOpen(true)}
                                 disabled={isLoading}
+                                className=" w-fit! border-danger-border! text-danger-fg! hover:bg-danger-border/10"
                             >
-                                {loadingAction === "COMPLETE" ? 
+                                {loadingAction === "NO_SHOW" ? 
                                     <span className="flex gap-2 items-center">
                                         <SpinnerIcon /> Salvando...
                                     </span> 
                                     : 
-                                    "Marcar como concluído"
+                                    "Tutor ausente"
                                 }
                             </Button>
-                        </>
-                    )}
+                        )}   
+
+
+                        {isPendingOrAwaiting && (
+                            <>
+                                {hasDateAndPeriod && (
+                                    <Button 
+                                        variant="primary" 
+                                        onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period, "CONFIRM")} 
+                                        disabled={isLoading}
+                                    >
+                                        {loadingAction !== "CONFIRM" ? 
+                                            <span className="flex gap-2 items-center">
+                                                <CalendarCheckIcon /> Confirmar agendamento
+                                            </span>
+                                            : 
+                                            <span className="flex gap-2 items-center">
+                                                <SpinnerIcon/> Confirmando...
+                                            </span>
+                                        }
+                                    </Button>
+                                )}
+                            </>
+                        )}
+
+                        {appointment.status === "CONFIRMED" && (
+                            <>
+                                <Button 
+                                    variant="primary" 
+                                    onClick={handleCompleteRequest} 
+                                    disabled={isLoading}
+                                >
+                                    {loadingAction === "COMPLETE" ? 
+                                        <span className="flex gap-2 items-center">
+                                            <SpinnerIcon /> Salvando...
+                                        </span> 
+                                        : 
+                                        "Marcar como concluído"
+                                    }
+                                </Button>
+                            </>
+                        )}
+                    </div>
                 </div>
 
 
