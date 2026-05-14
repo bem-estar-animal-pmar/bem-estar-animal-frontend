@@ -7,15 +7,10 @@ import { translateError } from "@/src/lib/error-map";
 
 import { Label, Input, Select, Button, Card, Textarea, Dialog, Radio } from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
-import { petSizeOptions, petSpeciesOptions } from "@/src/constants/constants";
+import { petSizeOptions, petSpeciesOptions, petGenderOptions } from "@/src/constants/constants";
 
 import { Pet, TriageData } from "@/src/constants/interfaces"; 
 import { AppointmentScheduleIcon } from "../../icons/outline";
-
-const petGenderOptions = [
-    { value: "MALE", label: "Macho" },
-    { value: "FEMALE", label: "Fêmea" }
-];
 
 export interface RequestEmergencyFormProps {
     pets: Pet[];
@@ -40,7 +35,6 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
     const [isTriageModalOpen, setIsTriageModalOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Updated State Object
     const defaultTriageState: Required<TriageData> = {
         isNeutered: "DONT_KNOW",
         isConscious: "DONT_KNOW",
@@ -53,10 +47,10 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
         unsupportedPaw: "",
         hasWalked: "DONT_KNOW",
         hasExposedBone: "DONT_KNOW",
-        exposedBone: "", // NEW
+        exposedBone: "",
         breathingDifficulty: "DONT_KNOW",
         hasEaten: "DONT_KNOW",
-        hasDrunk: "DONT_KNOW", // NEW
+        hasDrunk: "DONT_KNOW",
         hasVomited: "DONT_KNOW",
         hasDiarrhea: "DONT_KNOW",
         symptomsDuration: "",
@@ -91,8 +85,7 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
         }
     }, [targetSelection, pets]);
 
-    /* Step 1: Validate main form and open Modal */
-    const handleOpenTriage = (e: React.FormEvent) => { 
+    const handleOpenTriage = (e: React.SubmitEvent) => { 
         e.preventDefault();
 
         if (!name || !species || !size || !description || description.length < 10) {
@@ -103,7 +96,6 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
         setIsTriageModalOpen(true);
     };
 
-    /* Step 2: Submit data */
     const handleFinalSubmit = async () => {
         try {
             setIsSubmitting(true);
@@ -136,7 +128,6 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
 
             toast.success("Solicitação de atendimento enviada! A clínica entrará em contato em breve.");
             
-            // Reset everything
             setIsTriageModalOpen(false);
             setDescription("");
             setTemporaryHomeAccepted(false);
@@ -322,7 +313,6 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
                     {renderTriageRadio("isConscious", "O animal está consciente?")}
                     {renderTriageRadio("isHeadRaised", "O animal está com a cabeça levantada?")}
                     
-                    {/* Dependent Question: Bleeding */}
                     <div className="flex flex-col gap-2 bg-muted-bg/50 p-3 rounded-md border border-default-border">
                         <span className="text-sm font-medium text-default-fg">O animal está sangrando?</span>
                         <div className="flex gap-4">
@@ -358,7 +348,6 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
 
                     {renderTriageRadio("hasWalked", "O animal já andou?")}
                     
-                    {/* Dependent Question: Exposed Bone */}
                     <div className="flex flex-col gap-2 bg-muted-bg/50 p-3 rounded-md border border-default-border">
                         <span className="text-sm font-medium text-default-fg">Tem algum osso exposto?</span>
                         <div className="flex gap-4">
