@@ -18,6 +18,12 @@ interface AdminUpdateEmergencyFormProps {
 
 type LoadingAction = "NO_SHOW" | "CANCEL" | "CONFIRM" | "COMPLETE" | "SAVE_DATE" | null;
 
+const extractTime = (isoString?: string | null) => {
+    if (!isoString) return "";
+    const d = new Date(isoString);
+    return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+};
+
 export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmergencyFormProps) => {
     const [loadingAction, setLoadingAction] = useState<LoadingAction>(null);
     const isLoading = loadingAction !== null;
@@ -27,13 +33,13 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
     const [cancelWarningDialogOpen, setCancelWarningDialogOpen] = useState(false);
     const [noShowWarningDialogOpen, setNoShowWarningDialogOpen] = useState(false);
     const [createPetDialogOpen, setCreatePetDialogOpen] = useState(false);
-    
-    const initialDate = appointment.scheduleDate 
-        ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`)
-        : undefined;
 
+    const initialDate = appointment.scheduleDate ? new Date(appointment.scheduleDate) : undefined;
+    const initialTime = extractTime(appointment.scheduleDate);
+    
     const [formData, setFormData] = useState({
         scheduleDate: initialDate as Date | undefined,
+        scheduleTime: initialTime,
         period: appointment.period || "" 
     });
 
@@ -41,7 +47,8 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
 
     useEffect(() => {
         setFormData({
-            scheduleDate: appointment.scheduleDate ? new Date(`${appointment.scheduleDate.split('T')[0]}T00:00:00`) : undefined,
+            scheduleDate: appointment.scheduleDate ? new Date(appointment.scheduleDate) : undefined,
+            scheduleTime: extractTime(appointment.scheduleDate),
             period: appointment.period || ""
         });
     }, [appointment]);
@@ -49,21 +56,22 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
     const handleCancelEdit = () => {
         setFormData({
             scheduleDate: initialDate as Date | undefined,
+            scheduleTime: initialTime,
             period: appointment.period || ""
         });
         setIsEditing(false);
     };
 
-    const executeUpdate = async (newStatus: string, newDate: Date | undefined, newPeriod: string | undefined, actionName: LoadingAction, newPetId?: string) => {
+    const executeUpdate = async (newStatus: string, newDate: Date | undefined, newTime: string, newPeriod: string | undefined, actionName: LoadingAction, newPetId?: string) => {
         setLoadingAction(actionName);
         try {
-            const formattedDate = newDate
-                ? new Date(Date.UTC(
-                    newDate.getFullYear(),
-                    newDate.getMonth(),
-                    newDate.getDate()
-                )).toISOString()
-                : undefined;
+            let formattedDate: string | undefined = undefined;
+            if (newDate && newTime) {
+                const combinedDate = new Date(newDate);
+                const [hours, minutes] = newTime.split(':').map(Number);
+                combinedDate.setHours(hours, minutes, 0, 0);
+                formattedDate = combinedDate.toISOString();
+            }
 
             const payload: any = {
                 status: newStatus,
@@ -116,17 +124,33 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
     /* new function in case emergency didn't have a pet attached, after creating one, this will be called to finish the
     appointmnet */
     const handlePetCreated = async (newCreatedPetId: string) => {
-        await executeUpdate("COMPLETED", initialDate, appointment.period, "COMPLETE", newCreatedPetId);
+        await executeUpdate("COMPLETED", formData.scheduleDate, formData.scheduleTime, appointment.period, "COMPLETE", newCreatedPetId);
         setCreatePetDialogOpen(false);
     };
 
     /* simple function to complete the appointment, if pet exists just execute update, if not, open pet create modal */
     const handleCompleteAction = () => {
         if (hasPet) {
-            executeUpdate("COMPLETED", initialDate, appointment.period, "COMPLETE");
+            executeUpdate("COMPLETED", formData.scheduleDate, formData.scheduleTime, appointment.period, "COMPLETE");
             return;
         } 
-        setCreatePetDialogOpen(true); // opens pet creation modal 
+        setCreatePetDialogOpen(true);
+    };
+
+    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newTime = e.target.value;
+        let autoPeriod = formData.period; 
+
+        if (newTime) {
+            const hour = parseInt(newTime.split(':')[0], 10);
+            autoPeriod = hour < 12 ? "MORNING" : "AFTERNOON";
+        }
+
+        setFormData({ 
+            ...formData, 
+            scheduleTime: newTime, 
+            period: autoPeriod 
+        });
     };
 
     const isFinalStatus = ["NO_SHOW", "COMPLETED", "CANCELLED"].includes(appointment.status);
@@ -148,11 +172,11 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 w-full">
                         <div className="flex flex-col w-full sm:w-1/2">
-                            <Label className="mb-1">Data</Label>
+                            <Label className="mb-1">Data e Hora</Label>
                             <Input 
                                 readOnly 
                                 disabled 
-                                value={appointment.scheduleDate ? appointment.scheduleDate.split('T')[0].split('-').reverse().join('/') : "Aguardando definição"} 
+                                value={appointment.scheduleDate ? new Date(appointment.scheduleDate).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : "Aguardando definição"} 
                                 className="cursor-default! opacity-100!"
                             />
                         </div>
@@ -184,7 +208,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                         >
                             {loadingAction === "NO_SHOW" ? <span className="flex gap-2 items-center"><SpinnerIcon /> Processando...</span> : "Tutor ausente"}
                         </Button>
-                    )}   
+                    )}
 
                     {!isFinalStatus && (
                         <Button 
@@ -218,7 +242,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                             {hasDateAndPeriod && (
                                 <Button 
                                     variant="primary" 
-                                    onClick={() => executeUpdate("CONFIRMED", initialDate, appointment.period, "CONFIRM")} 
+                                    onClick={() => executeUpdate("CONFIRMED", formData.scheduleDate, formData.scheduleTime, appointment.period, "CONFIRM")} 
                                     disabled={isLoading}
                                 >
                                     {loadingAction === "CONFIRM" ? 
@@ -292,7 +316,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                             variant="danger" 
                             onClick={() => { 
                                 setCancelWarningDialogOpen(false); 
-                                executeUpdate("CANCELLED", initialDate, appointment.period, "CANCEL"); 
+                                executeUpdate("CANCELLED", formData.scheduleDate, formData.scheduleTime, appointment.period, "CANCEL"); 
                             }}
                         >
                             Sim, tenho certeza
@@ -321,7 +345,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                             variant="danger" 
                             onClick={() => { 
                                 setNoShowWarningDialogOpen(false); 
-                                executeUpdate("NO_SHOW", initialDate, appointment.period, "NO_SHOW"); 
+                                executeUpdate("NO_SHOW", formData.scheduleDate, formData.scheduleTime, appointment.period, "NO_SHOW"); 
                                 }}
                         >
                             Sim, confirmar falta
@@ -337,13 +361,13 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
             <form 
                 onSubmit={(e) => {
                     e.preventDefault();
-                    executeUpdate(appointment.status, formData.scheduleDate, formData.period, "SAVE_DATE");
+                    executeUpdate(appointment.status, formData.scheduleDate, formData.scheduleTime, formData.period, "SAVE_DATE");
                 }} 
                 className="flex flex-col gap-6"
             >
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <div className="flex flex-col w-full sm:w-1/2">
+                        <div className="flex flex-col w-full sm:w-1/3">
                             <Label htmlFor="scheduleDate" className="mb-1">Nova Data</Label>
                             <DatePicker
                                 id="scheduleDate"
@@ -353,7 +377,19 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                                 onChange={(date: Date | undefined) => setFormData({ ...formData, scheduleDate: date })}
                             />
                         </div>
-                        <div className="flex flex-col w-full sm:w-1/2">
+
+                        <div className="flex flex-col w-full sm:w-1/3">
+                            <Label htmlFor="scheduleTime" className="mb-1">Nova Hora</Label>
+                            <Input
+                                type="time"
+                                id="scheduleTime"
+                                className="w-full"
+                                value={formData.scheduleTime}
+                                onChange={handleTimeChange}
+                            />
+                        </div>
+
+                        <div className="flex flex-col w-full sm:w-1/3">
                             <Label htmlFor="period" className="mb-1">Novo Período</Label>
                             <Select
                                 id="period"
@@ -381,7 +417,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                     <Button 
                         type="submit" 
                         variant="primary" 
-                        disabled={isLoading || (!formData.scheduleDate || !formData.period)}
+                        disabled={isLoading || (!formData.scheduleDate || !formData.scheduleTime || !formData.period)}
                     >
                         {loadingAction === "SAVE_DATE" ? 
                             <span className="flex gap-2 items-center">

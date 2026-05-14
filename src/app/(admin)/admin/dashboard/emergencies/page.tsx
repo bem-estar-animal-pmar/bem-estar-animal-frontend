@@ -252,7 +252,8 @@ export default function AdminEmergenciesPage() {
                     ) : (
                         appointments.map((app) => {
                             const statusInfo = emergencyStatusMap[app.status];
-                            const displayDate = app.scheduleDate ? app.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Sem data";
+                            const displayDate = app.scheduleDate ? new Date(app.scheduleDate).toLocaleDateString("pt-BR") : "Sem data";
+                            const displayTime = app.scheduleDate ? new Date(app.scheduleDate).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
                             const period = app.period ? translateTable(app.period) : "";
 
                             return (
@@ -273,7 +274,7 @@ export default function AdminEmergenciesPage() {
                                 <div className="flex flex-col w-2/14">
                                     <p className="text-default-fg font-medium">{displayDate}</p>
                                     {app.period && (
-                                        <p className="text-muted-fg text-xs">Período: {period}</p>
+                                        <p className="text-muted-fg text-xs">{displayTime} - {period}</p>
                                     )}
                                 </div>
                                 <div className="flex flex-col w-3/14">

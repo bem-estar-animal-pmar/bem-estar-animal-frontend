@@ -117,7 +117,8 @@ const EmergencyContent = () => {
                             <div className="flex flex-col gap-4">
                                 {appointments.map((appt) => {
                                     const statusInfo = emergencyStatusMap[appt.status];
-                                    const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
+                                    const displayDate = appt.scheduleDate ? new Date(appt.scheduleDate).toLocaleDateString("pt-BR") : "Sem data";
+                                    const displayTime = appt.scheduleDate ? new Date(appt.scheduleDate).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
                                     const period = appt.period ? translateTable(appt.period) : ""
 
                                     return (
@@ -159,9 +160,7 @@ const EmergencyContent = () => {
                                                 </span>
                                                 <div className="text-xs text-right">
                                                     <p className="text-default-fg font-medium">{displayDate}</p>
-                                                    {appt.period && (
-                                                        <p className="text-muted-fg">{period}</p>
-                                                    )}
+                                                    <p className="text-muted-fg">{displayTime} - {period}</p>
                                                 </div>
                                             </div>
                                         </Card>
@@ -198,7 +197,8 @@ const EmergencyContent = () => {
                         <div className="flex flex-col gap-4">
                             {appointments.map((appt) => {
                                 const statusInfo = emergencyStatusMap[appt.status];
-                                const displayDate = appt.scheduleDate ? appt.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Aguardando data";
+                                const displayDate = appt.scheduleDate ? new Date(appt.scheduleDate).toLocaleDateString("pt-BR") : "Sem data";
+                                const displayTime = appt.scheduleDate ? new Date(appt.scheduleDate).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
                                 const period = appt.period ? translateTable(appt.period) : ""
 
                                 return (
@@ -243,9 +243,7 @@ const EmergencyContent = () => {
                                             </span>
                                             <div className="text-xs text-right">
                                                 <p className="text-default-fg font-medium">{displayDate}</p>
-                                                {appt.period && (
-                                                    <p className="text-muted-fg">{period}</p>
-                                                )}
+                                                <p className="text-muted-fg">{displayTime} - {period}</p>
                                             </div>
                                         </div>
                                     </Card>
