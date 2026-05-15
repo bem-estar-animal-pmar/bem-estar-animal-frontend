@@ -114,14 +114,23 @@ export default function AdminEmergencyDetailsPage({ params }: { params: Promise<
                         Visualize e gerencie a emergência médica solicitada para {petName}.
                     </p>
                 </div>
-                <div className="flex flex-col gap-4 items-center">
+                <div className="flex gap-4 items-center">
+                    <ButtonLink 
+                        href={`/emergency-triage-template?id=${appointment.id}`}
+                        variant="outline" 
+                        target="_blank"
+                    >
+                        <span className="flex gap-2 items-center">
+                            <PrintIcon /> Ficha de triagem
+                        </span>
+                    </ButtonLink>
                     <ButtonLink 
                         href={`/emergency-template?id=${appointment.id}`}
                         variant="outline" 
                         target="_blank"
                     >
                         <span className="flex gap-2 items-center">
-                            <PrintIcon /> Imprimir formulário de emergência
+                            <PrintIcon /> Formulário de emergência
                         </span>
                     </ButtonLink>
                 </div>

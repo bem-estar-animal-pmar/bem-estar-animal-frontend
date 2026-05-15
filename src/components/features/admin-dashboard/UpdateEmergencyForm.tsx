@@ -124,8 +124,8 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
     /* new function in case emergency didn't have a pet attached, after creating one, this will be called to finish the
     appointmnet */
     const handlePetCreated = async (newCreatedPetId: string) => {
-        await executeUpdate("COMPLETED", formData.scheduleDate, formData.scheduleTime, appointment.period, "COMPLETE", newCreatedPetId);
         setCreatePetDialogOpen(false);
+        await executeUpdate("COMPLETED", formData.scheduleDate, formData.scheduleTime, appointment.period, "COMPLETE", newCreatedPetId);
     };
 
     /* simple function to complete the appointment, if pet exists just execute update, if not, open pet create modal */
