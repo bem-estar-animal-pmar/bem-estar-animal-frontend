@@ -167,7 +167,7 @@ const getDaysInMonth = () => {
                         if (!isCurrentMonth || isPast) {
                             boxStyleClasses = "text-muted-fg/30 cursor-default bg-transparent";
                         } else if (isDisabled || !totalSlots) {
-                            boxStyleClasses = "bg-gray-200 dark:bg-default/50 text-muted-fg cursor-not-allowed";
+                            boxStyleClasses = "bg-gray-100 text-muted-fg cursor-not-allowed";
                         } else if (totalSlots === 0) {
                             boxStyleClasses = "bg-danger-fg/20 text-danger-fg hover:opacity-80 cursor-pointer";
                         } else if (morningSlots <= 5 || afternoonSlots <= 5) {

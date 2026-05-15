@@ -9,7 +9,7 @@ import { formatRequestNumber } from "@/src/lib/request-formatter"
 import { toast } from "@/src/lib/toast-store"
 
 import { Card } from "@/src/components/ui/Card"
-import { Badge, ButtonLink } from "@/src/components/ui"
+import { Badge, ButtonLink, InfoPopUp } from "@/src/components/ui"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { CreateEmergencyForm } from "@/src/components/features/dashboard/CreateEmergencyForm"
 
@@ -155,9 +155,21 @@ const EmergencyContent = () => {
                                                 >
                                                     Imprimir formulário
                                                 </ButtonLink>
-                                                <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusInfo.classes}`}>
-                                                    {statusInfo.label}
-                                                </span>
+                                                <div className="flex gap-1 items-center">
+                                                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusInfo.classes}`}>
+                                                        {statusInfo.label}
+                                                    </span>
+                                                    {(appt.status === "CONFIRMED" || appt.status === "PENDING") &&
+                                                        <InfoPopUp>
+                                                            {
+                                                                appt.status === "CONFIRMED" ?
+                                                                    "Esse agendamento está confirmado, apresente-se na superintendência de bem-estar animal no dia e horário marcados com o formulário preenchido."
+                                                                    :
+                                                                    "Esse agendamento está análise, aguarde enquanto definimos uma data."
+                                                            }
+                                                        </InfoPopUp>   
+                                                    }
+                                                </div>
                                                 <div className="text-xs text-right">
                                                     <p className="text-default-fg font-medium">{displayDate}</p>
                                                     <p className="text-muted-fg">{displayTime} - {period}</p>
@@ -238,9 +250,21 @@ const EmergencyContent = () => {
                                         </div>
 
                                         <div className="flex flex-col items-start sm:items-end gap-2 shrink-0 w-full max-w-32">
-                                            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusInfo.classes}`}>
-                                                {statusInfo.label}
-                                            </span>
+                                            <div className="flex gap-1 items-center">
+                                                <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusInfo.classes}`}>
+                                                    {statusInfo.label}
+                                                </span>
+                                                {(appt.status === "CONFIRMED" || appt.status === "PENDING") &&
+                                                    <InfoPopUp>
+                                                        {
+                                                            appt.status === "CONFIRMED" ?
+                                                                "Esse agendamento está confirmado, apresente-se na superintendência de bem-estar animal no dia e horário marcados com o formulário preenchido."
+                                                                :
+                                                                "Esse agendamento está análise, aguarde enquanto definimos uma data."
+                                                        }
+                                                    </InfoPopUp>   
+                                                }
+                                            </div>
                                             <div className="text-xs text-right">
                                                 <p className="text-default-fg font-medium">{displayDate}</p>
                                                 <p className="text-muted-fg">{displayTime} - {period}</p>

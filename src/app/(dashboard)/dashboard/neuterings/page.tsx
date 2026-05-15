@@ -336,12 +336,26 @@ const NeuteringContent = () => {
                                                 )}
                                             </div>
                                             
-                                            <div className="flex h-fit!">
+                                            <div className="flex h-fit! items-center gap-1">
                                                 <Badge
                                                     className={` ${statusInfo.classes}`}
                                                 >
                                                     {statusInfo.label}
                                                 </Badge>
+                                                {(appt.status === "CONFIRMED" || appt.status === "AWAITING_EXAMS" || appt.status === "PENDING") &&
+                                                    <InfoPopUp>
+                                                        {
+                                                            appt.status === "CONFIRMED" ?
+                                                                "Esse agendamento está confirmado, apresente-se na superintendência de bem-estar animal no dia e horário marcados com o formulário preenchido."
+                                                                :
+                                                            appt.status === "AWAITING_EXAMS" ?
+                                                                "Esse pet precisa de exames especiais antes de agendar o agendamento, entre em contato com a clínica, realize os exames que vamos agendar uma data para você."
+                                                                :
+                                                                "Esse agendamento está análise, aguarde enquanto definimos uma data."
+                                                        }
+                                                    </InfoPopUp>   
+                                                }
+
                                             </div>
 
 
