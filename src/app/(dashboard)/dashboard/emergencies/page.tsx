@@ -9,7 +9,7 @@ import { formatRequestNumber } from "@/src/lib/request-formatter"
 import { toast } from "@/src/lib/toast-store"
 
 import { Card } from "@/src/components/ui/Card"
-import { Badge, ButtonLink, InfoPopUp } from "@/src/components/ui"
+import { Badge, ButtonLink, InfoPopUp, Button } from "@/src/components/ui"
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon"
 import { CreateEmergencyForm } from "@/src/components/features/dashboard/CreateEmergencyForm"
 
@@ -23,6 +23,7 @@ const EmergencyContent = () => {
     const [pets, setPets] = useState<Pet[]>([]);
     const [appointments, setAppointments] = useState<EmergencyAppointment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isCanceling, setIsCanceling] = useState<string | null>(null);
 
     useEffect(() => {
         loadInitialData();
@@ -61,6 +62,42 @@ const EmergencyContent = () => {
         }
     };
 
+    const handleCancelAppointment = async (appointmentId: string) => {
+        try {
+            setIsCanceling(appointmentId);
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/emergencies/${appointmentId}/cancel`, {
+                method: "PATCH",
+                credentials: "include"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new ApiError(data.message, data.code, data.details);
+            }
+
+            toast.success("Agendamento de emergência cancelado com sucesso.");
+            loadInitialData();
+
+        } catch (err: unknown) {
+            if (err instanceof ApiError) {
+                if (err.details) {
+                    const firstError = err.details[0]?.message
+                    toast.warning(translateError(err.message), {
+                        message: translateError(firstError)
+                    })
+                    return;
+                }
+                toast.warning(translateError(err.message));
+                return;
+            }
+            toast.danger("Erro desconhecido ao cancelar.");
+        } finally {
+            setIsCanceling(null);
+        }
+    };
+
     return (
         <div className="w-full flex flex-col">
             <section className="w-full flex flex-col pb-4">
@@ -71,7 +108,7 @@ const EmergencyContent = () => {
                     Este serviço é destinado ao socorro de animais em situação de rua ou casos graves de pets já cadastrados. 
                 </p>
                 <p className="text-muted-fg text-sm sm:text-base">
-                    Nossa equipe avaliará a gravidade e a disponibilidade de vagas para definir o horário do atendimento. Por favor, forneça o máximo de detalhes possível.     
+                    Nossa equipe avaliará a gravidade e a disponibilidade de vagas para definir o horário do atendimento. Por favor, forneça o máximo de detalhes possível.    
                 </p>
             </section>
 
@@ -120,10 +157,11 @@ const EmergencyContent = () => {
                                     const displayDate = appt.scheduleDate ? new Date(appt.scheduleDate).toLocaleDateString("pt-BR") : "Sem data";
                                     const displayTime = appt.scheduleDate ? new Date(appt.scheduleDate).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
                                     const period = appt.period ? translateTable(appt.period) : ""
+                                    const canCancel = ["PENDING", "CONFIRMED"].includes(appt.status);
 
                                     return (
-                                        <Card key={appt.id} className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shadow-sm!">
-                                            <div className="flex flex-col gap-1">
+                                        <Card key={appt.id} className="p-4 flex flex-col sm:flex-row flex-wrap gap-4 justify-between items-start sm:items-center shadow-sm!">
+                                            <div className="flex flex-col gap-1 w-full max-w-60">
                                                 <div className="flex items-center gap-2">
                                                     <Badge variant="primary" size="sm" pill="true">
                                                         {translateTable(appt.species)}
@@ -146,16 +184,8 @@ const EmergencyContent = () => {
                                                 </p>
                                             </div>
 
-                                            <div className="flex flex-col items-start sm:items-end gap-2 shrink-0 w-full sm:w-auto">
-                                                <ButtonLink
-                                                    variant="outline" 
-                                                    size="sm" 
-                                                    target="_blank"
-                                                    href={`/emergency-template?id=${appt.id}`}
-                                                >
-                                                    Imprimir formulário
-                                                </ButtonLink>
-                                                <div className="flex gap-1 items-center">
+                                            <div className="flex flex-col items-start gap-2 shrink-0 w-full sm:w-auto">
+                                                <div className="flex gap-1">
                                                     <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusInfo.classes}`}>
                                                         {statusInfo.label}
                                                     </span>
@@ -165,15 +195,40 @@ const EmergencyContent = () => {
                                                                 appt.status === "CONFIRMED" ?
                                                                     "Esse agendamento está confirmado, apresente-se na superintendência de bem-estar animal no dia e horário marcados com o formulário preenchido."
                                                                     :
-                                                                    "Esse agendamento está análise, aguarde enquanto definimos uma data."
+                                                                    "Esse agendamento está em análise, aguarde enquanto definimos uma data."
                                                             }
                                                         </InfoPopUp>   
                                                     }
                                                 </div>
-                                                <div className="text-xs text-right">
+                                                <div className="text-xs">
                                                     <p className="text-default-fg font-medium">{displayDate}</p>
                                                     <p className="text-muted-fg">{displayTime} - {period}</p>
                                                 </div>
+                                            </div>
+
+                                            <div className="flex flex-col gap-2">
+                                                <ButtonLink
+                                                    variant="outline" 
+                                                    size="sm" 
+                                                    target="_blank"
+                                                    href={`/emergency-template?id=${appt.id}`}
+                                                >
+                                                    Imprimir formulário
+                                                </ButtonLink>
+                                                {canCancel && (
+                                                    <Button 
+                                                        variant="danger" 
+                                                        size="sm" 
+                                                        onClick={() => handleCancelAppointment(appt.id)}
+                                                        disabled={isCanceling === appt.id}
+                                                    >
+                                                        {isCanceling === appt.id ? 
+                                                            <span className="flex gap-2 items-center">
+                                                                <SpinnerIcon/> Cancelando... 
+                                                            </span>
+                                                        : "Cancelar Emergência"}
+                                                    </Button>
+                                                )}
                                             </div>
                                         </Card>
                                     )
@@ -212,10 +267,11 @@ const EmergencyContent = () => {
                                 const displayDate = appt.scheduleDate ? new Date(appt.scheduleDate).toLocaleDateString("pt-BR") : "Sem data";
                                 const displayTime = appt.scheduleDate ? new Date(appt.scheduleDate).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
                                 const period = appt.period ? translateTable(appt.period) : ""
+                                const canCancel = ["PENDING", "CONFIRMED"].includes(appt.status);
 
                                 return (
                                     <Card key={appt.id} className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shadow-sm!">
-                                        <div className="flex flex-col w-full max-w-56">
+                                        <div className="flex flex-col w-full max-w-64">
                                             <div className="flex items-center gap-2">
                                                 <Badge variant="primary" size="sm" pill="true">
                                                     {translateTable(appt.species)}
@@ -238,19 +294,8 @@ const EmergencyContent = () => {
                                             </p>
                                         </div>
 
-                                        <div className="flex flex-col items-start sm:items-end gap-2 shrink-0 w-full sm:w-auto">
-                                            <ButtonLink
-                                                variant="outline" 
-                                                size="sm" 
-                                                target="_blank"
-                                                href={`/emergency-template?id=${appt.id}`}
-                                            >
-                                                Imprimir formulário
-                                            </ButtonLink>
-                                        </div>
-
-                                        <div className="flex flex-col items-start sm:items-end gap-2 shrink-0 w-full max-w-32">
-                                            <div className="flex gap-1 items-center">
+                                        <div className="flex flex-col gap-2 shrink-0 w-full max-w-32">
+                                            <div className="flex gap-1">
                                                 <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusInfo.classes}`}>
                                                     {statusInfo.label}
                                                 </span>
@@ -260,15 +305,42 @@ const EmergencyContent = () => {
                                                             appt.status === "CONFIRMED" ?
                                                                 "Esse agendamento está confirmado, apresente-se na superintendência de bem-estar animal no dia e horário marcados com o formulário preenchido."
                                                                 :
-                                                                "Esse agendamento está análise, aguarde enquanto definimos uma data."
+                                                                "Esse agendamento está em análise, aguarde enquanto definimos uma data."
                                                         }
                                                     </InfoPopUp>   
                                                 }
                                             </div>
-                                            <div className="text-xs text-right">
+                                            <div className="text-xs">
                                                 <p className="text-default-fg font-medium">{displayDate}</p>
                                                 <p className="text-muted-fg">{displayTime} - {period}</p>
                                             </div>
+                                        </div>
+
+                                        <div className="flex flex-col items-start sm:items-end gap-2 shrink-0 w-full sm:w-auto">
+                                            <ButtonLink
+                                                variant="outline" 
+                                                size="sm" 
+                                                target="_blank"
+                                                href={`/emergency-template?id=${appt.id}`}
+                                                className="w-full text-center justify-center"
+                                            >
+                                                Imprimir formulário
+                                            </ButtonLink>
+                                            {canCancel && (
+                                                <Button 
+                                                    variant="danger" 
+                                                    size="sm" 
+                                                    onClick={() => handleCancelAppointment(appt.id)}
+                                                    disabled={isCanceling === appt.id}
+                                                    className="w-full"
+                                                >
+                                                    {isCanceling === appt.id ? 
+                                                        <span className="flex gap-2 items-center">
+                                                            <SpinnerIcon/> Cancelando... 
+                                                        </span>
+                                                    : "Cancelar Emergência"}
+                                                </Button>
+                                            )}
                                         </div>
                                     </Card>
                                 )
