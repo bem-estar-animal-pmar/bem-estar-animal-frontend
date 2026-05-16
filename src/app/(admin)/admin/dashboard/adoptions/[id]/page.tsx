@@ -14,8 +14,9 @@ import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { AdoptionHistorySection } from "@/src/components/features/admin-dashboard/AdoptionHistorySection";
 import { adoptionStatusMap } from "@/src/constants/constants";
-import { Card, TextLink, Badge, Button, Dialog } from "@/src/components/ui"; 
+import { Card, TextLink, Badge, Button, Dialog, ButtonLink } from "@/src/components/ui"; 
 import { DetailsField } from "@/src/components/ui/DetailsField";
+import { PrintIcon } from "@/src/components/icons/outline";
 
 type LoadingAction = "APPROVE" | "REJECT" | "RETURN" | null;
 
@@ -156,6 +157,17 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
                     <p className="text-muted-fg text-sm sm:text-base">
                         Visualize os dados do pet e do adotante, e avalie a solicitação de adoção.
                     </p>
+                </div>
+                <div className="flex gap-4 items-center">
+                    <ButtonLink
+                        href={`/adoption-template?id=${request.id}`}
+                        variant="outline"
+                        target="_blank"
+                    >
+                        <span className="flex gap-2 items-center">
+                            <PrintIcon /> Formulário de adoção
+                        </span>
+                    </ButtonLink>
                 </div>
             </section>
             
