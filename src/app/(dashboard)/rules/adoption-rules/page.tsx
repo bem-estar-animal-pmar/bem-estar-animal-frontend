@@ -23,8 +23,8 @@ export default function AdoptionRulesPage() {
                     cadastrarem esses pets para adoção. É importante reforçar que <span className="text-default-fg font-medium">nós não disponibilizamos abrigo</span> para 
                     os pets em questão.
                 </p>
-                <div className="flex flex-col items-center lg:items-start lg:flex-row gap-4 pb-8">
-                
+
+                <section className="flex flex-col items-center lg:items-start lg:flex-row gap-4 pb-8">
                     <div className="flex gap-4 flex-col sm:flex-row justify-center h-full">
                         <Card className="flex flex-col p-5 gap-2 shadow-sm max-w-92!">
                             <Image
@@ -37,7 +37,6 @@ export default function AdoptionRulesPage() {
                                 Você cadastra os dados e a foto do animal no sistema e cria um pedido formal para colocá-lo para adoção.
                             </p>
                         </Card>
-
                         <Card className="flex flex-col p-5 gap-2 shadow-sm max-w-92!">
                             <Image
                                 src={adoption_two}
@@ -76,10 +75,10 @@ export default function AdoptionRulesPage() {
                             </p>
                         </Card>
                     </div>
-                </div>
+                </section>
 
-                <div className="bg-card border-l border-l-primary-border border-y border-r border-primary-border rounded-xl p-6 mb-8">
-                    <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
+                <section className="bg-card border border-default-border rounded-xl p-6 mb-8">
+                    <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4 border-b border-default-border mb-4">
                         Deveres e Regras do Lar Temporário
                     </h2>
                     <ul className="list-disc pl-5 flex flex-col gap-3 text-sm md:text-base text-muted-fg">
@@ -90,36 +89,47 @@ export default function AdoptionRulesPage() {
                         <li><span className="font-semibold text-default-fg">Adoção concluída:</span> Caso encontre um adotante antes de nós, é sua responsabilidade comunicar a equipe para remover o animal da vitrine.</li>
                         <li><span className="font-semibold text-default-fg">Abandono é crime:</span> O abandono de animais nas ruas ou nas dependências da clínica configura crime ambiental (Lei Federal nº 9.605/98), sujeito a penalidades severas.</li>
                     </ul>
-                </div>
+                </section>
 
                 <p className="text-muted-fg text-sm md:text-base pb-8">
-                    <span className="font-semibold text-default-fg">Nota: </span> o serviço descrito refere-se apenas à colocar animais para adoção, se você deseja 
-                    <span className="font-medium text-default-fg"> adotar um pet</span>, clique aqui.
+                    <span className="font-semibold text-default-fg">*</span> O serviço descrito refere-se apenas à colocar animais para adoção, se você deseja 
+                    <span className="font-medium text-muted-fg italic"> adotar um pet</span>, 
+                    <TextLink
+                        href="/adoption"
+                        className="text-sm! md:text-base!"
+                    >
+                       {" "} clique aqui.
+                    </TextLink>
                 </p>
 
-                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
-                    Documentações em PDF
-                </h2>
+                <section className="flex flex-col">
+                    <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
+                        Documentações em PDF
+                    </h2>
 
-                <div className="gap-y-2 flex flex-col pb-8">
-                    <TextLink target="_blank" variant="primary" className="underline! w-fit" href="#">
-                        - Termo de Responsabilidade - Lar Temporário
-                    </TextLink>
-                    <TextLink target="_blank" variant="primary" className="underline! w-fit" href="#">
-                        - Guia de Cuidados Básicos
-                    </TextLink>
-                </div>
+                    <div className="gap-y-2 flex flex-col pb-8">
+                        <TextLink target="_blank" variant="primary" className="underline! w-fit" href="/termo_de_adocao_responsavel.pdf">
+                            - Termo de Responsabilidade - Lar Temporário
+                        </TextLink>
+                    </div>
+                </section>
 
-                <div className="flex w-full justify-end">
+                <div className="flex w-full justify-end gap-2 sm:gap-4 items-center">
+                    <TextLink 
+                        variant="primary" 
+                        size="md" 
+                        href={`/dashboard`}
+                    >
+                        Não concordo
+                    </TextLink>
                     <ButtonLink 
                         variant="primary" 
-                        size="lg" 
+                        size="md" 
                         href="/dashboard/adoptions"
                     >
                         Li e concordo com as regras
                     </ButtonLink>
                 </div>
-
             </div>
         </div>
     )

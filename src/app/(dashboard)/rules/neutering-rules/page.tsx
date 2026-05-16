@@ -26,27 +26,21 @@ const NeuteringRulesContent = () => {
 
     return (
         <div className="w-full flex flex-col">
-                
-            <div className="flex flex-col w-full pb-8">
-                <h1 className="text-default-fg font-semibold text-xl sm:text-2xl md:text-3xl pb-4">
-                    Regulamento e instruções <span className="text-primary-fg">para castração</span>
-                </h1>
+            <h1 className="text-default-fg font-semibold text-xl sm:text-2xl md:text-3xl pb-4">
+                Regulamento e instruções <span className="text-primary-fg">para castração</span>
+            </h1>
 
-                <p className="text-muted-fg text-sm md:text-base pb-4">
-                    Antes de agendar a castração do seu pet, é fundamental que você leia e compreenda as regras e instruções abaixo. O não cumprimento dessas diretrizes pode resultar na recusa do atendimento no dia da cirurgia.
-                </p>
-                
-                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4 mt-2">
+            <p className="text-muted-fg text-sm md:text-base pb-4">
+                Antes de agendar a castração do seu pet, é fundamental que você leia e compreenda as regras e instruções abaixo. O não cumprimento dessas diretrizes pode resultar na recusa do atendimento no dia da cirurgia.
+            </p>
+            
+            <section className="bg-card border border-default-border rounded-xl p-6 mb-8">
+                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4 border-b border-default-border mb-4">
                     Regras de agendamento
                 </h2>
-                
-                <p className="text-muted-fg text-sm md:text-base pb-4 max-w-244">
-                    Todas as regras abaixo são aplicadas automaticamente no sistema, leia-as atentamente para evitar problemas ao cadastrar seu pet para castração.
-                </p>
-                    
-                <div className="mb-8 bg-primary/80 px-4 py-4 flex flex-col shadow-sm
+                <div className="border border-l-4 border-primary-border px-4 py-4 flex flex-col shadow-sm
                     md:grid md:grid-cols-1 lg:grid-cols-3 gap-4 max-h-68 md:max-h-none overflow-y-auto md:overflow-y-visible rounded-md
-                    [&::-webkit-scrollbar]:w-3
+                    [&::-webkit-scrollbar]:w-2
                     [&::-webkit-scrollbar-track]:bg-transparent
                     [&::-webkit-scrollbar-thumb]:bg-brand-fg/60
                     [&::-webkit-scrollbar-thumb]:rounded-full
@@ -114,55 +108,51 @@ const NeuteringRulesContent = () => {
                     </Card>
                     
                 </div>
+            </section>
 
+            <section className="bg-card border border-default-border rounded-xl p-6 mb-8">
+                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4 border-b border-default-border mb-4">
+                    Instruções para o dia da castração
+                </h2>
+                <ul className="list-disc pl-5 flex flex-col gap-3 text-sm md:text-base text-default-fg">
+                    <li><span className="font-semibold">Não será permitida a troca de tutor ou lar temporário</span>; caso não possa comparecer no dia da cirurgia, o responsável deverá cancelar o agendamento previamente.</li>
+                    <li>No dia da castração, o tutor deverá apresentar originais e xerox do <span className="font-semibold">RG e CPF</span>, do <span className="font-semibold">comprovante de residência</span> e do <span className="font-semibold">formulário de inscrição</span> de cada animal (digital ou impresso). Sem esses documentos, a cirurgia não será realizada.</li>
+                    <li>No dia de castração, colocaremos um CHIP de Identificação no animal, que poderá ser visto sistema e ajudará à localizar seu pet.</li>
+                    <li>Os responsáveis também devem levar, <span className="font-semibold">OBRIGATORIAMENTE</span>, a roupinha cirúrgica para o pós-operatório das fêmeas.</li>
+                    <li>O animal deve estar em <span className="font-semibold">jejum alimentar de 6 horas e hídrico de 4 horas</span>.</li>
+                    <li>O <span className="font-semibold">hemograma é obrigatório</span> para canino fêmea abaixo de 3 kg e acima de 15 kg, sendo opcional para caninos macho e felinos macho/fêmea.</li>
+                    <li>O animal deve estar em boas condições de saúde.</li>
+                    <li><span className="font-semibold">Felinos</span> devem estar em caixa de transporte compatível com seu tamanho, sem panos, jornal, lençol etc., forrada apenas com tapete higiênico. Apenas 01 (um) animal por caixa de transporte. <span className="font-semibold">Não receberemos felinos fora da caixa de transporte.</span></li>
+                    <li><span className="font-semibold">Caninos</span> devem estar de coleira, guia ou em caixa de transporte compatível com o tamanho. Caninos bravos ou de grande porte devem estar de focinheira.</li>
+                    <li>O animal <span className="font-semibold">não pode estar vacinado</span> no período de 21 dias.</li>
+                    <li>Animais braquicefálicos (focinho curto) devem realizar <span className="font-semibold">obrigatoriamente</span>, além do hemograma, outros exames a serem indicados pela Superintendência de Bem-Estar Animal. Para realizar a solicitação de exames, entre em contato através do e-mail: bemestaranimal@angra.rj.gov.br ou telefone: (24) 3377-4527.</li>
+                    <li>Mesmo com a apresentação dos exames, o animal ainda está sujeito à avaliação médico-veterinária.</li>
+                    <li>
+                        <span className="font-semibold block mb-2 mt-2">Lista de animais braquicefálicos:</span>
+                        <ul className="list-[circle] pl-5 flex flex-col gap-2 text-muted-fg bg-muted/30 p-4 rounded-lg">
+                            <li><span className="font-semibold">Cães:</span> Pug, Boston Terrier, Bulldog Francês, Pequinês, Boxer, Shih Tzu, Dogue de Bordeaux, Lhasa Apso, Shar-pei, Buldogue inglês/francês, Chihuahua, American Bully, Cavalier King Charles Spaniel, Maltês, Staffordshire Bull Terrier.</li>
+                            <li><span className="font-semibold">Gatos:</span> Burmês Americano, Himalaio, Persa (todos os tipos) e Shorthair Exótico.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
 
-                <div className="bg-card border-l border-l-primary-border border-y border-r border-primary-border rounded-xl p-6 mb-8">
-                    <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
-                        Instruções para o dia da castração
-                    </h2>
-                    <ul className="list-disc pl-5 flex flex-col gap-3 text-sm md:text-base text-default-fg">
-                        <li><span className="font-semibold">Não será permitida a troca de tutor ou lar temporário</span>; caso não possa comparecer no dia da cirurgia, o responsável deverá cancelar o agendamento previamente.</li>
-                        <li>No dia da castração, o tutor deverá apresentar originais e xerox do <span className="font-semibold">RG e CPF</span>, do <span className="font-semibold">comprovante de residência</span> e do <span className="font-semibold">formulário de inscrição</span> de cada animal (digital ou impresso). Sem esses documentos, a cirurgia não será realizada.</li>
-                        <li>No dia de castração, colocaremos um CHIP de Identificação no animal, que poderá ser visto sistema e ajudará à localizar seu pet.</li>
-                        <li>Os responsáveis também devem levar, <span className="font-semibold">OBRIGATORIAMENTE</span>, a roupinha cirúrgica para o pós-operatório das fêmeas.</li>
-                        <li>O animal deve estar em <span className="font-semibold">jejum alimentar de 6 horas e hídrico de 4 horas</span>.</li>
-                        <li>O <span className="font-semibold">hemograma é obrigatório</span> para canino fêmea abaixo de 3 kg e acima de 15 kg, sendo opcional para caninos macho e felinos macho/fêmea.</li>
-                        <li>O animal deve estar em boas condições de saúde.</li>
-                        <li><span className="font-semibold">Felinos</span> devem estar em caixa de transporte compatível com seu tamanho, sem panos, jornal, lençol etc., forrada apenas com tapete higiênico. Apenas 01 (um) animal por caixa de transporte. <span className="font-semibold">Não receberemos felinos fora da caixa de transporte.</span></li>
-                        <li><span className="font-semibold">Caninos</span> devem estar de coleira, guia ou em caixa de transporte compatível com o tamanho. Caninos bravos ou de grande porte devem estar de focinheira.</li>
-                        <li>O animal <span className="font-semibold">não pode estar vacinado</span> no período de 21 dias.</li>
-                        <li>Animais braquicefálicos (focinho curto) devem realizar <span className="font-semibold">obrigatoriamente</span>, além do hemograma, outros exames a serem indicados pela Superintendência de Bem-Estar Animal. Para realizar a solicitação de exames, entre em contato através do e-mail: bemestaranimal@angra.rj.gov.br ou telefone: (24) 3377-4527.</li>
-                        <li>Mesmo com a apresentação dos exames, o animal ainda está sujeito à avaliação médico-veterinária.</li>
-                        <li>
-                            <span className="font-semibold block mb-2 mt-2">Lista de animais braquicefálicos:</span>
-                            <ul className="list-[circle] pl-5 flex flex-col gap-2 text-muted-fg bg-muted/30 p-4 rounded-lg">
-                                <li><span className="font-semibold">Cães:</span> Pug, Boston Terrier, Bulldog Francês, Pequinês, Boxer, Shih Tzu, Dogue de Bordeaux, Lhasa Apso, Shar-pei, Buldogue inglês/francês, Chihuahua, American Bully, Cavalier King Charles Spaniel, Maltês, Staffordshire Bull Terrier.</li>
-                                <li><span className="font-semibold">Gatos:</span> Burmês Americano, Himalaio, Persa (todos os tipos) e Shorthair Exótico.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-
-                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
+            <section className="bg-card border border-default-border rounded-xl p-6 mb-8">
+                <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4 border-b border-default-border mb-4">
                     Horários
                 </h2>
-                                
-                <p className="text-muted-fg text-sm md:text-base pb-4 max-w-244">
-                    No momento de agendar a castração, o sistema só permite que você selecione o horário com base nos horários disponíveis:
-                </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-8">
-                    
                     <Card className="p-4 flex flex-col gap-4 shadow-none!">
                         <div className="flex items-center gap-2 border-b border-default-border pb-2 text-default-fg">
                             <CalendarIcon />
-                            <h3 className="font-bold text-sm md:text-base">Segunda à Quinta-feira</h3>
+                            <h3 className="font-semibold text-sm md:text-base">Segunda à Quinta-feira</h3>
                         </div>
                         
                         <div className="flex flex-col gap-3">
                             <div className="flex justify-between items-center bg-muted/30 p-3 rounded-lg border border-default-border">
                                 <div className="flex flex-col">
-                                    <span className="font-semibold text-default-fg flex items-center gap-1">
+                                    <span className="font-medium text-default-fg flex items-center gap-1">
                                         <span className="text-amber-500"><SunIcon /></span>
                                         Manhã (09:00)
                                     </span>
@@ -172,8 +162,8 @@ const NeuteringRulesContent = () => {
 
                             <div className="flex justify-between items-center bg-muted/30 p-3 rounded-lg border border-default-border">
                                 <div className="flex flex-col">
-                                    <span className="font-semibold text-default-fg flex items-center gap-1">
-                                        <span className="text-orange-500"><MoonIcon /></span>
+                                    <span className="font-medium text-default-fg flex items-center gap-1">
+                                        <span className="text-orange-500"><SunIcon size={18}/></span>
                                         Tarde (14:00)
                                     </span>
                                     <span className="text-sm text-muted-fg mt-0.5">Atendimento para caninos</span>
@@ -185,7 +175,7 @@ const NeuteringRulesContent = () => {
                     <Card className="p-4 flex flex-col gap-4 shadow-none!">
                         <div className="flex items-center gap-2 border-b border-default-border pb-2 text-default-fg">
                             <CalendarIcon />
-                            <h3 className="font-bold text-sm md:text-base">Sexta-feira</h3>
+                            <h3 className="font-semibold text-sm md:text-base">Sexta-feira</h3>
                         </div>
                         
                         <div className="flex flex-col gap-3">
@@ -202,7 +192,7 @@ const NeuteringRulesContent = () => {
                             <div className="flex justify-between items-center bg-muted/30 p-3 rounded-lg border border-default-border">
                                 <div className="flex flex-col">
                                     <span className="font-semibold text-default-fg flex items-center gap-1">
-                                        <span className="text-orange-500"><MoonIcon /></span>
+                                        <span className="text-orange-500"><SunIcon size={18}/></span>
                                         Tarde (14:00)
                                     </span>
                                     <span className="text-sm text-muted-fg mt-0.5">Apenas caninos machos</span>
@@ -212,7 +202,9 @@ const NeuteringRulesContent = () => {
                     </Card>
 
                 </div>
+            </section>
 
+            <section className="flex flex-col">
                 <h2 className="text-default-fg font-semibold text-lg sm:text-xl pb-4">
                     Documentações em PDF
                 </h2>
@@ -224,21 +216,27 @@ const NeuteringRulesContent = () => {
                     <TextLink target="_blank" variant="primary" className="underline! w-fit" href="https://portal.angra.rj.gov.br/downloads/IMAAR/Regulamento-Programa-Castracao-2025.pdf">
                         - Regulamento do programa de castração
                     </TextLink>
-                    <TextLink target="_blank" variant="primary" className="underline! w-fit" href="/neutering-template">
+                    <TextLink target="_blank" variant="primary" className="underline! w-fit" href="/ficha_de_autorizacao_procedimento_anestesicos_e_cirurgicos.pdf">
                         - Formulário de inscrição e termo de compromisso do animal
                     </TextLink>
                 </div>
+            </section>
 
-                <div className="flex w-full justify-end">
-                    <ButtonLink 
-                        variant="primary" 
-                        size="lg" 
-                        href={`/dashboard/neuterings${ petIdParam ? `?petId=${petIdParam}` : ""}`}
-                    >
-                        Li e concordo com as regras
-                    </ButtonLink>
-                </div>
-
+            <div className="flex w-full justify-end gap-2 sm:gap-4 items-center">
+                <TextLink 
+                    variant="primary" 
+                    size="md" 
+                    href={`/dashboard`}
+                >
+                    Não concordo
+                </TextLink>
+                <ButtonLink 
+                    variant="primary" 
+                    size="md" 
+                    href={`/dashboard/neuterings${ petIdParam ? `?petId=${petIdParam}` : ""}`}
+                >
+                    Li e concordo com as regras
+                </ButtonLink>
             </div>
         </div>
     )

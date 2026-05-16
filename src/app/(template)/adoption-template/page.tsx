@@ -73,7 +73,6 @@ export default function AdoptionTemplatePage() {
 
     const pet = request?.pet;
 
-    // Mapeamento de dados do animal
     const petName = pet?.name || "_________________________________________________________";
     const species = pet?.species;
     const isCanine = species === "DOG";
@@ -103,7 +102,6 @@ export default function AdoptionTemplatePage() {
             <main className="flex min-h-screen w-full">
                 <div id="template-page" className="w-[210mm] min-h-[297mm] bg-white text-black p-8 mx-auto font-sans text-[11px] leading-tight flex flex-col gap-2 shadow-md">
                     
-                    {/* HEADER - IDENTICO AO EMERGENCY */}
                     <div className="flex justify-between items-center border-b border-black pb-2 mb-2">
                         <div className="flex items-center gap-4">
                             <div className="w-16 bg-gray-200 flex items-center justify-center">
@@ -136,7 +134,6 @@ export default function AdoptionTemplatePage() {
                         Termo de Guarda Responsável
                     </h1>
 
-                    {/* DADOS DO ADOTANTE */}
                     <div className="border border-black p-2 flex flex-col gap-1">
                         <h2 className="font-bold uppercase text-[10px]">Dados do Adotante</h2>
                         <div className="flex gap-2">
@@ -161,7 +158,6 @@ export default function AdoptionTemplatePage() {
                         </div>
                     </div>
 
-                    {/* DADOS DO ANIMAL */}
                     <div className="border border-black p-2 flex flex-col gap-1 mt-1">
                         <h2 className="font-bold uppercase text-[10px]">Dados do Animal</h2>
                         <div className="flex gap-2">
@@ -180,7 +176,6 @@ export default function AdoptionTemplatePage() {
                         </div>
                     </div>
 
-                    {/* COMPROMISSOS */}
                     <div className="border border-black p-2 text-[10px] mt-1 flex flex-col gap-0.5 text-justify">
                         <h3 className="font-bold text-[11px] mb-1 uppercase">Comprometo-me a:</h3>
                         <p>1. Proporcionar ao animal deste termo, respeitando suas características e zelando pelas suas necessidades psicológicas e físicas;</p>
@@ -195,7 +190,6 @@ export default function AdoptionTemplatePage() {
                         <p>10. Permitir a visita regular do veterinário da Superintendência de Bem-Estar Animal.</p>
                     </div>
 
-                    {/* DECLARAÇÕES LEGAIS */}
                     <div className="border border-black p-2 text-[10px] mt-1 flex flex-col gap-2 text-justify">
                         <p className="font-bold">Estou ciente de que:</p>
                         <ul className="list-disc ml-4 flex flex-col gap-1">
@@ -209,7 +203,6 @@ export default function AdoptionTemplatePage() {
                         </p>
                     </div>
 
-                    {/* RODAPÉ E ASSINATURAS */}
                     <div className="w-full text-center mt-4">
                         <p>Angra dos Reis, _____ de ____________________ de _____. </p>
                     </div>
@@ -217,16 +210,16 @@ export default function AdoptionTemplatePage() {
                     <div className="flex flex-col gap-6 mt-8 px-20">
                         <div className="text-center w-full">
                             <div className="border-t border-black mb-1 w-full mx-auto"></div>
-                            <p className="font-bold uppercase text-[10px]">(Assinatura)</p>
+                            <p className=" uppercase text-[10px]">(Assinatura)</p>
                         </div>
                         <div className="text-center w-full">
                             <div className="border-t border-black mb-1 w-full mx-auto"></div>
-                            <p className="font-bold uppercase text-[10px]">(Nome e assinatura)</p>
+                            <p className=" uppercase text-[10px]">(Nome e assinatura)</p>
                             <p className="text-[9px] italic mt-0.5">Responsável pelo Termo</p>
                         </div>
                     </div>
 
-                    <div className="mt-auto text-center text-[8px] text-gray-500 border-t pt-2">
+                    <div className="mt-18 text-center text-[8px] text-gray-500 border-t pt-2">
                         Rua Juvêncio de Resende, 42 - Centro - Angra dos Reis/RJ | Tel: (24) 3377-4527
                     </div>
 
