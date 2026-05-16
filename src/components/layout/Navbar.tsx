@@ -12,7 +12,7 @@ export const Navbar = () => {
                 pill="true"
                 className="px-2! sm:px-3!"
             >
-                Pets
+                Início
             </NavLink>
             <NavLink
                 href="/rules/neutering-rules"
@@ -28,7 +28,7 @@ export const Navbar = () => {
                 pill="true"
                 className="px-2! sm:px-3!"
             >
-                Consulta
+                Emergência
             </NavLink>
             <NavLink
                 href="/rules/adoption-rules"

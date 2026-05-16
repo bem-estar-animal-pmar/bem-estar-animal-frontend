@@ -9,12 +9,11 @@ import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
 import { Button, ButtonLink, Badge, Dialog, Card, InfoPopUp } from "@/src/components/ui";
-
 import { CreatePetForm } from "@/src/components/features/dashboard/CreatePetForm";
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { toast } from "@/src/lib/toast-store";
-import { XIcon } from "@/src/components/icons/outline";
+import { SquareArrowUpRightIcon, XIcon } from "@/src/components/icons/outline";
 
 import type { Pet } from "@/src/constants/interfaces"
 import { translateError } from "@/src/lib/error-map";
@@ -74,31 +73,49 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="w-full flex flex-col">
-            <div className="w-full flex justify-between items-center flex-wrap gap-y-2 pb-4">
+        <div className="w-full flex flex-col h-[calc(100vh-108px)] sm:h-[calc(100vh-136px)] overflow-clip">
+            <section className="w-full flex justify-between items-center flex-wrap gap-y-2 pb-4">
                 <h1 className="text-default-fg font-semibold text-xl sm:text-2xl lg:text-3xl text-center lg:text-start">
                     Bem-vindo (a), <span className="text-primary-fg">{session?.user.name}</span>!
                 </h1>
-                <Button 
-                    variant="primary" 
-                    size="sm"
-                    pill="true"
-                    onClick={() => setIsDialogOpen(true)}
-                >
-                    + Cadastrar novo pet
-                </Button>
-            </div>
-            
-            <p className="text-muted-fg text-sm sm:text-base max-w-316">
-                Esta é sua área do usuário, aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar 
-                consultas para eles. Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, 
-                entre em contato com a clínica para realizar a edição / remoção do pet.
-            </p>
-            <p className="text-muted-fg text-xs sm:text-sm py-4">
-                No momento você 
-                {pets.length > 0 ? ` tem ${pets.length} pet${pets.length === 1 ? "" : "s"}.` : " ainda não tem pets cadastrados."}
 
-            </p>
+                <div className="flex gap-2 items-center">
+                    <Button 
+                        variant="primary" 
+                        pill="true"
+                        onClick={() => setIsDialogOpen(true)}
+                        className="text-xs sm:text-sm"
+                    >
+                        + Cadastrar novo pet
+                    </Button>
+                    {session?.user.role === "ADMIN" && (
+                        <ButtonLink
+                            href="/admin/dashboard/"
+                            pill="true"
+                            variant="outline"
+                            className="flex gap-1 text-xs sm:text-sm"
+                        >
+                            Painel do administrador <SquareArrowUpRightIcon size={18} />
+                        </ButtonLink>
+                    )}
+                </div>
+            </section>
+            
+            <section className="flex flex-col pb-4">
+                <p className="text-muted-fg text-sm sm:text-base max-w-316 mb-1">
+                    Esta é sua área do usuário, aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar 
+                    consultas para eles.
+                </p>
+                <p className="text-muted-fg text-sm sm:text-base max-w-316 mb-4">
+                    Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, 
+                    entre em contato com a clínica para realizar a edição / remoção do pet.
+                </p>
+                <p className="text-muted-fg text-xs sm:text-sm">
+                    No momento você 
+                    {pets.length > 0 ? ` tem ${pets.length} pet${pets.length === 1 ? "" : "s"}.` : " ainda não tem pets cadastrados."}
+
+                </p>
+            </section>
 
             {pets.length === 0 &&
                 <div className="flex flex-col items-center justify-center p-4 min-h-88 border-2 border-dashed border-primary-border 
@@ -146,7 +163,7 @@ export default function DashboardPage() {
             
             {/* must update the pet display here */}
             {pets.length !== 0 && 
-                <div className="border-2 border-dashed border-default-border rounded-xl h-full">
+                <div className="border-2 border-dashed border-default-border rounded-xl overflow-y-auto">
                     <div className="flex flex-col w-full max-w-184 justify-self-center justify-center p-4 gap-4">
                         {pets.map((pet) => (
                             <Card 
@@ -161,7 +178,7 @@ export default function DashboardPage() {
                                         alt="Foto de perfil do pet"
                                     />
                                     <div className="flex flex-col w-full pl-2"> 
-                                        <div className="flex w-full flex-wrap items-center justify-between gap-2 pb-2">
+                                        <div className="flex w-full flex-wrap items-center justify-between gap-y-3 gap-2 pb-2">
                                             <div className="flex items-center gap-2">
                                                 <h3 className="font-medium text-base sm:text-lg text-default-fg truncate">
                                                     {pet.name}
@@ -174,7 +191,7 @@ export default function DashboardPage() {
                                                     {translateTable(pet.species)}
                                                 </Badge>
                                             </div>
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex flex-wrap items-center gap-2">
                                                 <p className="text-xs sm:text-sm text-muted-fg flex truncate">
                                                     {translateTable(pet.homeStatus)}
                                                 </p>
