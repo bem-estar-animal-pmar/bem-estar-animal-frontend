@@ -19,7 +19,7 @@ export const AdminGuard = ({ children }: { children: React.ReactNode }) => {
             return;
         }
 
-        if (session.user.role !== "ADMIN") {
+        if (session.user.role !== "ADMIN" && session.user.role !== "MANAGER") {
             router.replace("/dashboard");
             return;
         }
@@ -29,7 +29,7 @@ export const AdminGuard = ({ children }: { children: React.ReactNode }) => {
         return <Loading />;
     }
 
-    if (session && session.user.role !== "ADMIN") {
+    if (session && session.user.role !== "ADMIN" && session.user.role !== "MANAGER") {
         return <Loading />;
     }
 

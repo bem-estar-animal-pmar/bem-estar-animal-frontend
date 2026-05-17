@@ -12,7 +12,7 @@ import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"; 
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
-import { AdoptionHistorySection } from "@/src/components/features/admin-dashboard/AdoptionHistorySection";
+import { HistorySection } from "@/src/components/features/admin-dashboard/HistorySection";
 import { adoptionStatusMap } from "@/src/constants/constants";
 import { Card, TextLink, Badge, Button, Dialog, ButtonLink } from "@/src/components/ui"; 
 import { DetailsField } from "@/src/components/ui/DetailsField";
@@ -224,7 +224,7 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
                         </div>
                     </Card>
 
-                    <AdoptionHistorySection history={request.history} />
+                    <HistorySection history={request.history} />
                 </div>
 
                 <div className="flex flex-col w-full gap-4 lg:w-2/5">

@@ -1,4 +1,4 @@
-export type Role = "USER" | "ADMIN";
+export type Role = "USER" | "ADMIN" | "MANAGER";
 export type PetSpecies = "DOG" | "CAT";
 export type PetGender = "MALE" | "FEMALE";
 export type PetSize = "SMALL" | "MEDIUM" | "LARGE";
@@ -31,6 +31,41 @@ export interface TriageData {
     hasDiarrhea?: TriageAnswer;
     symptomsDuration?: string;
     otherSymptoms?: string;
+}
+
+export interface AdminUser { /* list route */
+    id: string,
+    name: string,
+    email: string,
+    phone: string,
+    lastName: string,
+    role: Role
+}
+
+export interface UserById { /* get by id route  */
+    id: string,
+    name: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    role: string,
+    createdAt: Date,
+    cep: string,
+    cpf: string,
+    street: string,
+    number: string,
+    state: string,
+    neighborhood: string,
+    city: string,
+    blockedUntil: Date,
+    deletedAt: Date,
+    termsAcceptedAt: Date,
+    privacyAcceptedAt: Date,
+    termsVersion: string,
+    privacyVersion: string,
+    updatedAt: Date,
+    emailVerified: boolean,
+    history?: string /* only when admin asks, user does not see this field */
 }
 
 /* pets */

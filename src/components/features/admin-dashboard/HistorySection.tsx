@@ -1,6 +1,6 @@
 import { Card } from "../../ui";
 
-export const AdoptionHistorySection = ({ history }: { history: string }) => {
+export const HistorySection = ({ history }: { history: string }) => {
     const historyLogs = history ? history.split('\n').filter(log => log.trim() !== '') : [];
 
     const parseLogEntry = (log: string) => {
@@ -15,7 +15,7 @@ export const AdoptionHistorySection = ({ history }: { history: string }) => {
         <Card size="lg" className="shadow-sm! h-fit!">
             <section className="flex flex-col">
                 <h3 className="text-base lg:text-lg font-semibold pb-2 mb-4 border-b border-default-border">
-                    Histórico do Pedido
+                    Histórico
                 </h3>
                 <div className="rounded-md p-4 text-sm max-h-80 overflow-y-auto border border-default-border bg-default/30">
                     {historyLogs.length > 0 ? (

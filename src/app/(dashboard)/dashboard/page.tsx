@@ -72,6 +72,8 @@ export default function DashboardPage() {
         fetchPets();
     };
 
+    const isAdmin = session?.user.role === "ADMIN" || session?.user.role === "MANAGER"
+
     return (
         <div className="w-full flex flex-col h-[calc(100vh-108px)] sm:h-[calc(100vh-136px)] overflow-clip">
             <section className="w-full flex justify-between items-center flex-wrap gap-y-2 pb-4">
@@ -88,7 +90,7 @@ export default function DashboardPage() {
                     >
                         + Cadastrar novo pet
                     </Button>
-                    {session?.user.role === "ADMIN" && (
+                    {isAdmin && (
                         <ButtonLink
                             href="/admin/dashboard/"
                             pill="true"

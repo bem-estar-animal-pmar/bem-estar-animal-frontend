@@ -7,6 +7,7 @@ import { translateError } from "@/src/lib/error-map";
 import { Button, Input, Label, Select } from "@/src/components/ui";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
 import { SearchIcon } from "../../icons/outline";
+import { userRoleOptions } from "@/src/constants/constants";
 
 export const SearchUserIdForm = () => {
 
@@ -127,10 +128,7 @@ export const SearchUserIdForm = () => {
                         </Label>
                         <Select 
                             id="role"
-                            options={[
-                                { label: "Usuário", value: "USER" }, 
-                                { label: "Admin", value: "ADMIN" }
-                            ]}
+                            options={userRoleOptions}
                             value={filters.role}
                             onChange={(val) => setFilters({...filters, role: val})}
                         />

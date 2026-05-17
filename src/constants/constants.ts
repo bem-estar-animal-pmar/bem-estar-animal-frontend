@@ -1,3 +1,11 @@
+/* user */
+
+export const userRoleOptions = [
+    { label: "Usuário", value: "USER" }, 
+    { label: "Admin", value: "ADMIN" },
+    { label: "Gerente", value: "MANAGER" }
+];
+
 /* pets */
 
 export const petSpeciesOptions = [

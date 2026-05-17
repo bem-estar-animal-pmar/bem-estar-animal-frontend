@@ -1,4 +1,9 @@
 const tableTranslations: Record<string, string> = {
+    /* user role */
+
+    USER: "Usuário",
+    ADMIN: "Administrador",
+    MANAGER: "Gerente",
     /* pets */
     DOG: "Cachorro",
     CAT: "Gato",

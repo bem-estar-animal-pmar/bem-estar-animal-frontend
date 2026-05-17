@@ -13,7 +13,7 @@ import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"; 
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
-import { AdoptionHistorySection } from "@/src/components/features/admin-dashboard/AdoptionHistorySection";
+import { HistorySection } from "@/src/components/features/admin-dashboard/HistorySection";
 import { UpdateGiveUpStatusForm } from "@/src/components/features/admin-dashboard/UpdateGiveUpStatusForm";
 import { Card, TextLink, Badge } from "@/src/components/ui"; 
 import { DetailsField } from "@/src/components/ui/DetailsField";
@@ -147,7 +147,7 @@ export default function AdminGiveUpDetailsPage({ params }: { params: Promise<{ i
                         </div>
                     </Card>
 
-                    <AdoptionHistorySection history={request.history} />
+                    <HistorySection history={request.history} />
 
                     <Card size="lg" className="shadow-sm! h-fit!">
                         <h3 className="text-base lg:text-lg font-semibold pb-2 mb-4 border-b border-default-border">
