@@ -92,7 +92,7 @@ const NeuteringContent = () => {
         try {
             setIsCanceling(appointmentId);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/neuterings/${appointmentId}/cancel`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/neuterings/cancel/${appointmentId}`, {
                 method: "PATCH",
                 credentials: "include"
             });

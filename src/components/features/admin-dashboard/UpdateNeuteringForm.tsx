@@ -104,7 +104,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                 )).toISOString()
                 : undefined;
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/neuterings/${appointment.id}/status`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/neuterings/status/${appointment.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
