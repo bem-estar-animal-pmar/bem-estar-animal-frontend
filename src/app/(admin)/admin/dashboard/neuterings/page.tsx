@@ -8,7 +8,7 @@ import { formatRequestNumber } from "@/src/lib/request-formatter";
 import { toast } from "@/src/lib/toast-store";
 import { neuteringStatusMap } from "@/src/constants/constants";
 
-import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, Tabs, ButtonTab } from "@/src/components/ui";
+import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, Tabs, ButtonTab, InfoPopUp } from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import type { AdminNeuteringAppointment } from "@/src/constants/interfaces";
 
@@ -124,6 +124,12 @@ export default function AdminNeuteringsPage() {
             { label: "Cancelado", value: "CANCELLED" }, 
             { label: "Não compareceu", value: "NO_SHOW" } 
           ];
+
+    const tomorrowUtcTimestamp = Date.UTC(
+        new Date().getUTCFullYear(),
+        new Date().getUTCMonth(),
+        new Date().getUTCDate() + 1
+    );
 
     return (
         <div className="w-full flex flex-col gap-4">
@@ -255,6 +261,7 @@ export default function AdminNeuteringsPage() {
                             const statusInfo = neuteringStatusMap[app.status];
                             const displayDate = app.scheduleDate ? app.scheduleDate.split("T")[0].split("-").reverse().join("/")  : "Sem data";
                             const period = app.period ? translateTable(app.period) : ""
+                            const isExpired = !!app.scheduleDate && ["CONFIRMED", "PENDING", "AWAITING_EXAMS"].includes(app.status) && new Date(app.scheduleDate).getTime() < tomorrowUtcTimestamp;
 
                             return (
                             <div key={app.id} className="flex w-full gap-4 px-6 py-4 items-center text-sm">
@@ -268,8 +275,16 @@ export default function AdminNeuteringsPage() {
                                         Atualizar
                                     </ButtonLink>
                                 </div>  
-                                <div className="w-2/14">
+                                <div className="flex items-center justify-between gap-1 w-2/14">
                                     {formatRequestNumber("NEUTERING", app.requestNumber)}
+                                    {isExpired &&
+                                        <InfoPopUp
+                                            sign="alert"
+                                            className="shrink-0"
+                                        >
+                                            Esse agendamento já passou da data marcada e será automaticamente definido como cancelado em breve.
+                                        </InfoPopUp>
+                                    }
                                 </div>
                                 <div className="flex flex-col w-2/14">
                                     <p className="text-default-fg font-medium">{displayDate}</p>

@@ -8,7 +8,7 @@ import { formatRequestNumber } from "@/src/lib/request-formatter";
 import { toast } from "@/src/lib/toast-store";
 import { emergencyStatusMap } from "@/src/constants/constants"; // Assumindo que você tenha ou criará esse map
 
-import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, Tabs, ButtonTab } from "@/src/components/ui";
+import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, Tabs, ButtonTab, InfoPopUp } from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import type { AdminEmergencyAppointment } from "@/src/constants/interfaces";
 
@@ -123,6 +123,12 @@ export default function AdminEmergenciesPage() {
             { label: "Cancelado", value: "CANCELLED" }, 
             { label: "Não compareceu", value: "NO_SHOW" } 
           ];
+
+    const tomorrowUtcTimestamp = Date.UTC(
+        new Date().getUTCFullYear(),
+        new Date().getUTCMonth(),
+        new Date().getUTCDate() + 1
+    );
 
     return (
         <div className="w-full flex flex-col gap-4">
@@ -255,6 +261,7 @@ export default function AdminEmergenciesPage() {
                             const displayDate = app.scheduleDate ? new Date(app.scheduleDate).toLocaleDateString("pt-BR") : "Sem data";
                             const displayTime = app.scheduleDate ? new Date(app.scheduleDate).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
                             const period = app.period ? translateTable(app.period) : "";
+                            const isExpired = !!app.scheduleDate && ["CONFIRMED", "PENDING"].includes(app.status) && new Date(app.scheduleDate).getTime() + 1000 * 60 * 60 * 24 < Date.now();
 
                             return (
                             <div key={app.id} className="flex w-full gap-4 px-6 py-4 items-center text-sm">
@@ -268,8 +275,16 @@ export default function AdminEmergenciesPage() {
                                         Atualizar
                                     </ButtonLink>
                                 </div>  
-                                <div className="w-2/14">
+                                <div className="flex items-center justify-between gap-1 w-2/14">
                                     {formatRequestNumber("EMERGENCY", app.requestNumber)}
+                                    {isExpired &&
+                                        <InfoPopUp
+                                            sign="alert"
+                                            className="shrink-0"
+                                        >
+                                            Esse agendamento já passou da data marcada e será automaticamente definido como cancelado em breve.
+                                        </InfoPopUp>
+                                    }
                                 </div>
                                 <div className="flex flex-col w-2/14">
                                     <p className="text-default-fg font-medium">{displayDate}</p>
