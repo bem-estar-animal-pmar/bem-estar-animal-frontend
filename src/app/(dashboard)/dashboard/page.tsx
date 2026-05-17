@@ -1,30 +1,37 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "@/src/lib/auth-client";
+import { useSession, signOut } from "@/src/lib/auth-client";
 import { ApiError } from "@/src/lib/api-error";
 import { translateTable } from "@/src/lib/table-map";
 
 import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
-import { Button, ButtonLink, Badge, Dialog, Card, InfoPopUp } from "@/src/components/ui";
+import { Button, ButtonLink, Badge, Dialog, Card, InfoPopUp, DetailsField, Input, Label } from "@/src/components/ui";
 import { CreatePetForm } from "@/src/components/features/dashboard/CreatePetForm";
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { toast } from "@/src/lib/toast-store";
-import { SquareArrowUpRightIcon, XIcon } from "@/src/components/icons/outline";
+import { GearIcon, LogoutIcon, SquareArrowUpRightIcon, XIcon } from "@/src/components/icons/outline";
 
 import type { Pet } from "@/src/constants/interfaces"
 import { translateError } from "@/src/lib/error-map";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
 
     const { data: session, error } = useSession();
+    const router = useRouter();
     
     const [pets, setPets] = useState<Pet[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [fetchError, setFetchError] = useState(false);
+
+    const [isTermsDialogOpen, setIsTermsDialogOpen] = useState(false);
+    const [isRevokingTerms, setIsRevokingTerms] = useState(false);
+    const [revokeTermsConfirmation, setRevokeTermsConfirmation] = useState("");
     
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -72,6 +79,50 @@ export default function DashboardPage() {
         fetchPets();
     };
 
+    const handleRevokeTerms = async () => {
+        try {
+            setIsRevokingTerms(true);
+
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/admin/users/revoke-terms`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new ApiError(data.message, data.code, data.details);
+            }
+
+            toast.success("Aceite revogado com sucesso.");
+            router.push("/login");
+
+        } catch (err: unknown) {
+            if (err instanceof ApiError) {
+                toast.danger(translateError(err.message));
+                return;
+            }
+
+            toast.danger("Erro ao revogar aceite.");
+        } finally {
+            setIsRevokingTerms(false);
+        }
+    };
+
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        await signOut({
+            fetchOptions: {
+            onSuccess: () => {
+                router.push("/");
+            },
+            },
+        });
+    };
+
     const isAdmin = session?.user.role === "ADMIN" || session?.user.role === "MANAGER"
 
     return (
@@ -100,6 +151,23 @@ export default function DashboardPage() {
                             Painel do administrador <SquareArrowUpRightIcon size={18} />
                         </ButtonLink>
                     )}
+                    <Button
+                        variant="ghost-default"
+                        size="sm"
+                        onClick={() => setIsTermsDialogOpen(true)}
+                        className="w-fit! px-2!"
+                    >
+                        <GearIcon/>
+                    </Button>
+                    <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={handleLogout}
+                        className="w-fit! px-2! gap-1"
+                        disabled={isLoggingOut}
+                    >
+                        <LogoutIcon/> {isLoggingOut ? "Saindo..." : "Sair"}
+                    </Button>
                 </div>
             </section>
             
@@ -297,6 +365,97 @@ export default function DashboardPage() {
                     onSuccess={handlePetCreated} 
                     onCancel={() => setIsDialogOpen(false)} 
                 />
+            </Dialog>
+
+            <Dialog
+                isOpen={isTermsDialogOpen}
+                onClose={() => setIsTermsDialogOpen(false)}
+                title="Painel de administração"
+                size="lg"
+            >
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2 text-sm sm:text-base text-muted-fg py-4">
+                        <h3 className="text-default-fg text-sm sm:text-base font-semibold border-b border-default-border pb-2">
+                            Termos de Serviço e Política de Privacidade
+                        </h3>
+                        <div className="flex flex-col gap-1">
+                            <div className="flex flex-col sm:flex-row gap-1 justify-between">
+                                <DetailsField
+                                    title="Versão dos Termos:"
+                                >
+                                    {session?.user.termsVersion ?? "N/A"}
+                                </DetailsField>            
+                                <DetailsField
+                                    title="Aceito em:"
+                                >
+                                    {session?.user.termsAcceptedAt
+                                        ? new Date(session.user.termsAcceptedAt)
+                                            .toLocaleDateString("pt-BR")
+                                        : "N/A"
+                                    }
+                                </DetailsField>                       
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-1 justify-between">
+                                <DetailsField
+                                    title="Versão da Política de Privacidade:"
+                                >
+                                    {session?.user.privacyVersion ?? "N/A"}
+                                </DetailsField>     
+                                <DetailsField
+                                    title="Aceito em:"
+                                >
+                                    {session?.user.privacyAcceptedAt
+                                        ? new Date(session.user.privacyAcceptedAt)
+                                            .toLocaleDateString("pt-BR")
+                                        : "N/A"
+                                    }
+                                </DetailsField>                       
+                            </div>
+                        </div>
+
+                        <p className="text-xs sm:text-sm italic">
+                            Ao revogar o aceite, sua sessão será encerrada imediatamente e o acesso às funcionalidades da plataforma será bloqueado até um novo aceite.
+                        </p>
+
+                        <Label
+
+                        >
+                            Digite: eu-{session?.user.name.toLowerCase()}-desejo-revogar-a-aceitação-dos-termos
+                        </Label>
+                        <Input
+                            id="name"
+                            value={revokeTermsConfirmation}
+                            onChange={(e: any) => setRevokeTermsConfirmation(e.target.value)}
+                            placeholder="Digite o texto para continuar..."
+                            maxLength={100}
+                        />
+                    </div>
+
+
+                    <div className="flex justify-end gap-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsTermsDialogOpen(false)}
+                            className="text-danger-fg border-danger-accent-border! hover:text-danger-fg! hover:bg-transparent!"
+                        >
+                            Cancelar
+                        </Button>
+
+                        <Button
+                            variant="danger"
+                            onClick={handleRevokeTerms}
+                            disabled={isRevokingTerms || revokeTermsConfirmation !== `eu-${session?.user.name.toLowerCase()}-desejo-revogar-a-aceitação-dos-termos`}
+                        >
+                            {isRevokingTerms ? 
+                                <span className="flex gap-2 items-center">
+                                    <SpinnerIcon/> Revogando... 
+                                </span>
+                                : 
+                                "Revogar aceite"
+                            }
+                        </Button>
+                    </div>
+                </div>
             </Dialog>
         </div>
     );

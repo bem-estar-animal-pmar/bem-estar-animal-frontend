@@ -65,6 +65,50 @@ export const authClient = createAuthClient({
                     required: true,
                     input: true,
                     returned: false
+                },
+                history: {
+                    type: "string",
+                    required: false,
+                    input: false, /* Set automatically by DB or server, not frontend */
+                    returned: false
+                },
+                termsAcceptedAt: {
+                    type: "date",
+                    required: false,
+                    input: false, /* Set automatically by DB or server, not frontend */
+                    returned: true
+                },
+                termsVersion: { 
+                    type: "string", 
+                    required: false, 
+                    input: true, /* input must be true because we inject this field on the before hook, even being true, our 
+                        zod schema prevents user from sending it from the client */ 
+                    returned: true 
+                },
+                privacyAcceptedAt: {
+                    type: "date",
+                    required: false,
+                    input: false, /* Set automatically by DB or server, not frontend */
+                    returned: true
+                },
+                privacyVersion: { 
+                    type: "string", 
+                    required: false, 
+                    input: true, /* input must be true because we inject this field on the before hook, even being true, our 
+                        zod schema prevents user from sending it from the client */ 
+                    returned: true 
+                },
+                blockedUntil: {
+                    type: "date",
+                    required: false,
+                    input: false,     /* user nor admin can set blockedUntil, it automatically goes to true if a status is NO_SHOW */
+                    returned: false
+                },
+                deletedAt: {
+                    type: "date",
+                    required: false,
+                    input: false,
+                    returned: false
                 }
             },
         }),
