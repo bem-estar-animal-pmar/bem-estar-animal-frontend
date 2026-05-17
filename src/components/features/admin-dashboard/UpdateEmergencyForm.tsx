@@ -83,7 +83,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
                 payload.petId = newPetId;
             }
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/emergencies/${appointment.id}/status`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/emergencies/status/${appointment.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

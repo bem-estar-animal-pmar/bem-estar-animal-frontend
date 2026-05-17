@@ -66,7 +66,7 @@ const EmergencyContent = () => {
         try {
             setIsCanceling(appointmentId);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/emergencies/${appointmentId}/cancel`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/emergencies/cancel/${appointmentId}`, {
                 method: "PATCH",
                 credentials: "include"
             });
