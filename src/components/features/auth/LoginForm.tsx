@@ -7,6 +7,7 @@ import { signIn, signOut, sendVerificationEmail } from "@/src/lib/auth-client";
 import { toast } from "@/src/lib/toast-store";
 import { translateError } from "@/src/lib/error-map";
 import { Input, Button, Label, TextLink, TextButton } from "@/src/components/ui";
+import { SpinnerIcon } from "../../icons/SpinnerIcon";
 
 export function LoginForm() {
 
@@ -119,9 +120,17 @@ export function LoginForm() {
                 className="w-full"
                 type="submit"
                 variant="primary"
+                disabled={loading}
             >
-                {loading ? "Entrando..." : "Entrar na conta"}
+                {loading ? 
+                    <span className="flex gap-1 items-center">
+                        <SpinnerIcon/> Entrando... 
+                    </span>
+                    : 
+                    "Entrar na conta"
+                }
             </Button>
+
 
             {isUnverified &&
                 <div className="w-full text-center">

@@ -454,7 +454,13 @@ return (
                 variant="primary"
                 disabled={loading}
             >
-                {loading ? "Carregando..." : "Criar conta"}
+                {loading ? 
+                    <span className="flex gap-1 items-center">
+                        <SpinnerIcon/> Carregando... 
+                    </span>
+                    : 
+                    "Criar conta"
+                }
             </Button>
         </form>
     );
