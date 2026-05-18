@@ -1,3 +1,6 @@
+export const CURRENT_TERMS_OF_SERVICE_VERSION = "v1.0.0";
+export const CURRENT_PRIVACY_POLICY_VERSION = "v1.0.0";
+
 /* user */
 
 export const userRoleOptions = [

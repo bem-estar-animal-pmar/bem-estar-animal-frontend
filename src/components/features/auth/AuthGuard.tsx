@@ -18,9 +18,20 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
             router.replace("/login");
             return;
         }
+
+        if ((!session?.user.termsAcceptedAt || !session?.user.privacyAcceptedAt) && session.user.role !== "ADMIN") {
+            router.replace("/accept-terms");
+            return;
+        }
     }, [session, isPending, router]);
 
+    const termsAccepted = session?.user.termsAcceptedAt && session?.user.privacyAcceptedAt
+
     if (isPending && !session) {
+        return <Loading />;
+    }
+
+    if (!termsAccepted && session?.user.role !== "ADMIN") {
         return <Loading />;
     }
 
