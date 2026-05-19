@@ -9,6 +9,8 @@ import { Button, Card, TextButton, TextLink } from "@/src/components/ui";
 import { toast } from "@/src/lib/toast-store";
 import { useRouter } from "next/navigation";
 import { Loading } from "@/src/components/layout/Loading";
+import { ApiError } from "@/src/lib/api-error";
+import { translateError } from "@/src/lib/error-map";
 
 export default function AcceptTermsPage() {
 
@@ -37,9 +39,9 @@ export default function AcceptTermsPage() {
         setIsLoggingOut(true);
         await signOut({
             fetchOptions: {
-            onSuccess: () => {
-                router.push("/");
-            },
+                onSuccess: () => {
+                    router.push("/");
+                },
             },
         });
         setIsLoggingOut(false);
@@ -58,23 +60,25 @@ export default function AcceptTermsPage() {
             );
 
             const data = await response.json();
-
             if (!response.ok) {
-                throw new Error(data.message || "Erro ao aceitar termos");
+                throw new ApiError(data.message, data.code, data.details);
             }
 
             toast.success("Termos aceitos com sucesso.");
-            
             await refetch();
 
-        } catch (error) {
-            toast.danger("Erro ao aceitar termos.");
+        } catch (err: unknown) { 
+            if (err instanceof ApiError) {
+                toast.danger(translateError(err.code), { message: err.details?.[0]?.message || err.message });
+                return;
+            }
+            toast.danger("Erro desconhecido ao aceitar os termos.");
         } finally {
             setIsAccepting(false);
         }
     };
 
-    const termsAccepted = (session?.user.termsAcceptedAt && session?.user.privacyAcceptedAt ? true : false) || session?.user.role === "ADMIN"
+    const termsAccepted = (session?.user.termsAcceptedAt && session?.user.privacyAcceptedAt ? true : false);
 
     if (isPending && !session) {
         return <Loading />;

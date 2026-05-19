@@ -108,7 +108,7 @@ export const authClient = createAuthClient({
                     type: "date",
                     required: false,
                     input: false,
-                    returned: false
+                    returned: true
                 }
             },
         }),
