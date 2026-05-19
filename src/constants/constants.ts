@@ -9,6 +9,19 @@ export const userRoleOptions = [
     { label: "Gerente", value: "MANAGER" }
 ];
 
+export const accountStatusMap: Record<string, { label: string, classes: string }> = {
+    ACTIVE: { label: "Ativo", classes: "bg-success! text-success-fg! border-success-border!" },
+    DELETED: { label: "Excluído pelo Usuário", classes: "bg-default! text-muted-fg! border-default-border!" },
+    BLOCKED: { label: "Bloqueado (Agendamentos)", classes: "bg-danger! text-danger-fg! border-danger-border!" },
+    SUSPENDED: { label: "Suspenso", classes: "bg-danger! text-danger-fg! border-danger-border!" },
+};
+
+export const userRoleMap: Record<string, { label: string, classes: string }> = {
+    USER: { label: "Usuário", classes: "border-primary-border!" },
+    ADMIN: { label: "Administrador", classes: "bg-danger! text-danger-fg! border-danger-border!" },
+    MANAGER: { label: "Gerente", classes: "bg-alert! text-alert-fg! border-alert-border!" },
+};
+
 /* pets */
 
 export const petSpeciesOptions = [

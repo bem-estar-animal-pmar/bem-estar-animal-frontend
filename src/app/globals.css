@@ -27,20 +27,23 @@
 	--primary-900: #2D3A1E;
 	--primary-950: #1B2414;
 
+	--danger-50: #fef2f2;
 	--danger-200: #fecaca;
-    --danger-500: #ef4444;
-    --danger-600: #dc2626;
-    --danger-800: #991b1b;
+	--danger-500: #ef4444;
+	--danger-600: #dc2626;
+	--danger-800: #991b1b;
 
-    --alert-200: #fde68a;
-    --alert-500: #f59e0b;
-    --alert-600: #d97706;
-    --alert-800: #92400e;
+	--alert-50: #fffbeb;
+	--alert-200: #fde68a;
+	--alert-500: #f59e0b;
+	--alert-600: #d97706;
+	--alert-800: #92400e;
 
-    --success-200: #a1f1bd;
-    --success-500: #22c55e;
-    --success-600: #16a34a;
-    --success-800: #166534;
+	--success-50: #f0fdf4;
+	--success-200: #a1f1bd;
+	--success-500: #22c55e;
+	--success-600: #16a34a;
+	--success-800: #166534;
 
 	/* radius */
 	--radius-xs: 4px;
@@ -78,6 +81,10 @@
 	
 	--background-neutral: var(--neutral-0);  /* full white / dark */
 	--background-footer: var(--neutral-900);
+
+	--background-danger: var(--danger-50); 
+	--background-alert: var(--alert-50); 
+	--background-success: var(--success-50); 
 	
 	/* css mainly for text */
 	--foreground-default: var(--neutral-900);      
@@ -149,6 +156,10 @@
 
 		--background-neutral: var(--neutral-900);
 		--background-footer: var(--neutral-950); /* #2B1315; */
+
+		--background-danger: var(--danger-800); 
+		--background-alert: var(--alert-800); 
+		--background-success: var(--success-800); 
 	
 		/* css mainly for text */
 		--foreground-default: var(--neutral-50);  
@@ -219,6 +230,10 @@
 
 	--color-neutral:    var(--background-neutral);
 	--color-footer:     var(--background-footer);
+	
+	--color-danger:    var(--background-danger); 
+	--color-alert:    var(--background-alert); 
+	--color-success:    var(--background-success); 
 
 	/* css mainly for text */
 	--color-default-fg: var(--foreground-default); /* use className="text-default-fg" */

@@ -149,3 +149,52 @@ export const giveUpFormSchema = z.object({
 });
 
 export type GiveUpFormData = z.infer<typeof giveUpFormSchema>;
+
+/* user */
+
+
+export const updateUserSchema = z.object({
+    name: z.string().trim()
+        .min(1, "O nome não pode ficar em branco")
+        .max(20, "O nome deve ter menos de 20 caracteres")
+        .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "O nonme deve conter apenas letras")
+        .optional(),
+    lastName: z.string()
+        .trim()
+        .min(1, "O sobrenome não pode ficar em branco")
+        .max(40, "O sobrenome deve ter menos de 40 caracteres")
+        .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "O sobrenome deve conter apenas letras")
+        .optional(),
+    phone: z.string().trim()
+        .regex(/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/, "Formato de telefone inválido")
+        .transform((value) => value.replace(/\D/g, ""))
+        .optional(),
+    cpf: z.string()
+        .regex(/^\d{11}$/, "CPF Inválido")
+        .trim()
+        .optional(),
+    cep: z.string()
+        .regex(/^\d{5}-?\d{3}$/, "CEP Inválido")
+        .transform((value) => value.replace(/\D/g, ""))
+        .optional(),
+    street: z.string().trim()
+        .min(1, "A rua não pode ficar em branco")
+        .max(200, "A rua deve ter menos de 200 caracteres")
+        .optional(),
+    neighborhood: z.string().min(1, "O bairro não pode ficar em branco")
+        .max(100, "O bairro deve ter menos de 200 caracteres")
+        .optional(),
+    city: z.string().trim()
+        .min(1, "A cidade não pode ficar em branco")
+        .max(100, "A cidade deve ter menos de 200 caracteres")
+        .optional(),
+    state: z.string().trim()
+        .length(2, "Digite apenas o UF")
+        .optional(),
+    number: z.string().trim()
+        .min(1, "O número não pode ficar em branco")
+        .max(8, "O número deve ter menos de 8 caracteres")
+        .optional(),
+});
+
+export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
