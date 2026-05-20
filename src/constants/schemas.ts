@@ -195,6 +195,14 @@ export const updateUserSchema = z.object({
         .min(1, "O número não pode ficar em branco")
         .max(8, "O número deve ter menos de 8 caracteres")
         .optional(),
+    maxPetLimit: z.coerce.number("Deve ser um número")
+        .min(1, "O limite deve ser no mínimo 1")
+        .max(100, "O limite máximo é 100")
+        .optional(),
+    maxMonthlyNeuteringRequestLimit: z.coerce.number("Deve ser um número")
+        .min(1, "O limite deve ser no mínimo 1")
+        .max(100, "O limite máximo é 100")
+        .optional()
 });
 
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;

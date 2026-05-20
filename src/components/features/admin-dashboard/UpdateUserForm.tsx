@@ -36,7 +36,9 @@ export const UpdateUserForm = ({ user, isSuspended, onUpdateSuccess }: AdminUpda
             neighborhood: user.neighborhood || "",
             city: user.city || "",
             state: user.state || "",
-            number: user.number || ""
+            number: user.number || "",
+            maxPetLimit: user.maxPetLimit ?? undefined, 
+            maxMonthlyNeuteringRequestLimit: user.maxMonthlyNeuteringRequestLimit ?? undefined,
         },
     });
 
@@ -119,6 +121,15 @@ export const UpdateUserForm = ({ user, isSuspended, onUpdateSuccess }: AdminUpda
                     </DetailsField>
                 </div>
 
+                <div className="flex flex-col md:flex-row gap-4 w-full">
+                    <DetailsField title="Limite de Pets" className="w-full md:w-1/2">
+                        {user.maxPetLimit ?? "Padrão do Sistema"}
+                    </DetailsField>
+                    <DetailsField title="Limite Mensal de Castração" className="w-full md:w-1/2">
+                        {user.maxMonthlyNeuteringRequestLimit ?? "Padrão do Sistema"}
+                    </DetailsField>
+                </div>
+
                 <div className="border-t border-default-border pt-4 mt-2">
                     <h4 className="text-sm font-semibold mb-3">Endereço</h4>
                     <div className="flex flex-col gap-3">
@@ -163,122 +174,160 @@ export const UpdateUserForm = ({ user, isSuspended, onUpdateSuccess }: AdminUpda
                     <div className="p-3 bg-alert border border-alert-border rounded-md text-sm text-alert-fg mb-2">
                         <strong>Atenção:</strong> A alteração de dados de um usuário só deve ser realizada sob solicitação expressa do próprio tutor ou em caso de extrema necessidade administrativa.
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1">
-                            <Label htmlFor="name">Nome</Label>
-                            <Controller
-                                name="name"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="name" {...field} variant={errors.name ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.name && <span className="text-danger-fg text-sm">{errors.name.message}</span>}
+                    <div className="w-full flex flex-col max-h-72 overflow-y-scroll p-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="name">Nome</Label>
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="name" {...field} variant={errors.name ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.name && <span className="text-danger-fg text-sm">{errors.name.message}</span>}
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="lastName">Sobrenome</Label>
+                                <Controller
+                                    name="lastName"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="lastName" {...field} variant={errors.lastName ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.lastName && <span className="text-danger-fg text-sm">{errors.lastName.message}</span>}
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="cpf">CPF (somente números)</Label>
+                                <Controller
+                                    name="cpf"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="cpf" {...field} variant={errors.cpf ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.cpf && <span className="text-danger-fg text-sm">{errors.cpf.message}</span>}
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="phone">Telefone</Label>
+                                <Controller
+                                    name="phone"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="phone" {...field} variant={errors.phone ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.phone && <span className="text-danger-fg text-sm">{errors.phone.message}</span>}
+                            </div>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <Label htmlFor="lastName">Sobrenome</Label>
-                            <Controller
-                                name="lastName"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="lastName" {...field} variant={errors.lastName ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.lastName && <span className="text-danger-fg text-sm">{errors.lastName.message}</span>}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div className="flex flex-col gap-1 md:col-span-1">
+                                <Label htmlFor="cep">CEP</Label>
+                                <Controller
+                                    name="cep"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="cep" {...field} variant={errors.cep ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.cep && <span className="text-danger-fg text-sm">{errors.cep.message}</span>}
+                            </div>
+                            <div className="flex flex-col gap-1 md:col-span-2">
+                                <Label htmlFor="city">Cidade</Label>
+                                <Controller
+                                    name="city"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="city" {...field} variant={errors.city ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.city && <span className="text-danger-fg text-sm">{errors.city.message}</span>}
+                            </div>
+                            <div className="flex flex-col gap-1 md:col-span-2">
+                                <Label htmlFor="street">Rua</Label>
+                                <Controller
+                                    name="street"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="street" {...field} variant={errors.street ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.street && <span className="text-danger-fg text-sm">{errors.street.message}</span>}
+                            </div>
+                            <div className="flex flex-col gap-1 md:col-span-1">
+                                <Label htmlFor="number">Número</Label>
+                                <Controller
+                                    name="number"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="number" {...field} variant={errors.number ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.number && <span className="text-danger-fg text-sm">{errors.number.message}</span>}
+                            </div>
+                            <div className="flex flex-col gap-1 md:col-span-2">
+                                <Label htmlFor="neighborhood">Bairro</Label>
+                                <Controller
+                                    name="neighborhood"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="neighborhood" {...field} variant={errors.neighborhood ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.neighborhood && <span className="text-danger-fg text-sm">{errors.neighborhood.message}</span>}
+                            </div>
+                            <div className="flex flex-col gap-1 md:col-span-1">
+                                <Label htmlFor="state">Estado (UF)</Label>
+                                <Controller
+                                    name="state"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input id="state" {...field} maxLength={2} variant={errors.state ? "danger" : "default"} />
+                                    )}
+                                />
+                                {errors.state && <span className="text-danger-fg text-sm">{errors.state.message}</span>}
+                            </div>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <Label htmlFor="cpf">CPF (somente números)</Label>
-                            <Controller
-                                name="cpf"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="cpf" {...field} variant={errors.cpf ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.cpf && <span className="text-danger-fg text-sm">{errors.cpf.message}</span>}
-                        </div>
-                        <div className="flex flex-col gap-1">
-                            <Label htmlFor="phone">Telefone</Label>
-                            <Controller
-                                name="phone"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="phone" {...field} variant={errors.phone ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.phone && <span className="text-danger-fg text-sm">{errors.phone.message}</span>}
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="flex flex-col gap-1 md:col-span-1">
-                            <Label htmlFor="cep">CEP</Label>
-                            <Controller
-                                name="cep"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="cep" {...field} variant={errors.cep ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.cep && <span className="text-danger-fg text-sm">{errors.cep.message}</span>}
-                        </div>
-                        <div className="flex flex-col gap-1 md:col-span-2">
-                            <Label htmlFor="city">Cidade</Label>
-                            <Controller
-                                name="city"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="city" {...field} variant={errors.city ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.city && <span className="text-danger-fg text-sm">{errors.city.message}</span>}
-                        </div>
-                        <div className="flex flex-col gap-1 md:col-span-2">
-                            <Label htmlFor="street">Rua</Label>
-                            <Controller
-                                name="street"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="street" {...field} variant={errors.street ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.street && <span className="text-danger-fg text-sm">{errors.street.message}</span>}
-                        </div>
-                        <div className="flex flex-col gap-1 md:col-span-1">
-                            <Label htmlFor="number">Número</Label>
-                            <Controller
-                                name="number"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="number" {...field} variant={errors.number ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.number && <span className="text-danger-fg text-sm">{errors.number.message}</span>}
-                        </div>
-                        <div className="flex flex-col gap-1 md:col-span-2">
-                            <Label htmlFor="neighborhood">Bairro</Label>
-                            <Controller
-                                name="neighborhood"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="neighborhood" {...field} variant={errors.neighborhood ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.neighborhood && <span className="text-danger-fg text-sm">{errors.neighborhood.message}</span>}
-                        </div>
-                        <div className="flex flex-col gap-1 md:col-span-1">
-                            <Label htmlFor="state">Estado (UF)</Label>
-                            <Controller
-                                name="state"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input id="state" {...field} maxLength={2} variant={errors.state ? "danger" : "default"} />
-                                )}
-                            />
-                            {errors.state && <span className="text-danger-fg text-sm">{errors.state.message}</span>}
-                        </div>
-                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-default-border">
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="maxPetLimit">Limite de Pets (Máximo)</Label>
+                                <Controller
+                                    name="maxPetLimit"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input 
+                                            type="number" 
+                                            id="maxPetLimit" 
+                                            {...field} 
+                                            value={field.value ?? ""} // Evita warning de controlled/uncontrolled
+                                            variant={errors.maxPetLimit ? "danger" : "default"} 
+                                        />
+                                    )}
+                                />
+                                {errors.maxPetLimit && <span className="text-danger-fg text-sm">{errors.maxPetLimit.message}</span>}
+                            </div>
 
-                    <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-default-border">
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="maxMonthlyNeuteringRequestLimit">Limite Mensal de Castrações</Label>
+                                <Controller
+                                    name="maxMonthlyNeuteringRequestLimit"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input 
+                                            type="number" 
+                                            id="maxMonthlyNeuteringRequestLimit" 
+                                            {...field} 
+                                            value={field.value ?? ""} // Evita warning de controlled/uncontrolled
+                                            variant={errors.maxMonthlyNeuteringRequestLimit ? "danger" : "default"} 
+                                        />
+                                    )}
+                                />
+                                {errors.maxMonthlyNeuteringRequestLimit && <span className="text-danger-fg text-sm">{errors.maxMonthlyNeuteringRequestLimit.message}</span>}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex justify-end gap-2 pt-4 border-t border-default-border">
                         <Button type="button" variant="outline" onClick={handleCancel} disabled={isSubmitting}>
                             Cancelar
                         </Button>

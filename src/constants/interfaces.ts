@@ -55,6 +55,8 @@ export interface UserById { /* get by id route  */
     street: string,
     number: string,
     state: string,
+    maxPetLimit: number,
+    maxMonthlyNeuteringRequestLimit: number,
     neighborhood: string,
     city: string,
     blockedUntil: string | null,
