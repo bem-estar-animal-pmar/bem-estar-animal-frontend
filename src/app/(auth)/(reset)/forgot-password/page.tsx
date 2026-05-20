@@ -33,7 +33,9 @@ export default function ForgotPasswordPage() {
                 setLoading(false);
             },
             onError: (ctx) => {
-                toast.danger(translateError(ctx.error.code || ctx.error.message));
+                toast.danger(translateError(ctx.error.code), {
+                    message:  translateError(ctx.error.message)
+                });
                 setLoading(false);
             }
         });

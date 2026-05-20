@@ -51,8 +51,11 @@ const ResetPasswordContent = () => {
             token: token
         });
 
+        
         if (error?.code) {
-            toast.danger(translateError(error.code));
+            toast.danger(translateError(error.code), {
+                message: translateError(error?.message || "")
+            });
             return;
         } 
 

@@ -39,8 +39,8 @@ export function LoginForm() {
                         router.push("/dashboard"); /* push to dashboard on success */
                     },
                     onError: (ctx) => {
-    
                         /* this is the status for when user login and is not verified */
+                        console.log(ctx)
                         if(ctx.error.status === 403) {
                             setIsUnverified(true);
                             toast.warning(translateError(ctx.error.code), {
@@ -49,7 +49,9 @@ export function LoginForm() {
                             setLoading(false);
                             return;
                         }
-                        toast.danger(translateError(ctx.error.code || ctx.error.message)); /* ctx is the backend response from better auth routes */
+                        toast.danger(translateError(ctx.error.code), {
+                            message: translateError(ctx.error.message)
+                        }); /* ctx is the backend response from better auth routes */
                         setLoading(false);
                     }
                 }
@@ -69,7 +71,9 @@ export function LoginForm() {
                 setIsUnverified(false); /* reset so they can login again */
             },
             onError: (ctx) => {
-                toast.danger(ctx.error.code);
+                toast.danger(translateError(ctx.error.code), {
+                    message: translateError(ctx.error.message)
+                });
                 setResendLoading(false);
             }
         });

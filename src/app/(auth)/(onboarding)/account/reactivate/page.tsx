@@ -69,7 +69,9 @@ export default function ReactivateAccountPage() {
 
         } catch (err: unknown) { 
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.code), { message: err.details?.[0]?.message || err.message });
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details?.[0]?.message || err.message)
+                });
                 return;
             }
             toast.danger("Erro desconhecido", { message: "Não foi possível reativar sua conta."});
