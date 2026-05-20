@@ -95,7 +95,7 @@ export default function DeactivateAccountPage() {
                     </div>
 
                     <h1 className="text-center text-lg text-default-fg font-semibold pb-2">
-                        Desativar conta
+                        Desativar Conta
                     </h1>
 
                     <p className="text-xs sm:text-sm text-muted-fg font-medium pb-2 text-justify"> 
@@ -111,7 +111,7 @@ export default function DeactivateAccountPage() {
                     <Label
 
                     >
-                        Digite: eu-{session?.user.name.toLowerCase()}-desejo-desativar-minha-conta
+                        Digite: eu-{session?.user.name.split(" ")[0].toLowerCase()}-desejo-desativar-minha-conta
                     </Label>
                     <Input
                         id="name"

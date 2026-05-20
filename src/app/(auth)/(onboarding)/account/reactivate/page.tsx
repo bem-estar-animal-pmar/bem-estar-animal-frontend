@@ -102,7 +102,7 @@ export default function ReactivateAccountPage() {
                     </div>
 
                     <h1 className="text-center text-lg text-default-fg font-semibold pb-2">
-                        Conta desativada
+                        Conta Desativada
                     </h1>
 
                     <p className="text-xs sm:text-sm text-muted-fg font-medium pb-4 text-justify"> 

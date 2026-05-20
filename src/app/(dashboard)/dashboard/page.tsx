@@ -421,7 +421,7 @@ export default function DashboardPage() {
                         <Label
 
                         >
-                            Digite: eu-{session?.user.name.toLowerCase()}-desejo-revogar-a-aceitação-dos-termos
+                            Digite: eu-{session?.user.name.split(" ")[0].toLowerCase()}-desejo-revogar-a-aceitação-dos-termos
                         </Label>
                         <Input
                             id="name"
@@ -433,7 +433,7 @@ export default function DashboardPage() {
                         <Button
                             variant="danger"
                             onClick={handleRevokeTerms}
-                            disabled={isRedirecting || isRevokingTerms || revokeTermsConfirmation !== `eu-${session?.user.name.toLowerCase()}-desejo-revogar-a-aceitação-dos-termos`}
+                            disabled={isRedirecting || isRevokingTerms || revokeTermsConfirmation !== `eu-${session?.user.name.split(" ")[0].toLowerCase()}-desejo-revogar-a-aceitação-dos-termos`}
                         >
                             {isRevokingTerms ? 
                                 <span className="flex gap-2 items-center">
