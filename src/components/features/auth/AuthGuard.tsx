@@ -22,21 +22,28 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
 
         const acceptedTerms = session?.user.termsAcceptedAt && session?.user.privacyAcceptedAt;
         const versionTerms = session?.user.termsVersion === CURRENT_TERMS_OF_SERVICE_VERSION && session?.user.privacyVersion === CURRENT_PRIVACY_POLICY_VERSION;
+        const accountDeactivated = session.user.deletedAt !== null;
 
         if (!acceptedTerms || !versionTerms) {
             router.replace("/accept-terms");
+            return;
+        }
+
+        if (accountDeactivated) {
+            router.replace("/account/reactivate");
             return;
         }
     }, [session, isPending, router]);
 
     const termsAccepted = session?.user.termsAcceptedAt && session?.user.privacyAcceptedAt;
     const termsVersion = session?.user.termsVersion === CURRENT_TERMS_OF_SERVICE_VERSION && session?.user.privacyVersion === CURRENT_PRIVACY_POLICY_VERSION;
+    const deactivated = session?.user.deletedAt !== null;
 
     if (isPending && !session) {
         return <Loading />;
     }
 
-    if (!termsAccepted || !termsVersion) {
+    if (!termsAccepted || !termsVersion || deactivated) {
         return <Loading />;
     }
 

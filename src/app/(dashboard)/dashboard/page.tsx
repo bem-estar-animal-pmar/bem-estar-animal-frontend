@@ -29,8 +29,9 @@ export default function DashboardPage() {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [fetchError, setFetchError] = useState(false);
 
-    const [isTermsDialogOpen, setIsTermsDialogOpen] = useState(false);
+    const [isConfigDialogOpen, setIsConfigDialogOpen] = useState(false);
     const [isRevokingTerms, setIsRevokingTerms] = useState(false);
+    const [isRedirecting, setIsRedirecting] = useState(false);
     const [revokeTermsConfirmation, setRevokeTermsConfirmation] = useState("");
     
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -154,7 +155,7 @@ export default function DashboardPage() {
                     <Button
                         variant="ghost-default"
                         size="sm"
-                        onClick={() => setIsTermsDialogOpen(true)}
+                        onClick={() => setIsConfigDialogOpen(true)}
                         className="w-fit! px-2!"
                     >
                         <GearIcon/>
@@ -368,13 +369,13 @@ export default function DashboardPage() {
             </Dialog>
 
             <Dialog
-                isOpen={isTermsDialogOpen}
-                onClose={() => setIsTermsDialogOpen(false)}
+                isOpen={isConfigDialogOpen}
+                onClose={() => setIsConfigDialogOpen(false)}
                 title="Painel de administração"
                 size="lg"
             >
                 <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2 text-sm sm:text-base text-muted-fg py-4">
+                    <div className="flex flex-col gap-2 text-sm sm:text-base text-muted-fg pt-4">
                         <h3 className="text-default-fg text-sm sm:text-base font-semibold border-b border-default-border pb-2">
                             Termos de Serviço e Política de Privacidade
                         </h3>
@@ -429,22 +430,10 @@ export default function DashboardPage() {
                             placeholder="Digite o texto para continuar..."
                             maxLength={100}
                         />
-                    </div>
-
-
-                    <div className="flex justify-end gap-2">
-                        <Button
-                            variant="outline"
-                            onClick={() => setIsTermsDialogOpen(false)}
-                            className="text-danger-fg border-danger-accent-border! hover:text-danger-fg! hover:bg-transparent!"
-                        >
-                            Cancelar
-                        </Button>
-
                         <Button
                             variant="danger"
                             onClick={handleRevokeTerms}
-                            disabled={isRevokingTerms || revokeTermsConfirmation !== `eu-${session?.user.name.toLowerCase()}-desejo-revogar-a-aceitação-dos-termos`}
+                            disabled={isRedirecting || isRevokingTerms || revokeTermsConfirmation !== `eu-${session?.user.name.toLowerCase()}-desejo-revogar-a-aceitação-dos-termos`}
                         >
                             {isRevokingTerms ? 
                                 <span className="flex gap-2 items-center">
@@ -455,6 +444,43 @@ export default function DashboardPage() {
                             }
                         </Button>
                     </div>
+
+                    <div className="flex flex-col gap-2 text-sm sm:text-base text-muted-fg pt-4">
+                        <h3 className="text-default-fg text-sm sm:text-base font-semibold border-b border-default-border pb-2">
+                            Acesso à Conta e Privacidade
+                        </h3>
+
+                        <p className="text-xs sm:text-sm">
+                            Você tem o direito de desativar sua conta e posteriormente apagar todos os seus dados da plataforma, para saber mais clique no botão abaixo.
+                        </p>
+                        <Button
+                            variant="danger"
+                            onClick={() => {
+                                setIsRedirecting(true);
+                                router.push("/account/deactivate");
+                            }}
+                            disabled={isRedirecting || isRevokingTerms}
+                        >
+                            {isRedirecting ? 
+                                <span className="flex gap-2 items-center">
+                                    <SpinnerIcon/> Carregando... 
+                                </span>
+                                : 
+                                <span className="flex gap-2 items-center">
+                                    Continuar para desativar <SquareArrowUpRightIcon/>
+                                </span>
+                            }
+                        </Button>
+                    </div>
+                    
+                    <Button
+                        variant="outline"
+                        onClick={() => setIsConfigDialogOpen(false)}
+                        className="text-danger-fg border-danger-accent-border! hover:text-danger-fg! hover:bg-danger!"
+                    >
+                        Voltar
+                    </Button>
+
                 </div>
             </Dialog>
         </div>
