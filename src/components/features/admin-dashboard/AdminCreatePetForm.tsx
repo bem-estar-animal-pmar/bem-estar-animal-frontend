@@ -8,7 +8,7 @@ import { translateError } from "@/src/lib/error-map";
 
 import { AdminCreatePetFormData, adminCreatePetSchema } from "@/src/constants/schemas";
 import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions, homeStatusOptions } from "@/src/constants/constants";
-
+import { ApiError } from "@/src/lib/api-error";
 import { Select, DatePicker, Input, Button, Label } from "@/src/components/ui";
 import { toast } from "@/src/lib/toast-store";
 
@@ -63,9 +63,8 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
             });
 
             const responseData = await response.json();
-
             if (!response.ok) {
-                throw new Error(responseData.message || "Erro ao criar pet");
+                throw new ApiError(responseData.message, responseData.code, responseData.details);
             }
 
             toast.success("Pet cadastrado e vinculado com sucesso!");
@@ -74,11 +73,15 @@ export const AdminCreatePetForm = ({ defaultValues, onSuccess, onCancel }: Admin
             onSuccess(newPetId);
             
         } catch (err: unknown) {
-            if (err instanceof Error) {
-                toast.danger(translateError(err.message));
+            if (err instanceof ApiError) {
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Ocorreu um erro inesperado ao salvar o pet.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível registrar pet."
+            });
         }
     };
 

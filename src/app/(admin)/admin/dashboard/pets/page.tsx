@@ -54,15 +54,14 @@ export default function AdminPetsPage() {
             setPagination(responseData.meta);
         } catch (err: unknown) { 
             if (err instanceof ApiError) {
-                if (err.details) {
-                    const firstError = err.details[0]?.message || ""
-                    toast.danger(translateError(err.message), { message: firstError })
-                    return;
-                }
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro desconhecido ao carregar pets.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível carregar dados dos pets."
+            });
         } finally {
             setIsLoadingPets(false);
         }

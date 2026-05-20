@@ -55,10 +55,14 @@ export default function AdminQuotasPage() {
             });
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro desconhecido ao carregar as cotas de castração.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível carregar dados das cotas de castração."
+            });
         } finally {
             setIsLoadingQuotas(false);
         }
@@ -88,10 +92,14 @@ export default function AdminQuotasPage() {
             fetchQuotas(); 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao atualizar as cotas de castração.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar cotas de castração."
+            });
         } finally {
             setIsSubmitting(false);
         }

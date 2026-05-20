@@ -99,15 +99,14 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
             setIsEditing(false);
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                if (err.details) {
-                    const firstError = err.details[0]?.message;
-                    toast.warning(translateError(err.message), { message: firstError });
-                    return;
-                }
-                toast.warning(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Ocorreu um erro inesperado ao atualizar.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar dados do pet."
+            });
         }
     };
 

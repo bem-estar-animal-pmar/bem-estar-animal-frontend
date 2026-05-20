@@ -56,10 +56,14 @@ export default function AdminUserDetailsPage({ params }: { params: Promise<{ id:
 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro desconhecido ao carregar detalhes do usuário.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível carregar detalhes do usuário."
+            });
         } finally {
             setIsLoading(false);
         }
@@ -98,10 +102,14 @@ export default function AdminUserDetailsPage({ params }: { params: Promise<{ id:
             fetchUser();
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao atualizar o status de bloqueio.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar status de bloqueio do usuário."
+            });
         } finally {
             setLoadingAction(null);
         }
@@ -138,10 +146,14 @@ export default function AdminUserDetailsPage({ params }: { params: Promise<{ id:
             fetchUser();
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao atualizar usuário.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar dados do usuário."
+            });
         } finally {
             setLoadingAction(null);
         }
@@ -166,10 +178,14 @@ export default function AdminUserDetailsPage({ params }: { params: Promise<{ id:
             fetchUser(); 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao suspender a conta por fraude.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível suspender a conta."
+            });
         } finally {
             setLoadingAction(null);
         }

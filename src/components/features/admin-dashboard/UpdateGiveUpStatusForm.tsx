@@ -33,11 +33,14 @@ export const UpdateGiveUpStatusForm = ({ request, onSuccess }: { request: AdminG
             onSuccess({ ...request, ...responseData });
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                const firstError = err.details?.[0]?.message;
-                toast.danger(translateError(err.message), { message: firstError });
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao atualizar o status do pedido.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar status do pedido."
+            });
         } finally {
             setIsUpdating(false);
         }

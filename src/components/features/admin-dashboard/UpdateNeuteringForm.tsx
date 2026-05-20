@@ -75,10 +75,14 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
             return true;
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.warning(translateError(err.message));
-            } else {
-                toast.danger("Erro ao atualizar o chip do pet.");
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
+                return;
             }
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar o chip do pet."
+            });
             return false;
         }
     };
@@ -130,15 +134,14 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
             });
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                if (err.details) {
-                    const firstError = err.details[0]?.message;
-                    toast.warning(translateError(err.message), { message: firstError });
-                    return;
-                }
-                toast.warning(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro desconhecido ao atualizar agendamento.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar agendamento."
+            });
         } finally {
             setLoadingAction(null);
         }

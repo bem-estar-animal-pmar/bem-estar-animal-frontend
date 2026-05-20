@@ -48,11 +48,14 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
             setRequest(responseData); 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                const firstError = err.details?.[0]?.message || "";
-                toast.danger(translateError(err.message), { message: firstError });
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro desconhecido ao carregar pedido de adoção.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível carregar dados do pedido de adoção."
+            });
         } finally {
             setIsLoading(false);
         }
@@ -83,10 +86,14 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
             fetchRequest(); // Recarrega os dados para atualizar o histórico e status
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao atualizar o status do pedido.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar status do pedido."
+            });
         } finally {
             setLoadingAction(null);
         }
@@ -110,10 +117,14 @@ export default function AdminAdoptionDetailsPage({ params }: { params: Promise<{
             fetchRequest();
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao registrar a devolução do pet.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível registrar devolução do pet."
+            });
         } finally {
             setLoadingAction(null);
         }

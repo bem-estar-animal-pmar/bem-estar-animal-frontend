@@ -45,10 +45,14 @@ export const PetStatusCard = ({ pet, onUpdateSuccess }: PetStatusCardProps) => {
             setIsEditingHome(false);
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.warning(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao atualizar o status de moradia.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível atualizar status de moradia."
+            });
         } finally {
             setIsUpdatingHome(false);
         }
