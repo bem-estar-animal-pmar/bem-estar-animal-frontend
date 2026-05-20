@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from "react";
 import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { Card, TextLink, Badge, Button, Dialog, Input, Label, Select, DatePicker } from "@/src/components/ui";

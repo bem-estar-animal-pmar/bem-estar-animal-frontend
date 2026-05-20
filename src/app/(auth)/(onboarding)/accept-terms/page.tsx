@@ -10,7 +10,7 @@ import { toast } from "@/src/lib/toast-store";
 import { useRouter } from "next/navigation";
 import { Loading } from "@/src/components/layout/Loading";
 import { ApiError } from "@/src/lib/api-error";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 
 export default function AcceptTermsPage() {
 

@@ -12,7 +12,7 @@ import { Card } from "@/src/components/ui/Card";
 import { Loading } from "@/src/components/layout/Loading";
 import { ResetPasswordForm } from "@/src/components/features/auth/ResetPasswordForm";
 import type { ResetPasswordFormData } from "@/src/components/features/auth/ResetPasswordForm";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 
 /* even though this is a client component, next.js still tries to pre-render it on the server at build time to generate a fast, 
 static HTML file to send to the user immediately 

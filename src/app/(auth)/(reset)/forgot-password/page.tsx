@@ -3,16 +3,12 @@
 import { useState } from "react";
 import { requestPasswordReset } from "@/src/lib/auth-client";
 import { toast } from "@/src/lib/toast-store";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 
 import Image from "next/image";
 import animal_logo from "@/public/animal-logo.svg"
 
-import { Card } from "@/src/components/ui/Card";
-import { Button } from "@/src/components/ui/Button";
-import { Label } from "@/src/components/ui/Label";
-import { Input } from "@/src/components/ui/Input";
-import { TextLink } from "@/src/components/ui/TextLink";
+import { Card, Button, Label, Input, TextLink } from "@/src/components/ui";
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("");

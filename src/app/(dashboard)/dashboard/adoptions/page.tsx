@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react"
 import { toast } from "@/src/lib/toast-store"
 import { ApiError } from "@/src/lib/api-error"
-import { translateTable } from "@/src/lib/table-map"
-import { translateError } from "@/src/lib/error-map"
+import { translateError } from "@/src/lib/translation-map"
 
 import Image from "next/image"
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
-import type { Pet, GiveUpRequest, GiveUpRequestListByUser } from "@/src/constants/interfaces"
+import type { Pet, GiveUpRequestListByUser } from "@/src/constants/interfaces"
 import { giveUpStatusMap } from "@/src/constants/constants"
 
 import { CreateGiveUpForm } from "@/src/components/features/dashboard/CreateGiveUpForm"

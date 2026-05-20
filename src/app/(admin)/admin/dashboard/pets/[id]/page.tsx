@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { use } from "react"; 
 import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 
 import type { PetById } from "@/src/constants/interfaces";
 

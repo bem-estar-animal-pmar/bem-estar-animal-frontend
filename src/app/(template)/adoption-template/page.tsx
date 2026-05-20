@@ -5,8 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { formatRequestNumber } from "@/src/lib/request-formatter";
 
 import { ApiError } from "@/src/lib/api-error";
-import { translateError } from "@/src/lib/error-map";
-import { translateTable } from "@/src/lib/table-map";
+import { translateError, translateTable } from "@/src/lib/translation-map";
 import { toast } from "@/src/lib/toast-store";
 
 import Image from "next/image";

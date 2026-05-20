@@ -8,7 +8,7 @@ import { Select, Button, Label, Textarea } from "@/src/components/ui";
 import { toast } from "@/src/lib/toast-store";
 
 import { giveUpFormSchema, GiveUpFormData } from "@/src/constants/schemas";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
 import { ApiError } from "@/src/lib/api-error";
 

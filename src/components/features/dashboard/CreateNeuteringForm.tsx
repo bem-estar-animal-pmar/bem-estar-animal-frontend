@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { ApiError } from "@/src/lib/api-error"
 import { format } from "date-fns"
-import { translateError } from "@/src/lib/error-map"
+import { translateError } from "@/src/lib/translation-map"
 import { toast } from "@/src/lib/toast-store"
 import { getTodayInBrasilia } from "@/src/lib/scheduling"
 

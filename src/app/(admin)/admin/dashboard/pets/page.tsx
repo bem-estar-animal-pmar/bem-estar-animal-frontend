@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { ApiError } from "@/src/lib/api-error";
-import { translateTable } from "@/src/lib/table-map";
-import { translateError } from "@/src/lib/error-map";
+import { translateTable, translateError } from "@/src/lib/translation-map";
 import { toast } from "@/src/lib/toast-store";
 
 import { petSpeciesOptions } from "@/src/constants/constants";
 import type { PetById} from "@/src/constants/interfaces";
 
-import { Button, Label, Input, Select, Dialog, Badge, ButtonLink, InfoPopUp }  from "@/src/components/ui";
+import { Button, Label, Input, Select, Dialog, Badge, ButtonLink }  from "@/src/components/ui";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { SearchUserIdForm } from "@/src/components/features/admin-dashboard/SearchUserIdForm";
 import { UserSearchIcon, FunnelIcon } from "@/src/components/icons/outline";

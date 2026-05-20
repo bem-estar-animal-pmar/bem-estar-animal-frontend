@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "@/src/lib/auth-client";
 import { ApiError } from "@/src/lib/api-error";
-import { translateTable } from "@/src/lib/table-map";
+import { useRouter } from "next/navigation";
+import { translateTable, translateError } from "@/src/lib/translation-map";
+import { toast } from "@/src/lib/toast-store";
 
 import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
@@ -12,12 +14,9 @@ import { Button, ButtonLink, Badge, Dialog, Card, InfoPopUp, DetailsField, Input
 import { CreatePetForm } from "@/src/components/features/dashboard/CreatePetForm";
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
-import { toast } from "@/src/lib/toast-store";
 import { GearIcon, LogoutIcon, SquareArrowUpRightIcon, XIcon } from "@/src/components/icons/outline";
 
 import type { Pet } from "@/src/constants/interfaces"
-import { translateError } from "@/src/lib/error-map";
-import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
 

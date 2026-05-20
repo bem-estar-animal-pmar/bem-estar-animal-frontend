@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ApiError } from "@/src/lib/api-error";
-import { translateError } from "@/src/lib/error-map";
-import { translateTable } from "@/src/lib/table-map";
+import { translateError, translateTable } from "@/src/lib/translation-map";
 import { formatRequestNumber } from "@/src/lib/request-formatter";
 import { toast } from "@/src/lib/toast-store";
 import { emergencyStatusMap } from "@/src/constants/constants"; // Assumindo que você tenha ou criará esse map

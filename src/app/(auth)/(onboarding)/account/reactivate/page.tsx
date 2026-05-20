@@ -4,12 +4,12 @@ import Image from "next/image";
 import animal_logo from "@/public/animal-logo.svg"
 import { useSession, signOut } from "@/src/lib/auth-client";
 import { useState, useEffect } from "react";
-import { Button, Card, TextButton, TextLink } from "@/src/components/ui";
+import { Button, Card, TextButton } from "@/src/components/ui";
 import { toast } from "@/src/lib/toast-store";
 import { useRouter } from "next/navigation";
 import { Loading } from "@/src/components/layout/Loading";
 import { ApiError } from "@/src/lib/api-error";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 export default function ReactivateAccountPage() {

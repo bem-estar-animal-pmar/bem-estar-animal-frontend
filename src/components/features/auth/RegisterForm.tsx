@@ -11,7 +11,7 @@ import * as z from "zod";
 
 import { cpf } from 'cpf-cnpj-validator'; 
 import { toast } from "@/src/lib/toast-store";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 
 import { Button, Input, Label, TextLink } from "@/src/components/ui";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";

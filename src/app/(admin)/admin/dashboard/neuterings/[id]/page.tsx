@@ -3,8 +3,7 @@
 import { useState, useEffect, use } from "react";
 import { ApiError } from "@/src/lib/api-error";
 import { toast } from "@/src/lib/toast-store";
-import { translateError } from "@/src/lib/error-map";
-import { translateTable } from "@/src/lib/table-map";
+import { translateError, translateTable } from "@/src/lib/translation-map";
 import { formatRequestNumber } from "@/src/lib/request-formatter";
 import type { AdminNeuteringAppointmentById } from "@/src/constants/interfaces";
 

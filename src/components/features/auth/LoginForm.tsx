@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { signIn, signOut, sendVerificationEmail } from "@/src/lib/auth-client";
 
 import { toast } from "@/src/lib/toast-store";
-import { translateError } from "@/src/lib/error-map";
+import { translateError } from "@/src/lib/translation-map";
 import { Input, Button, Label, TextLink, TextButton } from "@/src/components/ui";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
 

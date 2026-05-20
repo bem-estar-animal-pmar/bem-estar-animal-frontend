@@ -4,15 +4,16 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ApiError } from "@/src/lib/api-error";
-import { translateError } from "@/src/lib/error-map";
+import { translateError, translateTable } from "@/src/lib/translation-map";
 import { toast } from "@/src/lib/toast-store";
+
 import { updateUserSchema, UpdateUserFormData } from "@/src/constants/schemas"; 
 import type { UserById } from "@/src/constants/interfaces";
 
 import { Button, Dialog, Input, Label } from "@/src/components/ui";
 import { DetailsField } from "@/src/components/ui/DetailsField";
+
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
-import { translateTable } from "@/src/lib/table-map";
 
 interface AdminUpdateUserFormProps {
     user: UserById;

@@ -5,8 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { format } from "date-fns"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ApiError } from "@/src/lib/api-error";
-import { translateError } from "@/src/lib/error-map";
-import { translateTable } from "@/src/lib/table-map";
+import { translateError, translateTable } from "@/src/lib/translation-map";
 import { toast } from "@/src/lib/toast-store";
 
 import Image from "next/image";
