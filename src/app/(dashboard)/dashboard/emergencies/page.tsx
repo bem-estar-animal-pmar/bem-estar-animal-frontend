@@ -53,10 +53,14 @@ const EmergencyContent = () => {
 
         } catch (err: unknown) { 
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message), { message: translateError(err.details?.[0]?.message) });
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro desconhecido ao carregar dados.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível carregar dados."
+            });
         } finally {
             setIsLoading(false);
         }
@@ -82,17 +86,14 @@ const EmergencyContent = () => {
 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                if (err.details) {
-                    const firstError = err.details[0]?.message
-                    toast.warning(translateError(err.message), {
-                        message: translateError(firstError)
-                    })
-                    return;
-                }
-                toast.warning(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro desconhecido ao cancelar.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível cancelar agendamento."
+            });
         } finally {
             setIsCanceling(null);
         }

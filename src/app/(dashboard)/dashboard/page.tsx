@@ -57,19 +57,14 @@ export default function DashboardPage() {
             setPets(data);
         } catch (err: unknown) { 
             if (err instanceof ApiError) {
-                setFetchError(true);
-                if (err.details) {
-                    const firstError = err.details[0]?.message
-                    toast.danger(translateError(err.message), {
-                        message: translateError(firstError)
-                    })
-                    return;
-                }
-                toast.danger(translateError(err.message));
-                return
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
+                return;
             }
-            setFetchError(true);
-            toast.danger("Erro desconhecido ao carregar pets.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível carregar pets."
+            });
         } finally {
             setIsLoading(false);
         }
@@ -103,11 +98,14 @@ export default function DashboardPage() {
 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-
-            toast.danger("Erro ao revogar aceite.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível revogar termos."
+            });
         } finally {
             setIsRevokingTerms(false);
         }

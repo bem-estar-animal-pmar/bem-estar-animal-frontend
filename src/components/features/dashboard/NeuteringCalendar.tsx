@@ -48,10 +48,15 @@ export const NeuteringCalendar = () => {
             setCalendarData(data);
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.danger(translateError(err.message));
-            } else {
-                toast.danger("Erro ao carregar dados do calendário.");
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
+                setCalendarData({});
+                return;
             }
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível solicitar pedido."
+            });
             setCalendarData({});
         } finally {
             setIsLoading(false);
@@ -102,7 +107,7 @@ const getDaysInMonth = () => {
 
     return (
         <Card 
-            className="w-full max-w-112 shadow-sm! flex flex-col gap-2 items-center mx-auto"
+            className="w-full max-w-116 shadow-sm! flex flex-col gap-2 items-center mx-auto"
             size="md"
         >
             <div className="flex w-full items-center justify-between">
@@ -183,7 +188,7 @@ const getDaysInMonth = () => {
                                 <button 
                                     disabled={isDisabled}
                                     className={`
-                                        group relative flex flex-col items-center focus:font-semibold justify-center h-[36px] w-[36px] rounded-sm text-sm
+                                        group relative flex flex-col items-center focus:font-semibold justify-center h-9 w-9 rounded-sm text-sm
                                         ${boxStyleClasses}
                                         ${todayClasses}
                                     `}

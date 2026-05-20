@@ -10,15 +10,11 @@ import { translateError } from "@/src/lib/error-map";
 import { CreatePetFormData, createPetSchema } from "@/src/constants/schemas";
 import { catBreedOptions, dogBreedOptions, petSpeciesOptions, petGenderOptions, petSizeOptions, homeStatusOptions, userHomeStatusOptions } from "@/src/constants/constants";
 
-import { Select } from "../../ui/Select";
-import { DatePicker } from "../../ui/DatePicker";
-import { Input } from "@/src/components/ui/Input";
-import { Button } from "@/src/components/ui/Button";
-import { Label } from "@/src/components/ui/Label";
+import { Select, DatePicker, Input, Button, Label, InfoPopUp } from "@/src/components/ui";
 import { toast } from "@/src/lib/toast-store";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
 import { PetCreateIcon } from "../../icons/outline";
-import { InfoPopUp } from "../../ui";
+import { ApiError } from "@/src/lib/api-error";
 
 /* birthDate is now a Date object because of our custom DatePicker, that means it will convert the date to our timezone,
 in this case, we will need to strip the timezone before sending it to the backend. 
@@ -87,19 +83,24 @@ export const CreatePetForm = ({ onSuccess, onCancel }: CreatePetFormProps) => {
                 body: JSON.stringify(payload),
             });
 
+            const dataRes = await response.json();
+
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Erro ao criar pet");
+                throw new ApiError(dataRes.message, dataRes.code, dataRes.details);
             }
 
             toast.success("Pet cadastrado com sucesso!");
             onSuccess();
         } catch (err: unknown) {
-            if (err instanceof Error) {
-                toast.danger(translateError(err.message));
+            if (err instanceof ApiError) {
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Ocorreu um erro inesperado.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível cadastrar pet."
+            });
         }
     };
 

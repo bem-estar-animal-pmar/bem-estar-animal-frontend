@@ -10,6 +10,7 @@ import { toast } from "@/src/lib/toast-store";
 import { giveUpFormSchema, GiveUpFormData } from "@/src/constants/schemas";
 import { translateError } from "@/src/lib/error-map";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
+import { ApiError } from "@/src/lib/api-error";
 
 interface CreateGiveUpFormProps {
     pets: Pet[];
@@ -36,19 +37,24 @@ export const CreateGiveUpForm = ({ pets, onSuccess}: CreateGiveUpFormProps) => {
                 body: JSON.stringify(data),
             });
 
+            const dataRes = await response.json();
+
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Erro ao criar solicitação de doação");
+                throw new ApiError(dataRes.message, dataRes.code, dataRes.details);
             }
 
             toast.success("Solicitação de doação enviada com sucesso!");
             onSuccess();
         } catch (err: unknown) {
-            if (err instanceof Error) {
-                toast.danger(translateError(err.message));
+            if (err instanceof ApiError) {
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Ocorreu um erro inesperado.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível solicitar pedido."
+            });
         }
     };
 

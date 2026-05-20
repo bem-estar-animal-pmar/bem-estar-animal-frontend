@@ -146,10 +146,14 @@ export const CreateEmergencyForm = ({ pets, defaultPetId, onSuccess }: RequestEm
 
         } catch (err: unknown) {
             if (err instanceof ApiError) {
-                toast.warning(translateError(err.message), { message: err.details?.[0]?.message ? translateError(err.details?.[0]?.message) : "" });
+                toast.danger(translateError(err.code), { 
+                    message: translateError(err.details[0]?.message || err.message)
+                });
                 return;
             }
-            toast.danger("Erro ao solicitar atendimento.");
+            toast.danger("Erro desconhecido", {
+                message: "Não foi possível solicitar agendamento."
+            });
         } finally {
             setIsSubmitting(false);
         }
