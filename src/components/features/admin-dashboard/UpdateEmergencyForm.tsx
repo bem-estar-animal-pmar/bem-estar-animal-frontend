@@ -74,9 +74,11 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
 
             const payload: any = {
                 status: newStatus,
-                period: newPeriod !== "" ? newPeriod !== undefined ? newPeriod : undefined : undefined,
+                period: newPeriod !== "" && newPeriod !== null ? newPeriod : undefined,
                 scheduleDate: formattedDate,
             };
+
+            console.log(payload)
 
             if (newPetId) {
                 payload.petId = newPetId;
@@ -100,7 +102,7 @@ export const UpdateEmergencyForm = ({ appointment, onSuccess }: AdminUpdateEmerg
             /* callback to send update fields to main page update */
             onSuccess({
                 status: newStatus,
-                period: newPeriod !== "" ? newPeriod : undefined,
+                period: newPeriod !== "" && newPeriod !== null ? newPeriod : undefined,
                 scheduleDate: formattedDate,
                 pet: newPetId ? { id: newPetId } : appointment.pet
             });

@@ -112,7 +112,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     status: newStatus,
-                    period: newPeriod !== "" ? newPeriod : undefined,
+                    period: newPeriod !== "" && newPeriod !== null ? newPeriod : undefined,
                     scheduleDate: formattedDate,
                 }),
                 credentials: "include",
@@ -127,7 +127,7 @@ export const UpdateNeuteringForm = ({ appointment, onSuccess }: AdminUpdateNeute
             setIsEditing(false);
             onSuccess({
                 status: newStatus,
-                period: newPeriod !== "" ? newPeriod : undefined,
+                period: newPeriod !== "" && newPeriod !== null ? newPeriod : undefined,
                 scheduleDate: formattedDate,
                 pet: { ...appointment.pet, chip: chip }
             });

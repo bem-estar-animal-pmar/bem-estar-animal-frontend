@@ -1,7 +1,7 @@
 import { Card } from "../../ui";
 
 export const HistorySection = ({ history }: { history: string }) => {
-    const historyLogs = history ? history.split('\n').filter(log => log.trim() !== '') : [];
+    const historyLogs = history ? history.split('\n').filter(log => log.trim() !== '').reverse() : [];
 
     const parseLogEntry = (log: string) => {
         const match = log.match(/^\[(.*?)\]\s*(.*)$/);
@@ -22,7 +22,7 @@ export const HistorySection = ({ history }: { history: string }) => {
                         <div className="relative border-l-2 border-default-border/60 ml-2 space-y-5 my-2">
                             {historyLogs.map((log, index) => {
                                 const { timestamp, message } = parseLogEntry(log);
-                                const color = index === historyLogs.length - 1 ? "bg-primary-fg animate-bounce h-3 w-3" : "bg-muted-fg"
+                                const color = index === 0 ? "bg-primary-fg animate-bounce h-3 w-3" : "bg-muted-fg"
                                 return (
                                     <div key={index} className="relative pl-5">
                                         <div className={`absolute w-2.5 h-2.5 ${color} rounded-full -left-[5.5px] top-1.5 ring-4 ring-default/30`} />

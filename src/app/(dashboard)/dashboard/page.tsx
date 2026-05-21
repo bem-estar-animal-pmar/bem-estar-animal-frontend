@@ -135,10 +135,46 @@ export default function DashboardPage() {
                         variant="primary" 
                         pill="true"
                         onClick={() => setIsDialogOpen(true)}
-                        className="text-xs sm:text-sm"
+                        size="sm"
                     >
                         + Cadastrar novo pet
                     </Button>
+                    <Button
+                        variant="ghost-default"
+                        size="sm"
+                        onClick={() => setIsConfigDialogOpen(true)}
+                        className="w-fit! px-1.5! active:rotate-90 hover:rotate-90 transition-transform duration-500"
+                        pill="true"
+                    >
+                        <GearIcon/>
+                    </Button>
+                    <Button
+                        variant="ghost-default"
+                        size="sm"
+                        onClick={handleLogout}
+                        className="w-fit! px-2! gap-1 text-danger-fg! hover:text-btn-danger-fg! hover:bg-btn-danger!"
+                        disabled={isLoggingOut}
+                    >
+                        <LogoutIcon/>
+                    </Button>
+                </div>
+            </section>
+            
+            <section className="flex flex-col pb-4">
+                <p className="text-muted-fg text-sm sm:text-base max-w-316 mb-1">
+                    Esta é sua área do usuário, aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar 
+                    consultas para eles.
+                </p>
+                <p className="text-muted-fg text-sm sm:text-base max-w-316 mb-2">
+                    Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, 
+                    entre em contato com a clínica para realizar a edição / remoção do pet.
+                </p>
+                <div className="flex gap-2 justify-between items-center">
+                    <p className="text-muted-fg text-xs sm:text-sm">
+                        No momento você 
+                        {pets.length > 0 ? ` tem ${pets.length} pet${pets.length === 1 ? "" : "s"}.` : " ainda não tem pets cadastrados."}
+
+                    </p>
                     {isAdmin && (
                         <ButtonLink
                             href="/admin/dashboard/"
@@ -149,40 +185,7 @@ export default function DashboardPage() {
                             Painel do administrador <SquareArrowUpRightIcon size={18} />
                         </ButtonLink>
                     )}
-                    <Button
-                        variant="ghost-default"
-                        size="sm"
-                        onClick={() => setIsConfigDialogOpen(true)}
-                        className="w-fit! px-2!"
-                    >
-                        <GearIcon/>
-                    </Button>
-                    <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={handleLogout}
-                        className="w-fit! px-2! gap-1"
-                        disabled={isLoggingOut}
-                    >
-                        <LogoutIcon/> {isLoggingOut ? "Saindo..." : "Sair"}
-                    </Button>
                 </div>
-            </section>
-            
-            <section className="flex flex-col pb-4">
-                <p className="text-muted-fg text-sm sm:text-base max-w-316 mb-1">
-                    Esta é sua área do usuário, aqui você pode ver detalhes sobre seus pets cadastrados, cadastrar novos pets e agendar 
-                    consultas para eles.
-                </p>
-                <p className="text-muted-fg text-sm sm:text-base max-w-316 mb-4">
-                    Se você cadastrou um pet por engano ou precisa mudar algum dado importante, por favor, 
-                    entre em contato com a clínica para realizar a edição / remoção do pet.
-                </p>
-                <p className="text-muted-fg text-xs sm:text-sm">
-                    No momento você 
-                    {pets.length > 0 ? ` tem ${pets.length} pet${pets.length === 1 ? "" : "s"}.` : " ainda não tem pets cadastrados."}
-
-                </p>
             </section>
 
             {pets.length === 0 &&
