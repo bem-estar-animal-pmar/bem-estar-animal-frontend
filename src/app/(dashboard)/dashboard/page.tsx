@@ -7,16 +7,17 @@ import { useRouter } from "next/navigation";
 import { translateTable, translateError } from "@/src/lib/translation-map";
 import { toast } from "@/src/lib/toast-store";
 
-import Image from "next/image";
 import pet_avatar_placeholder from "@/public/pet-avatar-placeholder.webp"
 
 import { Button, ButtonLink, Badge, Dialog, Card, InfoPopUp, DetailsField, Input, Label } from "@/src/components/ui";
 import { CreatePetForm } from "@/src/components/features/dashboard/CreatePetForm";
+import { UpdatePetPhotoForm } from "@/src/components/features/dashboard/UpdatePetPhotoForm";
 
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
-import { GearIcon, LogoutIcon, SquareArrowUpRightIcon, XIcon } from "@/src/components/icons/outline";
+import { GearIcon, LogoutIcon, ReloadIcon, SquareArrowUpRightIcon, XIcon } from "@/src/components/icons/outline";
 
 import type { Pet } from "@/src/constants/interfaces"
+import { ExpandableImage } from "@/src/components/ui/ExpandableImage";
 
 export default function DashboardPage() {
 
@@ -34,6 +35,9 @@ export default function DashboardPage() {
     const [revokeTermsConfirmation, setRevokeTermsConfirmation] = useState("");
     
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
+    const [selectedPetForImage, setSelectedPetForImage] = useState<Pet | null>(null);
 
     useEffect(() => {
         fetchPets();
@@ -71,6 +75,16 @@ export default function DashboardPage() {
 
     const handlePetCreated = () => {
         setIsDialogOpen(false);
+        fetchPets();
+    };
+
+    const openImageDialog = (pet: Pet) => {
+        setSelectedPetForImage(pet);
+        setIsImageDialogOpen(true);
+    };
+
+    const handleImageUpdateSuccess = () => {
+        setIsImageDialogOpen(false);
         fetchPets();
     };
 
@@ -232,7 +246,6 @@ export default function DashboardPage() {
                 </div>            
             }
             
-            {/* must update the pet display here */}
             {pets.length !== 0 && 
                 <div className="border-2 border-dashed border-default-border rounded-xl overflow-y-auto">
                     <div className="flex flex-col w-full max-w-184 justify-self-center justify-center p-4 gap-4">
@@ -243,12 +256,16 @@ export default function DashboardPage() {
                                 size="lg"
                             >
                                 <div className="flex w-full">
-                                    <Image 
-                                        className="max-w-24 self-start justify-self-center rounded-full"
-                                        src={pet_avatar_placeholder}
-                                        alt="Foto de perfil do pet"
-                                    />
-                                    <div className="flex flex-col w-full pl-2"> 
+                                    <div className="flex flex-col items-center gap-2">
+                                        <ExpandableImage
+                                            className="w-24 aspect-square object-cover h-fit self-start justify-self-center rounded-full"
+                                            src={pet.image || pet_avatar_placeholder}
+                                            alt="Foto de perfil do pet"
+                                            width={96}
+                                            height={96}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col w-full pl-2 sm:pl-4"> 
                                         <div className="flex w-full flex-wrap items-center justify-between gap-y-3 gap-2 pb-2">
                                             <div className="flex items-center gap-2">
                                                 <h3 className="font-medium text-base sm:text-lg text-default-fg truncate">
@@ -304,7 +321,7 @@ export default function DashboardPage() {
                                         </div>                           
                                     </div>
                                 </div>
-                                <div className="flex w-full justify-between flex-wrap gap-y-2">
+                                <div className="flex w-full justify-between flex-wrap gap-y-2 pt-2">
                                     <div className="flex flex-col w-full max-w-52">   
                                         <p className="text-xs sm:text-sm text-muted-fg flex truncate">
                                             Nascimento: {pet.birthDate.split('T')[0].split('-').reverse().join('/')}
@@ -314,6 +331,14 @@ export default function DashboardPage() {
                                         </p>
                                     </div>
                                     <div className="flex gap-2 items-center">
+                                            <Button 
+                                                variant="outline" 
+                                                size="sm" 
+                                                onClick={() => openImageDialog(pet)}
+                                                className="gap-1 items-center"
+                                            >
+                                                <ReloadIcon size={18}/> Foto
+                                            </Button>
                                             {pet.adoptionStatus === "ADOPTED" ?
                                                 <span className="text-xs text-default-fg italic">Nenhuma ação disponível.</span>
                                             :
@@ -374,6 +399,7 @@ export default function DashboardPage() {
                 title="Painel de administração"
                 size="lg"
             >
+                {/* ... existing config dialog content untouched ... */}
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2 text-sm sm:text-base text-muted-fg pt-4">
                         <h3 className="text-default-fg text-sm sm:text-base font-semibold border-b border-default-border pb-2">
@@ -401,7 +427,7 @@ export default function DashboardPage() {
                                     title="Versão da Política de Privacidade:"
                                 >
                                     {session?.user.privacyVersion ?? "N/A"}
-                                </DetailsField>     
+                                </DetailsField>    
                                 <DetailsField
                                     title="Aceito em:"
                                 >
@@ -418,9 +444,7 @@ export default function DashboardPage() {
                             Ao revogar o aceite, sua sessão será encerrada imediatamente e o acesso às funcionalidades da plataforma será bloqueado até um novo aceite.
                         </p>
 
-                        <Label
-
-                        >
+                        <Label>
                             Digite: eu-{session?.user.name.split(" ")[0].toLowerCase()}-desejo-revogar-a-aceitação-dos-termos
                         </Label>
                         <Input
@@ -482,6 +506,20 @@ export default function DashboardPage() {
                     </Button>
 
                 </div>
+            </Dialog>
+
+            <Dialog
+                isOpen={isImageDialogOpen}
+                onClose={() => setIsImageDialogOpen(false)}
+                title="Atualizar foto"
+                size="md"
+            >
+                {selectedPetForImage && (
+                    <UpdatePetPhotoForm 
+                        pet={selectedPetForImage} 
+                        onSuccess={handleImageUpdateSuccess} 
+                    />
+                )}
             </Dialog>
         </div>
     );

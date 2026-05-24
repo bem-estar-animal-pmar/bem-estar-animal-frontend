@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { MAX_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "./constants";
 
 /* pets */
 export const checkDogBreed = (breed: string) => {
@@ -27,7 +28,13 @@ export const createPetSchema = z.object({
     homeStatus: z.enum([
         "HAS_OWNER",
         "TEMPORARY_HOME",
-    ], "Selecione um status de moradia válido.")
+    ], "Selecione um status de moradia válido."),
+    image: z.instanceof(File, { message: "Photo is required" })
+        .refine((file) => file.size <= MAX_FILE_SIZE, `O tamanho da imagem deve ser no máximo 5MB`)
+        .refine(
+            (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+            "Apenas formatos .jpg, .jpeg, .png ou .webp são aceitos"
+        ),
 }).refine((data) => {
     if (data.species === "DOG") {
         return checkDogBreed(data.breed);
@@ -72,6 +79,13 @@ export const adminCreatePetSchema = z.object({
         .min(1, "A cor da pelagem é obrigatória.")
         .max(28, "A cor da pelagem de ter no máximo 28 caracteres."),
     birthDate: z.date("A data de nascimento é obrigatória."), 
+    image: z.instanceof(File, { message: "Photo is required" })
+        .refine((file) => file.size <= MAX_FILE_SIZE, `O tamanho da imagem deve ser no máximo 5MB`)
+        .refine(
+            (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+            "Apenas formatos .jpg, .jpeg, .png ou .webp são aceitos"
+        )
+        .optional(),
 }).refine((data) => {
     if (data.species === "DOG") {
         return checkDogBreed(data.breed);

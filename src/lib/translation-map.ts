@@ -266,6 +266,8 @@ const errorTranslations: Record<string, string> = {
     "Maximum pet limit per user reached": "Limite máximo de pets por usuário atingido.",
     "Pet not found": "Pet não encontrado.",
     "You are not allowed to delete pets with future appointments. Please resolve them first": "Você não tem permissão para excluir pets com agendamentos futuros. Por favor, resolva-os primeiro.",
+    "You cannot update data when a pet is for adoption or adopted": "Não é possível atualizar os dados quando o pet está para adoção ou foi adotado.",
+    "Pet does not currently have an image": "O pet não possui uma foto.",
 
     /* neutering route */
     "You can only schedule appointments for your own pet": "Você só pode agendar consultas para o seu próprio pet.",

@@ -1,6 +1,9 @@
 export const CURRENT_TERMS_OF_SERVICE_VERSION = "v1.0.0";
 export const CURRENT_PRIVACY_POLICY_VERSION = "v1.0.0";
 
+export const MAX_FILE_SIZE = 5 * 1024 * 1024;
+export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
 /* user */
 
 export const userRoleOptions = [

@@ -76,6 +76,7 @@ export interface Pet { /* default pet model, listByUser uses it */
     id: string;
     ownerId: string;
     name: string;
+    image: string;
     species: PetSpecies;
     gender: PetGender;
     breed: PetBreed;
@@ -103,6 +104,7 @@ export interface AdminPet { /* list by admin */
         phone: string;
     }
     name: string;
+    image: string;
     species: PetSpecies;
     gender: PetGender;
     breed: PetBreed;
@@ -136,6 +138,7 @@ export interface PetById { /* get by user */
         number:  string
     }
     name: string;
+    image: string;
     species: string;
     gender: string;
     breed: string;
@@ -153,6 +156,7 @@ export interface PetById { /* get by user */
 export interface PetForAdoption { /* list pets with status "FOR_ADOPTION" (public adoptions page) */ 
     id: string;
     name: string;
+    image: string;
     species: PetSpecies;
     gender: PetGender;
     breed: PetBreed;
