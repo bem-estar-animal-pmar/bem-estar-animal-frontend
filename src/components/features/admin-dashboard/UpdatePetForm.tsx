@@ -22,6 +22,7 @@ import {
 import { Select, DatePicker, Input, Button, Label, Dialog } from "@/src/components/ui";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
 import { ReloadIcon } from "@/src/components/icons/outline"; // Added for the Photo button
+import { ExpandableImage } from "../../ui/ExpandableImage";
 
 interface AdminUpdatePetFormProps {
     pet: PetById;
@@ -118,8 +119,8 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess, onOpenImageDialog }: Admin
     // Component helper to render the image section cleanly in both views
     const renderImageSection = () => (
         <div className="flex flex-col items-center gap-2">
-            <Image 
-                className="w-24 h-fit sm:w-36 rounded-full object-cover aspect-square border border-default-border"
+            <ExpandableImage 
+                className="w-24 h-fit sm:w-32 object-cover aspect-square border border-default-border"
                 src={pet.image || pet_avatar_placeholder}
                 alt="Foto de perfil do pet"
                 width={144}
