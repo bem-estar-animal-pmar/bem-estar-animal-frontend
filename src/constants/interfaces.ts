@@ -76,7 +76,7 @@ export interface Pet { /* default pet model, listByUser uses it */
     id: string;
     ownerId: string;
     name: string;
-    image: string;
+    image?: string;
     species: PetSpecies;
     gender: PetGender;
     breed: PetBreed;
@@ -104,7 +104,7 @@ export interface AdminPet { /* list by admin */
         phone: string;
     }
     name: string;
-    image: string;
+    image?: string;
     species: PetSpecies;
     gender: PetGender;
     breed: PetBreed;
@@ -138,7 +138,7 @@ export interface PetById { /* get by user */
         number:  string
     }
     name: string;
-    image: string;
+    image?: string;
     species: string;
     gender: string;
     breed: string;
@@ -156,7 +156,7 @@ export interface PetById { /* get by user */
 export interface PetForAdoption { /* list pets with status "FOR_ADOPTION" (public adoptions page) */ 
     id: string;
     name: string;
-    image: string;
+    image?: string;
     species: PetSpecies;
     gender: PetGender;
     breed: PetBreed;
@@ -181,6 +181,7 @@ export interface NeuteringAppointment { /* default neutering model, list by user
     termsAccepted: boolean;
     pet: { 
         name: string;
+        image?: string;
         species: string;
         gender: string;
         breed: string;
@@ -200,6 +201,7 @@ export interface AdminNeuteringAppointment { /* list by admin */
     termsAccepted: boolean;
     pet: { 
         name: string;
+        image?: string;
         species: string;
     }
     user: { 
@@ -223,6 +225,7 @@ export interface AdminNeuteringAppointmentById { /* get by id (admin has medical
     termsAccepted: boolean;
     pet: { 
         name: string,
+        image?: string;
         species: string,
         gender: string,
         breed: string,
@@ -273,6 +276,7 @@ export interface EmergencyAppointment { /* default, list by user */
     updatedAt: string;
     pet?: { 
         id: string;
+        image?: string;
         name: string;
         allowEmergency: boolean;
     };
@@ -299,6 +303,7 @@ export interface AdminEmergencyAppointment { /* list by admin */
     updatedAt: string;
     pet?: { 
         id: string;
+        image?: string;
         name: string;
         allowEmergency: boolean;
     };
@@ -331,6 +336,7 @@ export interface AdminEmergencyAppointmentById { /* get by id  (admin has medica
     updatedAt: string;
     pet: { 
         name: string,
+        image?: string;
         species: string,
         gender: string,
         breed: string,
@@ -391,6 +397,7 @@ export interface GiveUpRequestListByUser {
     petId: string;
     pet: { 
         id: string,
+        image?: string;
         name: string,
         species: string,
     };
@@ -416,6 +423,7 @@ export interface AdminGiveUpRequest {
     petId: string;
     pet: { 
         name: string,
+        image?: string;
         species: string,
     };
     userId: string;
@@ -434,6 +442,7 @@ export interface AdminGiveUpRequestById {
     petId: string;
     pet: { 
         name: string,
+        image?: string;
         species: string,
         gender: string,
         breed: string,
@@ -445,6 +454,7 @@ export interface AdminGiveUpRequestById {
     };
     user: { 
         id: string,
+        image?: string;
         name: string,
         lastName: string,
         email: string,
@@ -494,6 +504,7 @@ export interface AdoptionRequestList {
     petId: string;
     pet: { 
         name: string,
+        image?: string;
         species: string,
     };
     adopterName: string;
@@ -518,6 +529,7 @@ export interface AdoptionRequestById { /* admin only */
     petId: string;
     pet: { 
         name: string,
+        image?: string;
         species: string,
         gender: string,
         breed: string,

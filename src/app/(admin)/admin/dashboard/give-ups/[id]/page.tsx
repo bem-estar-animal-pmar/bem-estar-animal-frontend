@@ -115,9 +115,11 @@ export default function AdminGiveUpDetailsPage({ params }: { params: Promise<{ i
                             </div>
 
                             <Image 
-                                className="w-24 h-24 sm:w-28 sm:h-28 sm:mr-4 rounded-full object-cover border border-default-border"
-                                src={pet_avatar_placeholder}
+                                className="w-24 h-fit sm:w-28 aspect-square object-cover border border-default-border"
+                                src={request.pet.image || pet_avatar_placeholder}
                                 alt="Foto de perfil do pet"
+                                width={96}
+                                height={96}
                             />
                         </div>
 

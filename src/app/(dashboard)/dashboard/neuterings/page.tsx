@@ -194,9 +194,11 @@ const NeuteringContent = () => {
                             >
                                 <div className="flex w-full">
                                     <Image 
-                                        className="max-w-18 sm:max-w-24 self-start rounded-full object-cover"
-                                        src={pet_avatar_placeholder}
+                                        className="max-w-18 sm:max-w-24 h-fit aspect-square self-start rounded-full object-cover"
+                                        src={activePet?.image || pet_avatar_placeholder}
                                         alt="Foto de perfil do pet"
+                                        width={96}
+                                        height={96}
                                     />
                                     <div className="flex flex-col w-full pl-2 sm:pl-4 justify-center"> 
                                         {activePet ? (
@@ -307,8 +309,10 @@ const NeuteringContent = () => {
                                         <div className="flex items-center flex-wrap gap-y-2 gap-x-4 w-full justify-between">
                                             <div className="flex w-full max-w-48">
                                                 <Image 
-                                                    src={pet_avatar_placeholder} 
-                                                    className="w-12 h-12 rounded-full object-cover" 
+                                                    src={appt.pet.image ||pet_avatar_placeholder} 
+                                                    className="w-12 h-fit rounded-full object-cover aspect-square" 
+                                                    width={96}
+                                                    height={96}
                                                     alt="Avatar" 
                                                 />
                                                 <div className="flex flex-col pl-3">

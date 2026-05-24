@@ -169,8 +169,10 @@ export default function AdoptionsPage() {
                                     <div className="flex items-center flex-wrap gap-y-1 gap-x-4 w-full justify-between">
                                         <div className="flex items-center gap-4">
                                             <Image 
-                                                src={pet_avatar_placeholder} 
-                                                className="w-12 h-12 rounded-full object-cover" 
+                                                src={req.pet.image || pet_avatar_placeholder} 
+                                                className="w-12 h-fit rounded-full object-cover aspect-square" 
+                                                width={96}
+                                                height={96}
                                                 alt="Avatar" 
                                             />
                                             <div className="flex flex-col">
