@@ -9,9 +9,10 @@ import { translateError } from "@/src/lib/translation-map";
 
 import type { PetById } from "@/src/constants/interfaces";
 
-import { Card, DetailsField, TextLink} from "@/src/components/ui";
+import { Card, DetailsField, TextLink, Dialog } from "@/src/components/ui";
 import { UpdatePetForm } from "@/src/components/features/admin-dashboard/UpdatePetForm";
 import { PetStatusCard } from "@/src/components/features/admin-dashboard/PetStatusCard";
+import { UpdatePetPhotoForm } from "@/src/components/features/dashboard/UpdatePetPhotoForm";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 
 export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -19,6 +20,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
     const { id: petId } = use(params);
     const [pet, setPet] = useState<PetById | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
 
     const fetchPet = async () => {
         try {
@@ -59,6 +61,11 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
             ...prev,
             ...updatedFields
         }));
+    };
+
+    const handleImageUpdateSuccess = () => {
+        setIsImageDialogOpen(false);
+        fetchPet(); // Refreshes the data so the new photo is visible
     };
 
     if (isLoading) {
@@ -102,6 +109,7 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                         <UpdatePetForm
                             pet={pet}
                             onUpdateSuccess={handleUpdatePet}
+                            onOpenImageDialog={() => setIsImageDialogOpen(true)}
                         />
                     </Card>
                 </section>
@@ -135,6 +143,19 @@ export default function AdminPetDetailsPage({ params }: { params: Promise<{ id: 
                     )}
                 </div>
             </div>
+
+            {/* Added Dialog for image update */}
+            <Dialog
+                isOpen={isImageDialogOpen}
+                onClose={() => setIsImageDialogOpen(false)}
+                title="Atualizar foto"
+                size="md"
+            >
+                <UpdatePetPhotoForm 
+                    pet={pet as any} 
+                    onSuccess={handleImageUpdateSuccess} 
+                />
+            </Dialog>
         </div>
     );
 }

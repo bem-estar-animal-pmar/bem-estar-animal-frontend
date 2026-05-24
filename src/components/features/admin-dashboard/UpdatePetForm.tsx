@@ -21,13 +21,15 @@ import {
 } from "@/src/constants/constants";
 import { Select, DatePicker, Input, Button, Label, Dialog } from "@/src/components/ui";
 import { SpinnerIcon } from "../../icons/SpinnerIcon";
+import { ReloadIcon } from "@/src/components/icons/outline"; // Added for the Photo button
 
 interface AdminUpdatePetFormProps {
     pet: PetById;
     onUpdateSuccess: (updatedFields: any) => void;
+    onOpenImageDialog: () => void;
 }
 
-export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps) => {
+export const UpdatePetForm = ({ pet, onUpdateSuccess, onOpenImageDialog }: AdminUpdatePetFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [updateWarningDialogOpen, setUpdateWarningDialogOpen] = useState(false);
 
@@ -75,7 +77,6 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                 coatColor: data.coatColor === "" ? undefined : data.coatColor,
             };  
 
-            console.log(payload)
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/${pet.id}`, {
                 method: "PATCH",
                 credentials: "include",
@@ -114,6 +115,28 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
         setIsEditing(false);
     };
 
+    // Component helper to render the image section cleanly in both views
+    const renderImageSection = () => (
+        <div className="flex flex-col items-center gap-2">
+            <Image 
+                className="w-24 h-fit sm:w-36 rounded-full object-cover aspect-square border border-default-border"
+                src={pet.image || pet_avatar_placeholder}
+                alt="Foto de perfil do pet"
+                width={144}
+                height={144}
+            />
+            <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                onClick={onOpenImageDialog}
+                className="gap-1 items-center"
+            >
+                <ReloadIcon size={18} /> Atualizar foto
+            </Button>
+        </div>
+    );
+
     if (!isEditing) {
         return (
             <div className="flex flex-col gap-4">
@@ -139,11 +162,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                         </div>
                     </div>
 
-                    <Image 
-                        className="w-24 h-24 sm:w-36 sm:h-36 sm:mr-4 rounded-full object-cover border border-default-border"
-                        src={pet_avatar_placeholder}
-                        alt="Foto de perfil do pet"
-                    />
+                    {renderImageSection()}
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
@@ -209,7 +228,6 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                     </div>
                 </div>
 
-                {/* NOVOS CAMPOS AQUI */}
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
                     <div className="flex-1">
                         <Label>Castrado?</Label>
@@ -273,9 +291,9 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
 
     return (
         <form 
-    onSubmit={handleSubmit(handleUpdatePet, (errors) => console.log("Erros de Validação:", errors))} 
-    className="flex flex-col gap-4"
->
+            onSubmit={handleSubmit(handleUpdatePet, (errors) => console.log("Erros de Validação:", errors))} 
+            className="flex flex-col gap-4"
+        >
             <div className="flex w-full justify-between items-end gap-4">
                 <div className="flex flex-col gap-y-4 w-full max-w-96">
                     <div className="">
@@ -319,11 +337,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                     </div>
                 </div>
 
-                <Image 
-                    className="w-24 h-24 sm:w-36 sm:h-36 sm:mr-4 rounded-full object-cover border border-default-border"
-                    src={pet_avatar_placeholder}
-                    alt="Foto de perfil do pet"
-                />
+                {renderImageSection()}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full">
@@ -362,7 +376,7 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                                 onChange={onChange}
                                 onBlur={onBlur}
                                 options={filteredBreedOptions} 
-                                disabled={!selectedSpecies}    
+                                disabled={!selectedSpecies}   
                                 variant={errors.breed ? "danger" : "default"}
                             />
                         )}
@@ -450,11 +464,9 @@ export const UpdatePetForm = ({ pet, onUpdateSuccess }: AdminUpdatePetFormProps)
                 </div>
             </div>
 
-            {/* NOVOS CAMPOS AQUI */}
             <div className="flex flex-col sm:flex-row gap-4 w-full">
                 <div className="flex-1">
                     <Label>Castrado?</Label>
-                    {/* Campo puramente visual (não controlável por aqui) */}
                     <Input 
                         readOnly 
                         disabled 
