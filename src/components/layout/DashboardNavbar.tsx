@@ -1,6 +1,6 @@
 import { NavLink } from "../ui/NavLink"
 
-export const Navbar = () => {
+export const DashboardNavbar = () => {
     return (
         <nav 
             className="md:gap-2 lg:gap-4 flex"

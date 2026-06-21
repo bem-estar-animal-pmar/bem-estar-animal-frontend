@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { Navbar } from "./Navbar"
+import { DashboardNavbar } from "./DashboardNavbar"
 
 import Image from "next/image";
 import animal_logo from "@/public/animal-logo.svg"
 
-export const Header = () => {
+export const DashboardHeader = () => {
 
     return (
         <header className="flex fixed w-full items-center justify-center h-18 bg-white/80 backdrop-blur-xs z-50 border-b-2 border-default-border">
@@ -19,7 +19,7 @@ export const Header = () => {
                         />
                     </Link>
                 </div>
-                <Navbar />
+                <DashboardNavbar />
             </div>
         </header>
     )
