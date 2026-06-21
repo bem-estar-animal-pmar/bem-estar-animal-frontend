@@ -7,7 +7,7 @@ interface NavLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement
     children: React.ReactNode;
     href: string;
     className?: string;
-    variant?: 'default'| 'primary';
+    variant?: 'default'| 'primary' | 'primary-accent';
     size?: 'sm' | 'md' | 'lg' | 'xl';
     pill?: 'true' | 'false';
 }
@@ -22,6 +22,7 @@ const sizeVariants = {
 const colorVariants = {
     default: "text-muted-fg hover:text-default-fg hover:bg-primary",
     primary: "text-muted-fg hover:text-primary-fg hover:bg-primary",
+    "primary-accent": "text-primary-fg hover:text-btn-primary-fg hover:bg-btn-primary",
 };
 
 export const NavLink = ({ children, href, className = "", variant = "default", size = "md", pill = "false", ...props }: NavLinkProps) => {

@@ -1,9 +1,12 @@
+import { PublicHeader } from "@/src/components/layout/PublicHeader";
+
 export default function Home() {
     return (
-        <div className="flex min-h-screen items-center justify-center">
-            <main className="flex min-h-screen w-full">
-                Home
-            </main>
-        </div>
+        <>
+            <PublicHeader />
+            <main className="w-full flex flex-col justify-center items-center bg-neutral">
+                home
+			</main>
+        </>
     );
 }
