@@ -24,22 +24,13 @@ export const RegisterCto = () => {
                             Cadastre-se no nosso sistema e registre seu pet para castrações e outros serviços.
                         </p>
                         <ButtonLink
-                            href="/register"
+                            href="/neutering"
                             variant="primary"
-                            className="hidden sm:flex gap-2"
-                            size="lg"
-                        >
-                            Criar conta agora
-                            <SquareArrowUpRightIcon />
-                        </ButtonLink>
-                        <ButtonLink
-                            href="/register"
-                            variant="primary"
-                            className="flex sm:hidden gap-2"
+                            className="sm:h-12 sm:px-8 sm:text-base gap-2"
                             size="md"
                         >
                             Criar conta agora
-                            <SquareArrowUpRightIcon size={18} />
+                            <SquareArrowUpRightIcon size={20} />
                         </ButtonLink>
                     </div>
             </div>
