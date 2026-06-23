@@ -5,6 +5,7 @@ import { NeuteringCto } from "../components/features/landing-page/NeuteringCto";
 import { AdoptionSection } from "../components/features/landing-page/AdoptionSection";
 import { EmergencyCto } from "../components/features/landing-page/EmergencyCto";
 import { PublicFooter } from "../components/layout/PublicFooter";
+import { Contact } from "../components/features/landing-page/Contact";
 
 export default function Home() {
     return (
@@ -17,7 +18,7 @@ export default function Home() {
                 <AdoptionSection />
                 <EmergencyCto />
                 <RegisterCto />
-                <span>contact</span>
+                <Contact />
 			</main>
             <PublicFooter />
         </>
