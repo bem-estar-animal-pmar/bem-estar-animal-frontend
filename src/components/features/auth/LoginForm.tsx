@@ -36,7 +36,8 @@ export function LoginForm() {
                 }, 
                 {
                     onSuccess: () => {
-                        router.push("/dashboard"); /* push to dashboard on success */
+                        window.location.href = "/dashboard";
+                        // router.push("/dashboard"); /* cannot use router here, bug after updating next (16.2.4 > 16.2.9) */
                     },
                     onError: (ctx) => {
                         /* this is the status for when user login and is not verified */
