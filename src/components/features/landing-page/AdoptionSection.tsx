@@ -93,8 +93,8 @@ export const AdoptionSection = () => {
     }, []);
 
     return (
-        <section className="w-full flex flex-col items-center justify-center px-4 gap-y-8 py-16 max-w-384">
-            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-around w-full gap-y-6">
+        <section className="w-full flex flex-col items-center justify-center px-4 gap-y-8 py-16 max-w-384 ">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-around w-full gap-y-6 ">
                 <h2 className="text-default-fg font-bold text-2xl lg:text-3xl text-center sm:text-left order-1 sm:w-auto items-center flex justify-center w-full">
                     Conheça os bichinhos de Angra
                 </h2>
@@ -119,7 +119,7 @@ export const AdoptionSection = () => {
                     Disponibilizamos animais para adoção no município, acesse a lista completa e adote um amigo.
                 </p>
 
-                <div className="order-3 sm:max-w-296">
+                <div className="order-3 sm:max-w-296 w-full min-w-0">
                     <EmblaCarousel 
                         slides={slides} 
                         buttonsPosition="center" 
