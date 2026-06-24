@@ -7,7 +7,7 @@ import { EnvelopeIcon, LocationIcon, PhoneIcon } from "@/src/components/icons/ou
 
 export const PublicFooter = () => {
     return (
-        <footer className="flex w-full items-center justify-center bg-footer pt-2 pb-8">
+        <footer className="flex w-full items-center justify-center border-t-48 border-(--primary-200) bg-(--primary-100) pt-4 py-8">
             <div className="w-full max-w-384 py-8 px-8 md:px-16 lg:px-32">
                 <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 gap-y-8">
                     <div className="flex flex-col w-full gap-4 md:col-span-3 lg:col-span-1">
@@ -16,64 +16,64 @@ export const PublicFooter = () => {
                             alt="Logo do Bem-Estar Animal"
                             className="w-full max-w-28 sm:max-w-32"
                         />
-                        <h1 className="text-white font-semibold text-base sm:text-xl">
+                        <h1 className="text-(--primary-800) font-semibold text-base sm:text-xl">
                             Superintendência de Bem-Estar Animal
                         </h1>
-                        <p className="text-white text-xs">
+                        <p className="text-(--primary-800) text-xs">
                             Informações, atendimentos e programas públicos voltados ao cuidado animal no município.
                         </p>
                     </div>
                     <div className="flex flex-col">
-                        <h3 className="text-white font-semibold text-lg mb-2">Navegação</h3>
+                        <h3 className="text-(--primary-800) font-semibold text-lg mb-2">Navegação</h3>
                         <nav className="flex flex-col w-fit gap-2">
                             <TextLink 
                                 href="/"
                                 size="md"
-                                className="text-white"
+                                className="text-(--primary-800)!"
                             >
                                 Início
                             </TextLink>
                             <TextLink 
                                 href="/neutering"
                                 size="md"
-                                className="text-white"
+                                className="text-(--primary-800)!"
                             >
                                 Castração
                             </TextLink>
                             <TextLink 
                                 href="/emergency"
                                 size="md"
-                                className="text-white"
+                                className="text-(--primary-800)!"
                             >
                                 Emergência
                             </TextLink>
                             <TextLink 
                                 href="/adoption"
                                 size="md"
-                                className="text-white"
+                                className="text-(--primary-800)!"
                             >
                                 Adoção
                             </TextLink>
                         </nav>
                     </div>
                     <div className="flex flex-col md:col-span-2 lg:col-span-1">
-                        <h3 className="text-white font-semibold text-lg mb-2">Contato</h3>
+                        <h3 className="text-(--primary-800) font-semibold text-lg mb-2">Contato</h3>
                         <div className="flex flex-col gap-4">
     
-                            <div className="flex items-center gap-2 text-white text-sm">
-                                <span className="text-primary-fg dark:text-primary">
+                            <div className="flex items-center gap-2 text-(--primary-800) text-sm">
+                                <span className="text-(--primary-800)!">
                                     <LocationIcon />
                                 </span>
                                 R. Juíz Orlando Caldelas, no 42 - Parque das Palmeiras, Angra dos Reis - RJ, 23906-470
                             </div>
-                            <div className="flex items-center gap-2 text-white text-sm">
-                                <span className="text-primary-fg dark:text-primary">
+                            <div className="flex items-center gap-2 text-(--primary-800) text-sm">
+                                <span className="text-(--primary-800)!">
                                     <PhoneIcon />
                                 </span>
                                 (24) 3365-0019
                             </div>
-                            <div className="flex items-center gap-2 text-white text-sm">
-                                <span className="text-primary-fg dark:text-primary">
+                            <div className="flex items-center gap-2 text-(--primary-800) text-sm">
+                                <span className="text-(--primary-800)!">
                                     <EnvelopeIcon />
                                 </span>
                                 bemestaranimal@angra.rj.gov.br
@@ -83,7 +83,7 @@ export const PublicFooter = () => {
                 </div>
                 <div className="w-full border-b border-default-accent-border my-4"></div>
                 <div className="flex flex-wrap w-full justify-between gap-2">
-                    <p className="text-white text-xs">
+                    <p className="text-(--primary-800) text-xs">
                         © 2026 Prefeitura Municipal de Angra dos Reis. Todos os direitos reservados.
                     </p>
                     <nav 
@@ -94,7 +94,7 @@ export const PublicFooter = () => {
                             size="sm"
                             href="/privacy-policy"
                             variant="default"
-                            className="text-white!"
+                            className="text-(--primary-800)!"
                         >
                             Políticas de Privacidade
                         </TextLink>
@@ -102,7 +102,7 @@ export const PublicFooter = () => {
                             size="sm"
                             href="/terms-of-use"
                             variant="default"
-                            className="text-white!"
+                            className="text-(--primary-800)!"
                         >
                             Termos de Uso
                         </TextLink>

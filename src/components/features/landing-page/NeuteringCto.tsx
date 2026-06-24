@@ -5,7 +5,7 @@ import { SquareArrowUpRightIcon } from "@/src/components/icons/outline";
 
 export const NeuteringCto = () => {
     return (
-        <section className="flex py-16 w-full px-4 sm:px-6 bg-[url('/grid-light.svg')] bg-size-[24px]">
+        <section className="flex py-16 w-full px-4 sm:px-6 justify-center">
             <div className="flex flex-col sm:flex-row w-full justify-around items-center max-w-384">
                 <div className="flex flex-col items-center max-w-108 sm:max-w-92 justify-center gap-4 text-center">
                     <h2 className="text-default-fg font-bold text-2xl md:text-3xl lg:text-4xl">
