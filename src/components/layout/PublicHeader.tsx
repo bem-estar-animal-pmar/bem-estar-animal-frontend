@@ -23,7 +23,7 @@ export const PublicHeader = () => {
 
     return (
         <>
-            <header className="flex fixed top-0 w-full items-center justify-center h-16 backdrop-blur-xs z-40">
+            <header className="flex fixed top-0 w-full items-center justify-center h-16 z-40 bg-white border border-default-border">
                 <div className="flex w-full max-w-384 items-center justify-between px-3 sm:px-4 md:px-8 lg:px-12">
                     
                     <div className="flex bg-white/20 px-4 py-1 rounded-md">

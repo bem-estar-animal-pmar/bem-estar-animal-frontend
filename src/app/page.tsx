@@ -13,7 +13,6 @@ export default function Home() {
             <PublicHeader />
             <main className="w-full flex flex-col justify-center items-center bg-neutral">
                 <Hero />
-                <span>story</span>
                 <NeuteringCto />
                 <AdoptionSection />
                 <EmergencyCto />
