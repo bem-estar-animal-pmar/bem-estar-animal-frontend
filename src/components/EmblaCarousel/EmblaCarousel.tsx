@@ -17,7 +17,10 @@ interface EmblaCarouselProps {
 	showBorder?: boolean;
 }
 
-const OPTIONS: EmblaOptionsType = { loop: true, slidesToScroll: 1 }
+const OPTIONS: EmblaOptionsType = { 
+    loop: true, 
+    slidesToScroll: 1
+}
 
 export const EmblaCarousel = ({ showBorder = true, buttonsPosition = 'start', dotsPosition = 'end', ...props}: EmblaCarouselProps) => {
     const { slides } = props;

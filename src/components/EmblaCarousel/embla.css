@@ -89,11 +89,25 @@
 @media (min-width: 640px) {
   .embla {
     width: 100%;     
-    max-width: 44rem;   
+    max-width: 100%;   
     margin: auto;
     --slide-height: 26rem;
     --slide-spacing: 1rem;
-    --slide-size: 50%;
+    --slide-size: 48%;
+    --button-size: 2.6rem;
+    --dot-size: 2rem;
+    --dot-inner-size: 1.1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .embla {
+    width: 100%;     
+    max-width: 100%;   
+    margin: auto;
+    --slide-height: 26rem;
+    --slide-spacing: 1rem;
+    --slide-size: 40%;
     --button-size: 2.6rem;
     --dot-size: 2rem;
     --dot-inner-size: 1.1rem;
@@ -107,7 +121,21 @@
     margin: auto;
     --slide-height: 30rem;
     --slide-spacing: 1rem;
-    --slide-size: 40%;
+    --slide-size: 38%;
+    --button-size: 3rem;
+    --dot-size: 2.2rem;
+    --dot-inner-size: 1.2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .embla {
+    width: 100%;     
+    max-width: 100%;   
+    margin: auto;
+    --slide-height: 30rem;
+    --slide-spacing: 1rem;
+    --slide-size: 33%;
     --button-size: 3rem;
     --dot-size: 2.2rem;
     --dot-inner-size: 1.2rem;
