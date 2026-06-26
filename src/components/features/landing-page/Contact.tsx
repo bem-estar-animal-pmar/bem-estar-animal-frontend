@@ -13,7 +13,7 @@ export const Contact = () => {
             id="contato"
             className="w-full flex flex-col items-center justify-center py-12 sm:py-16 px-4 sm:px-6 max-w-384"
         >
-            <div className="flex flex-col items-center justify-center gap-4 pb-8 text-center">
+            <div className="flex flex-col md:items-center justify-center gap-4 pb-8 md:text-center">
                 <h2 className="text-default-fg font-bold text-xl sm:text-3xl lg:text-4xl">
                     Quer saber mais?
                     <span className="text-brand-fg"> Fale conosco</span>

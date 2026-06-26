@@ -76,7 +76,7 @@
 
 .embla {
 	width: 100%;
-	max-width: 28rem;
+	max-width: 30rem;
 	margin: auto;
 	--slide-height: 22rem;
 	--slide-spacing: 1rem;
@@ -84,6 +84,20 @@
     --button-size: 2.4rem;
     --dot-size: 1.8rem;
     --dot-inner-size: 1rem;
+}
+
+@media (min-width: 492px) {
+  .embla {
+    width: 100%;
+    max-width: 100%;
+    margin: auto;
+    --slide-height: 22rem;
+    --slide-spacing: 1rem;
+    --slide-size: 50%;
+      --button-size: 2.4rem;
+      --dot-size: 1.8rem;
+      --dot-inner-size: 1rem;
+  }
 }
 
 @media (min-width: 640px) {

@@ -27,8 +27,17 @@
 	--primary-900: #2D3A1E;
 	--primary-950: #1B2414;
 
-	--secondary-400: #F4A261;
-	--secondary-500: #E07A5F;
+	--secondary-50:  #fdf5f2;
+    --secondary-100: #fce9e1;
+    --secondary-200: #f8cbb8;
+    --secondary-300: #f3a88a;
+    --secondary-400: #F4A261;
+    --secondary-500: #E07A5F;
+    --secondary-600: #c95d41;
+    --secondary-700: #a7472e;
+    --secondary-800: #8b3d29;
+    --secondary-900: #743525;
+    --secondary-950: #3f1a10;
 
 	--danger-50: #fef2f2;
 	--danger-200: #fecaca;
