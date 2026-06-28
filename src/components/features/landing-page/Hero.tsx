@@ -40,30 +40,33 @@ export const Hero = () => {
 
             <section 
                 id="inicio"
-                className="w-full flex h-120 sm:h-144 lg:h-168 max-w-384 items-center justify-start hero-section bg-[url('/hero-pattern.webp')] bg-size-[300px]! sm:bg-size-[440px]!"
+                className="w-full flex h-132 sm:h-144 lg:h-168 items-center justify-center hero-section bg-[url('/hero-pattern.webp')] bg-size-[300px]! sm:bg-size-[440px]!"
             >
-                <div className="flex flex-col max-w-80 sm:max-w-108 lg:max-w-132 p-4 ml-[2vw] md:ml-[4vw] xl:ml-28 gap-4">
-                    <div className="bg-default/60 p-6 sm:p-8 rounded-md">
-                        <h1 className="text-default-fg font-bold text-2xl sm:text-4xl lg:text-5xl">
-                            Superintendência de Bem-Estar <span className="text-brand-fg">Animal</span>
-                        </h1>
-                        <p className="text-muted-fg text-xs sm:text-sm lg:text-lg">
-                            Informações, atendimentos e programas públicos voltados ao cuidado animal no município.
-                        </p>
-                    </div>
+                <div className="flex w-full max-w-384">
+                    <div className="flex flex-col max-w-80 sm:max-w-108 lg:max-w-132 p-4 ml-[2vw] md:ml-[4vw] xl:ml-28 gap-4">
+                        <div className="bg-default/60 p-6 sm:p-8 rounded-md">
+                            <h1 className="text-default-fg font-bold text-2xl sm:text-4xl lg:text-5xl">
+                                Superintendência de Bem-Estar <span className="text-brand-fg">Animal</span>
+                            </h1>
+                            <p className="text-muted-fg text-xs sm:text-sm lg:text-lg">
+                                Informações, atendimentos e programas públicos voltados ao cuidado animal no município.
+                            </p>
+                        </div>
 
-                    <div className="flex flex-col sm:flex-row gap-y-1 gap-x-2 items-center justify-center py-2">
-                        <ButtonLink 
-                            href="/dashboard"
-                            target="_blank"
-                            className="sm:h-11! w-fit gap-1"
-                            variant="primary"
-                            pill="true"
-                        >
-                            Acessar serviços <SquareArrowUpRightIcon />
-                        </ButtonLink>
+                        <div className="flex flex-col sm:flex-row gap-y-1 gap-x-2 items-center justify-center py-2">
+                            <ButtonLink 
+                                href="/dashboard"
+                                target="_blank"
+                                className="sm:h-11! w-fit gap-1"
+                                variant="primary"
+                                pill="true"
+                            >
+                                Acessar serviços <SquareArrowUpRightIcon />
+                            </ButtonLink>
+                        </div>
                     </div>
                 </div>
+
             </section>
         </div>
     )
