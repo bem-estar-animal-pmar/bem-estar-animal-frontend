@@ -14,7 +14,7 @@ interface PetCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const AdoptionCard = ({ name, imageUrl, className = "", status, id, ...props }: PetCardProps) => {
-    const colors = `bg-card text-default-fg ${status === "ADOPTED" ? "shadow-[4px_4px_#d4d4d4]  sm:shadow-[5px_5px_#d4d4d4] lg:shadow-[6px_6px_#d4d4d4] border-(--neutral-300)" : "shadow-[4px_4px_#AFCE79]  sm:shadow-[5px_5px_#AFCE79] lg:shadow-[6px_6px_#AFCE79] border-(--primary-300)"}`;
+    const colors = `bg-card text-default-fg ${status === "ADOPTED" ? "border-(--neutral-300)" : "border-(--primary-300)"}`;
     const displaySrc = typeof imageUrl === "string" ? imageUrl : imageUrl?.src;
 
     return (
@@ -49,7 +49,7 @@ export const AdoptionCard = ({ name, imageUrl, className = "", status, id, ...pr
                 <ButtonLink
                     href={status === "ADOPTED" ? "/adoption" : `/adoption?petId=${id}`}
                     variant="primary" 
-                    className={`w-full ${status === "ADOPTED" ? "bg-(--neutral-300)! text-(--neutral-900)!" : "bg-(--primary-300)! text-(--primary-900)!"}`}
+                    className={`w-full font-bold! ${status === "ADOPTED" ? "bg-(--neutral-300)! text-(--neutral-800)!" : "bg-(--primary-300)! text-(--primary-800)!"}`}
                 >
                     {status === "FOR_ADOPTION" ? "EU QUERO" : "VER OUTROS"}
                 </ButtonLink>

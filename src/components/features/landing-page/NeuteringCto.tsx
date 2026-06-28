@@ -18,9 +18,9 @@ export const NeuteringCto = () => {
     return (
         <section className="flex py-4 md:py-12 w-full px-4 sm:px-6 justify-center">
             <div className="flex flex-col sm:flex-row w-full justify-around sm:items-center max-w-384">
-                <div className="flex flex-col sm:items-center sm:max-w-92 sm:justify-center gap-4 sm:text-center">
+                <div className="flex flex-col sm:items-center sm:max-w-104 sm:justify-center gap-4 sm:text-center">
                     <h2 className="text-default-fg font-bold text-2xl md:text-3xl lg:text-4xl">
-                        Mais saúde, menos riscos. <span className="text-brand-fg">Castre seu pet!</span>
+                        Mais saúde, menos riscos.  Castre seu pet!
                     </h2>
                     <p className="text-muted-fg text-sm md:text-base max-w-2xl">
                         A castração previne tumores, infecções e garante muito mais qualidade de vida para ele.

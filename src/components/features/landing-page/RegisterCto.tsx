@@ -18,7 +18,7 @@ export const RegisterCto = () => {
 
                     <div className="flex flex-col items-center max-w-108 justify-center gap-4 text-center">
                         <h2 className="text-default-fg font-bold text-2xl md:text-3xl lg:text-4xl">
-                            Acesse todos os nossos serviços na <span className="text-(--secondary-600)">área do usuário</span>
+                            Acesse todos os nossos serviços na área do usuário
                         </h2>
                         <p className="text-muted-fg text-sm md:text-base max-w-2xl">
                             Cadastre-se no nosso sistema e registre seu pet para castrações e outros serviços.

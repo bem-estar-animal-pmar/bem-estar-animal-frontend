@@ -10,7 +10,7 @@ export const About = () => {
                     <div className="py-4">
                         <div className="flex flex-col lg:items-center justify-center lg:text-center gap-4">
                             <h2 className="text-default-fg font-bold text-2xl md:text-3xl lg:text-4xl">
-                                Nossa <span className="text-brand-fg">missão</span>: proteger, cuidar e conscientizar 
+                                Nossa missão: proteger, cuidar e conscientizar 
                             </h2>
                             <p className="text-muted-fg text-sm md:text-base">
                                 A Superintendência de Bem-Estar animal é a estrutura do município dedicada exclusivamente a cuidar dos animais em situação de rua e apoiar tutores.

@@ -15,10 +15,9 @@ export const Contact = () => {
         >
             <div className="flex flex-col md:items-center justify-center gap-4 pb-8 md:text-center">
                 <h2 className="text-default-fg font-bold text-xl sm:text-3xl lg:text-4xl">
-                    Quer saber mais?
-                    <span className="text-brand-fg"> Fale conosco</span>
+                    Quer saber mais? Fale conosco
                 </h2>
-                <p className="text-muted-fg text-xs sm:text-sm lg:text-base max-w-2xl">
+                <p className="text-muted-fg text-sm sm:text-base  max-w-2xl">
                     Entre em contato conosco para esclarecimento de dúvidas e sugestões, ou visite-nos.
                 </p>
             </div>
