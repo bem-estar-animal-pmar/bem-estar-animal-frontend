@@ -34,8 +34,9 @@ export const NeuteringCto = () => {
                             <div className="flex justify-center">
                                 <ButtonLink
                                     href="/neutering"
-                                    variant="outline"
-                                    className="gap-2 px-12! w-full! bg-primary!"
+                                    variant="primary"
+                                    className="gap-2 px-12! w-full!"
+                                    pill="true"
                                     size="md"
                                 >
                                     Saiba como agendar
@@ -45,8 +46,8 @@ export const NeuteringCto = () => {
                         </div>
                         <ButtonLink
                             href="/neutering"
-                            variant="outline"
-                            className="hidden sm:flex sm:h-12 sm:px-8 sm:text-base gap-2 w-fit! self-center bg-primary!"
+                            variant="primary"
+                            className="hidden sm:flex sm:h-12 sm:px-8 sm:text-base gap-2 w-fit! self-center"
                             size="md"
                         >
                             Saiba como agendar

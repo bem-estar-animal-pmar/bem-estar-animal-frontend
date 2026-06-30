@@ -6,7 +6,7 @@ import { SquareArrowUpRightIcon } from "@/src/components/icons/outline";
 export const RegisterCto = () => {
     return (
         <section 
-            className="w-full flex items-center justify-center py-16 sm:py-24 px-4 sm:px-6 bg-(--secondary-100)"
+            className="w-full flex items-center justify-center py-16 sm:py-24 px-4 sm:px-6 bg-(--secondary-50)"
         >
             <div className="flex flex-col sm:flex-row max-w-304 w-full justify-around items-center gap-12">
                     <div className="flex max-w-64 sm:max-w-80 w-full">

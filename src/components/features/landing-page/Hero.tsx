@@ -23,7 +23,6 @@ export const Hero = () => {
                     background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 1536 672' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'><path fill='%23ffffff' d='M0,280 C768,280 768,600 1536,600 L1536,672 L0,672 Z'></path></svg>");
                     background-size: 100% 100%;
                     background-repeat: repeat;
-                    transform: scaleX(-1);
                 }
 
                 @media (min-width: 640px) {
@@ -40,7 +39,7 @@ export const Hero = () => {
 
             <section 
                 id="inicio"
-                className="w-full flex h-132 sm:h-144 lg:h-168 items-center justify-center hero-section bg-[url('/hero-pattern.webp')] bg-size-[300px]! sm:bg-size-[440px]!"
+                className="w-full flex h-132 sm:h-144 lg:h-168 items-center justify-center hero-section bg-[url('/hero-logo.webp')] bg-size-[888px]! md:bg-size-[1240px]! lg:bg-size-[1520px]! xl:bg-size-[1880px]!"
             >
                 <div className="flex w-full max-w-384">
                     <div className="flex flex-col max-w-80 sm:max-w-108 lg:max-w-132 p-4 ml-[2vw] md:ml-[4vw] xl:ml-28 gap-4">

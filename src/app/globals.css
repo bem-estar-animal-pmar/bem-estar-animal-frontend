@@ -27,17 +27,29 @@
 	--primary-900: #2D3A1E;
 	--primary-950: #1B2414;
 
-	--secondary-50:  #fdf5f2;
-    --secondary-100: #fce9e1;
-    --secondary-200: #f8cbb8;
-    --secondary-300: #f3a88a;
-    --secondary-400: #F4A261;
-    --secondary-500: #E07A5F;
-    --secondary-600: #c95d41;
-    --secondary-700: #a7472e;
-    --secondary-800: #8b3d29;
-    --secondary-900: #743525;
-    --secondary-950: #3f1a10;
+	--secondary-50:  #f0fbfb;
+    --secondary-100: #d7f3f5;
+    --secondary-200: #b3e5e9;
+    --secondary-300: #81ced6;
+    --secondary-400: #55b0ba;
+    --secondary-500: #39929d;
+    --secondary-600: #307883;
+    --secondary-700: #2b626c;
+    --secondary-800: #29525b;
+    --secondary-900: #25454d;
+    --secondary-950: #152d33;
+
+	--ternary-50:  #fdf5f2;
+    --ternary-100: #fce9e1;
+    --ternary-200: #f8cbb8;
+    --ternary-300: #f3a88a;
+    --ternary-400: #F4A261;
+    --ternary-500: #E07A5F;
+    --ternary-600: #c95d41;
+    --ternary-700: #a7472e;
+    --ternary-800: #8b3d29;
+    --ternary-900: #743525;
+    --ternary-950: #3f1a10;
 
 	--danger-50: #fef2f2;
 	--danger-200: #fecaca;

@@ -6,7 +6,7 @@ export const About = () => {
     return (
         <section className="flex px-4 sm:px-6 xl:px-12 pt-4 sm:pt-8 w-full justify-center">
             <div className="flex flex-col lg:flex-row w-full max-w-384 justify-between">
-                <div className="flex flex-col w-full pr-4 gap-2 justify-center items-center">
+                <div className="flex flex-col w-full lg:pr-4 gap-2 justify-center items-center">
                     <div className="py-4">
                         <div className="flex flex-col lg:items-center justify-center lg:text-center gap-4">
                             <h2 className="text-default-fg font-bold text-2xl md:text-3xl lg:text-4xl">
