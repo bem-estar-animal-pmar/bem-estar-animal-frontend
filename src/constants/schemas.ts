@@ -220,3 +220,39 @@ export const updateUserSchema = z.object({
 });
 
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
+
+
+export const createAdoptionSchema = z.object({
+    petId: z.string()
+        .min(1, "Pet ID is required")
+        .max(50, "Pet ID must be less than 50 characters"),
+    adopterName: z.string().trim()
+        .min(1, "Name can't be blank")
+        .max(60, "Name is expected to have less than 60 characters")
+        .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "Name must contain only letters"),
+    adopterEmail: z.email("Invalid email format"),
+    adopterPhone: z.string().trim()
+        .regex(/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/, "Invalid phone number format")
+        .transform((value) => value.replace(/\D/g, "")),
+    adopterCep: z.string()
+        .regex(/^\d{5}-?\d{3}$/, "Invalid CEP")
+        .transform((value) => value.replace(/\D/g, "")), // remove dots and dashes to send only numbers to backend
+    adopterStreet: z.string().trim()
+        .min(1, "Street is required")
+        .max(200, "Street is expected to have less than 200 characters"),
+    adopterNeighborhood: z.string().min(1, "Neighborhood is required")
+        .max(100, "Neighborhood is expected to have less than 100 characters"),
+    adopterCity: z.string().trim()
+        .min(1, "City is required")
+        .max(100, "City is expected to have less than 100 characters"),
+    adopterState: z.string().trim()
+        .length(2, "State must be UF (2 characters)"),
+    adopterNumber: z.string().trim()
+        .min(1, "Number is required")
+        .max(16, "Number is expected to have less than 16 characters"),
+    termsAccepted: z.boolean().refine(val => val === true, {
+        message: "You must agree that you have read the neutering terms"
+    }),
+});
+
+export type CreateAdoptionFormData = z.infer<typeof createAdoptionSchema>;
