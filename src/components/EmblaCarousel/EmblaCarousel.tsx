@@ -65,7 +65,7 @@ export const EmblaCarousel = ({ showBorder = true, buttonsPosition = 'start', do
                 </div>
             </div>
 
-            <div className="embla__controls flex flex-row w-full mt-2 items-center justify-between">
+            <div className="embla__controls flex flex-row w-full mt-2 items-center justify-between px-4">
                 <div className="flex-1 flex justify-start gap-4">
                     {buttonsPosition === 'start' && renderButtons()}
                     {dotsPosition === 'start' && renderDots()}

@@ -24,7 +24,7 @@ export const Contact = () => {
 
             <div className="w-full max-w-6xl flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Card className="md:col-span-2 p-0! rounded-xl! overflow-hidden h-88 md:h-auto grow">
+                    <Card className="md:col-span-2 p-0! rounded-md! overflow-hidden h-88 md:h-auto grow shadow-sm!">
                         <iframe 
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.684538115296!2d-44.307066123804006!3d-22.99862504116142!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9c4e5df97430e3%3A0x596d963333c3ee6d!2sR.%20Ju%C3%ADz%20Orlando%20Caldelas%2C%2042%20-%20Parque%20das%20Palmeiras%2C%20Angra%20dos%20Reis%20-%20RJ%2C%2023906-470%2C%20Brasil!5e0!3m2!1spt-BR!2sus!4v1782222819526!5m2!1spt-BR!2sus" 
                             width="100%" 
@@ -37,7 +37,7 @@ export const Contact = () => {
                         ></iframe>
                     </Card>
                     <div className="flex flex-col gap-6 justify-between">
-                        <Card className="flex flex-row md:flex-col items-center md:items-start justify-between gap-4 shadow-xs!">
+                        <Card className="flex flex-row md:flex-col items-center md:items-start justify-between gap-4 shadow-sm!">
                             <div className="flex items-center gap-2">
                                 <div className="bg-default text-muted-fg p-2.5 sm:p-3 rounded-full">
                                     <span className="sm:hidden"><PhoneIcon size={20} /></span>
@@ -58,7 +58,7 @@ export const Contact = () => {
                                 Ligar
                             </ButtonLink>
                         </Card>
-                        <Card className="flex flex-row md:flex-col items-center md:items-start justify-between gap-4 shadow-xs!">
+                        <Card className="flex flex-row md:flex-col items-center md:items-start justify-between gap-4 shadow-sm!">
                             <div className="flex items-center gap-2">
                                 <div className="bg-primary dark:bg-primary/20 text-primary-fg dark:text-brand-fg p-2.5 sm:p-3 rounded-full">
                                     <span className="sm:hidden"><LocationIcon size={20} /></span>
@@ -81,7 +81,7 @@ export const Contact = () => {
                                 Mapa
                             </ButtonLink>
                             </Card>
-                        <Card className="flex items-center gap-3 sm:gap-4 shadow-xs!">
+                        <Card className="flex items-center gap-3 sm:gap-4 shadow-sm!">
                             <div className="bg-primary text-primary-fg p-2.5 sm:p-3 rounded-full">
                                 <span className="sm:hidden"><ClockIcon size={20} /></span>
                                 <span className="hidden sm:inline"><ClockIcon size={24} /></span>
@@ -94,7 +94,7 @@ export const Contact = () => {
                             </div>
                         </Card>
 
-                        <Card className="flex items-center gap-4 shadow-xs!">
+                        <Card className="flex items-center gap-4 shadow-sm!">
                             <div className="bg-primary text-primary-fg p-2.5 sm:p-3 rounded-full">
                                 <span className="sm:hidden"><EnvelopeIcon size={20} /></span>
                                 <span className="hidden sm:inline"><EnvelopeIcon size={24} /></span>
@@ -107,7 +107,7 @@ export const Contact = () => {
                             </div>
                         </Card>
 
-                        <Card className="flex items-center gap-4 shadow-xs!">
+                        <Card className="flex items-center gap-4 shadow-sm!">
                             <div className="bg-primary text-primary-fg p-2.5 sm:p-3 rounded-full">
                                 <span className="sm:hidden"><InstagramIcon size={20} /></span>
                                 <span className="hidden sm:inline"><InstagramIcon size={24} /></span>
