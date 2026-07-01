@@ -7,7 +7,7 @@ import { EnvelopeIcon, LocationIcon, PhoneIcon } from "@/src/components/icons/ou
 
 export const PublicFooter = () => {
     return (
-        <footer className="flex w-full items-center justify-center border-t-48 border-(--neutral-200) bg-(--neutral-100) pt-4 py-8">
+        <footer className="flex w-full items-center justify-center border-t-48 border-(--primary-300) bg-(--primary-100) pt-4 py-8">
             <div className="w-full max-w-384 py-8 px-8 md:px-16 lg:px-32">
                 <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 gap-y-8">
                     <div className="flex flex-col w-full gap-4 md:col-span-3 lg:col-span-1">

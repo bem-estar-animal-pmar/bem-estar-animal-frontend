@@ -1,4 +1,5 @@
 import { ButtonLink } from "@/src/components/ui"
+import { SquareArrowUpRightIcon } from "@/src/components/icons/outline"
 
 export const EmergencyCto = () => {
     return (
@@ -30,7 +31,7 @@ export const EmergencyCto = () => {
                 className="sm:h-12 sm:px-8 sm:text-base gap-2"
                 size="md"
             >
-                Atendimento emergencial
+                Atendimento emergencial <SquareArrowUpRightIcon size={20} />
             </ButtonLink>
         </section>
     )

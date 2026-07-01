@@ -54,7 +54,7 @@ export const NeuteringCto = () => {
                             <SquareArrowUpRightIcon size={22} />
                         </ButtonLink>
                 </div>
-                <div className="hidden sm:flex max-w-112 pl-4 w-full">
+                <div className="hidden sm:flex max-w-114 pl-4 w-full">
                     <Image
                         src={neutering_cto_image}
                         alt="Imagem de pet com responsável"

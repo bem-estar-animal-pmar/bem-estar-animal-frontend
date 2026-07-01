@@ -60,7 +60,7 @@ export const Hero = () => {
                                 variant="primary"
                                 pill="true"
                             >
-                                Acessar serviços <SquareArrowUpRightIcon />
+                                Acessar área do tutor <SquareArrowUpRightIcon />
                             </ButtonLink>
                         </div>
                     </div>
