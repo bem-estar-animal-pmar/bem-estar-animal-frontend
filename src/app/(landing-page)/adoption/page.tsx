@@ -41,13 +41,13 @@ const CreateAdoptionForm = ({ petId, onCancel, onSuccess }: CreateAdoptionFormPr
             adopterCity: "",
             adopterState: "",
             adopterNumber: "",
+            // Como o usuário já aceitou os termos no passo 1 do Modal, deixamos true
             termsAccepted: true 
         }
     });
 
     const handleCreateAdoption = async (data: CreateAdoptionFormData) => {
         try {
-            // Nota: .transform do Zod já tirou a formatação do Cep e Telefone automaticamente no objeto "data"
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/adoptions/request`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -77,7 +77,11 @@ const CreateAdoptionForm = ({ petId, onCancel, onSuccess }: CreateAdoptionFormPr
     };
 
     return (
-        <form onSubmit={handleSubmit(handleCreateAdoption)} className="flex flex-col gap-4">
+        <form 
+            // O segundo parâmetro loga os erros do Zod no console se a validação falhar
+            onSubmit={handleSubmit(handleCreateAdoption, (errors) => console.log("Erros de validação:", errors))} 
+            className="flex flex-col gap-4"
+        >
             <div className="flex flex-col gap-2 pt-2">
                 <Label htmlFor="adopterName">Nome Completo</Label>
                 <Controller
@@ -199,6 +203,42 @@ const CreateAdoptionForm = ({ petId, onCancel, onSuccess }: CreateAdoptionFormPr
                         )}
                     />
                     {errors.adopterNeighborhood && <span className="text-danger-fg text-sm">{errors.adopterNeighborhood.message}</span>}
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="flex flex-col gap-2 sm:col-span-3">
+                    <Label htmlFor="adopterCity">Cidade</Label>
+                    <Controller
+                        name="adopterCity"
+                        control={control}
+                        render={({ field }) => (
+                            <Input 
+                                id="adopterCity"
+                                placeholder="Angra dos Reis"
+                                {...field}
+                                variant={errors.adopterCity ? "danger" : "default"}
+                            />
+                        )}
+                    />
+                    {errors.adopterCity && <span className="text-danger-fg text-sm">{errors.adopterCity.message}</span>}
+                </div>
+                <div className="flex flex-col gap-2">
+                    <Label htmlFor="adopterState">Estado (UF)</Label>
+                    <Controller
+                        name="adopterState"
+                        control={control}
+                        render={({ field }) => (
+                            <Input 
+                                id="adopterState"
+                                placeholder="RJ"
+                                maxLength={2}
+                                {...field}
+                                variant={errors.adopterState ? "danger" : "default"}
+                            />
+                        )}
+                    />
+                    {errors.adopterState && <span className="text-danger-fg text-sm">{errors.adopterState.message}</span>}
                 </div>
             </div>
 

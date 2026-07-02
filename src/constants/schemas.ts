@@ -34,7 +34,7 @@ export const createPetSchema = z.object({
         .refine(
             (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
             "Apenas formatos .jpg, .jpeg, .png ou .webp são aceitos"
-        ),
+        ).optional(),
 }).refine((data) => {
     if (data.species === "DOG") {
         return checkDogBreed(data.breed);
