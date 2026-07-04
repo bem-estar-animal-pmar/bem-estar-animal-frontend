@@ -63,7 +63,7 @@ const NeuteringRulesContent = () => {
                         </div>
                         <div className="flex flex-col">
                             <h3 className="font-semibold text-sm text-default-fg">Exigência de Hemograma</h3>
-                            <p className="text-xs text-muted-fg mt-1">Cães fêmeas pesando de <span className="font-semibold">1 a 3 kg</span> ou <span className="font-semibold">acima de 15 kg</span> requerem hemograma prévio. Após realizar o agendamento de castração, envie-nos o hemograma e confirmaremos o agendamento.</p>
+                            <p className="text-xs text-muted-fg mt-1">Cães fêmeas pesando de <span className="font-semibold">1 a 3 kg</span> ou <span className="font-semibold">acima de 20 kg</span> requerem hemograma prévio. Após realizar o agendamento de castração, envie-nos o hemograma e confirmaremos o agendamento.</p>
                         </div>
                     </Card>
 
