@@ -93,7 +93,7 @@ const NeuteringRulesContent = () => {
                         </div>
                         <div className="flex flex-col">
                             <h3 className="font-semibold text-sm text-default-fg">Cancelamentos</h3>
-                            <p className="text-xs text-muted-fg mt-1">Cancelamentos podem ser feitos com até <span className="font-semibold">48h de antecedência</span> pelo usuário. Para cancelamentos no mesmo dia, entre em contato com a clínica e evite faltas.</p>
+                            <p className="text-xs text-muted-fg mt-1">Cancelamentos podem ser feitos com até <span className="font-semibold">24h de antecedência</span> pelo usuário. Para cancelamentos no mesmo dia, entre em contato com a clínica e evite faltas.</p>
                         </div>
                     </Card>
 
@@ -120,7 +120,7 @@ const NeuteringRulesContent = () => {
                     <li>No dia de castração, colocaremos um CHIP de Identificação no animal, que poderá ser visto sistema e ajudará à localizar seu pet.</li>
                     <li>Os responsáveis também devem levar, <span className="font-semibold">OBRIGATORIAMENTE</span>, a roupinha cirúrgica para o pós-operatório das fêmeas.</li>
                     <li>O animal deve estar em <span className="font-semibold">jejum alimentar de 6 horas e hídrico de 4 horas</span>.</li>
-                    <li>O <span className="font-semibold">hemograma é obrigatório</span> para canino fêmea abaixo de 3 kg e acima de 15 kg, sendo opcional para caninos macho e felinos macho/fêmea.</li>
+                    <li>O <span className="font-semibold">hemograma é obrigatório</span> para canino fêmea abaixo de 3 kg e acima de 20 kg, sendo opcional para caninos macho e felinos macho/fêmea.</li>
                     <li>O animal deve estar em boas condições de saúde.</li>
                     <li><span className="font-semibold">Felinos</span> devem estar em caixa de transporte compatível com seu tamanho, sem panos, jornal, lençol etc., forrada apenas com tapete higiênico. Apenas 01 (um) animal por caixa de transporte. <span className="font-semibold">Não receberemos felinos fora da caixa de transporte.</span></li>
                     <li><span className="font-semibold">Caninos</span> devem estar de coleira, guia ou em caixa de transporte compatível com o tamanho. Caninos bravos ou de grande porte devem estar de focinheira.</li>
