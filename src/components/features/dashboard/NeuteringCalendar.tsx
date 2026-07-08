@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ApiError } from "@/src/lib/api-error";
-import { toast } from "@/src/lib/toast-store";
-import { translateError } from "@/src/lib/translation-map";
 import { SpinnerIcon } from "@/src/components/icons/SpinnerIcon";
 import { Card } from "@/src/components/ui";
+import { toast } from "@/src/lib/toast-store";
+import { translateError } from "@/src/lib/translation-map";
 
 type CalendarData = Record<string, { MORNING: number; AFTERNOON: number }>;
 
@@ -27,44 +27,38 @@ export const NeuteringCalendar = () => {
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
     };
 
-    const fetchMonthData = async (date: Date) => {
-        try {
-            setIsLoading(true);
-            const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
-            const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-            const startStr = formatDateString(startDate);
-            const endStr = formatDateString(endDate);
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/neuterings/calendar?startDate=${startStr}&endDate=${endStr}`, {
-                credentials: "include",
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                throw new ApiError(data.message, data.code, data.details);
-            }
-
-            setCalendarData(data);
-        } catch (err: unknown) {
-            if (err instanceof ApiError) {
-                toast.danger(translateError(err.code), { 
-                    message: translateError(err.details?.[0]?.message || err.message)
-                });
-                setCalendarData({});
-                return;
-            }
-            toast.danger("Erro desconhecido", {
-                message: "Não foi possível solicitar pedido."
-            });
-            setCalendarData({});
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
-        fetchMonthData(currentDate);
+        const fetchMonthData = async () => {
+            try {
+                setIsLoading(true);
+                const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+                const startStr = formatDateString(startDate);
+                const endStr = formatDateString(endDate);
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/neuterings/calendar?startDate=${startStr}&endDate=${endStr}`, {
+                    credentials: "include",
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new ApiError(data.message, data.code, data.details);
+                }
+                setCalendarData(data);
+            } catch (err: unknown) {
+                if (err instanceof ApiError) {
+                    toast.danger(translateError(err.code), { message: translateError(err.details?.[0]?.message || err.message) });
+                    return;
+                }
+                toast.danger("Erro desconhecido", { message: "Não foi possível carregar a agenda." });
+                setCalendarData({});
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchMonthData();
     }, [currentDate]);
 
     const handlePrevMonth = () => {
@@ -75,7 +69,7 @@ export const NeuteringCalendar = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
     };
 
-const getDaysInMonth = () => {
+    const getDaysInMonth = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const firstDayOfMonth = new Date(year, month, 1).getDay();
@@ -107,7 +101,7 @@ const getDaysInMonth = () => {
 
     return (
         <Card 
-            className="w-full max-w-116 shadow-sm! flex flex-col gap-2 items-center mx-auto"
+            className="w-full max-w-116 shadow-sm! flex flex-col gap-4 items-center mx-auto"
             size="md"
         >
             <div className="flex w-full items-center justify-between">
@@ -141,7 +135,6 @@ const getDaysInMonth = () => {
                     </div>
                 )}
 
-                {/* weekdays */}
                 <div className="grid grid-cols-7 gap-1 mb-2">
                     {weekDays.map((day) => (
                         <div key={day} className="text-center font-medium text-muted-fg text-[13px] py-1">
@@ -150,29 +143,29 @@ const getDaysInMonth = () => {
                     ))}
                 </div>
 
-                {/* days grid */}
                 <div className="grid grid-cols-7 gap-1">
                     {gridDays.map((date) => {
                         const dateStr = formatDateString(date);
                         const isPast = date < today;
                         const isToday = date.getTime() === today.getTime();
-                        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                        
                         const isCurrentMonth = date.getMonth() === currentDate.getMonth();
                         
                         const dayData = calendarData[dateStr];
-                        const morningSlots = dayData?.MORNING || 0;
-                        const afternoonSlots = dayData?.AFTERNOON || 0;
+                        
+                        const isUnconfigured = !dayData || dayData.MORNING === -1;
+                        
+                        const morningSlots = isUnconfigured ? 0 : (dayData.MORNING || 0);
+                        const afternoonSlots = isUnconfigured ? 0 : (dayData.AFTERNOON || 0);
                         const totalSlots = morningSlots + afternoonSlots;
 
-                        const isDisabled = isPast || isWeekend || !isCurrentMonth;
+                        const isDisabled = isPast || !isCurrentMonth || isUnconfigured;
 
                         let boxStyleClasses = "";
                         
                         if (!isCurrentMonth || isPast) {
                             boxStyleClasses = "text-muted-fg/30 cursor-default bg-transparent";
-                        } else if (isDisabled || !totalSlots) {
-                            boxStyleClasses = "bg-gray-100 text-muted-fg cursor-not-allowed";
+                        } else if (isDisabled) {
+                            boxStyleClasses = "bg-(--neutral-50) text-muted-fg cursor-not-allowed";
                         } else if (totalSlots === 0) {
                             boxStyleClasses = "bg-danger-fg/20 text-danger-fg hover:opacity-80 cursor-pointer";
                         } else if (morningSlots <= 5 || afternoonSlots <= 5) {
@@ -181,7 +174,7 @@ const getDaysInMonth = () => {
                             boxStyleClasses = "text-default-fg hover:bg-default cursor-pointer";
                         }
 
-                        const todayClasses = isToday ? "text-default-fg font-bold border border-muted-fg" : "";
+                        const todayClasses = isToday ? "text-default-fg font-semibold" : "";
 
                         return (
                             <div key={dateStr} className="flex justify-center items-center">
@@ -193,9 +186,7 @@ const getDaysInMonth = () => {
                                         ${todayClasses}
                                     `}
                                 >
-                                    <span>
-                                        {date.getDate()}
-                                    </span>
+                                    <span>{date.getDate()}</span>
                                     
                                     {!isDisabled && isCurrentMonth && (
                                         <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-focus:flex flex-col items-center z-20 w-32 bg-card">
@@ -219,6 +210,18 @@ const getDaysInMonth = () => {
                             </div>
                         );
                     })}
+                </div>
+            </div>
+
+            <div className="w-full flex justify-center gap-4 text-[11px] text-muted-fg border-t border-default-border pt-3 mt-1">
+                <div className="flex items-center gap-1">
+                    <span className="w-3 h-3 rounded-sm bg-alert-fg/20 inline-block"></span> Vagas esgotando
+                </div>
+                <div className="flex items-center gap-1">
+                    <span className="w-3 h-3 rounded-sm bg-danger-fg/20 inline-block"></span> Sem vagas
+                </div>
+                <div className="flex items-center gap-1">
+                    <span className="w-3 h-3 rounded-sm bg-gray-100 border border-default-border inline-block"></span> Não definido / Feriado
                 </div>
             </div>
         </Card>
